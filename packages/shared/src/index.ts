@@ -17,6 +17,7 @@ export * from './schemas/structure';
 export * from './schemas/chat';
 export * from './schemas/alerts';
 export * from './schemas/journal';
+export * from './schemas/onchain-signal';
 
 // Per-tool output envelope schemas (consumed by chat parts via `safeParse`).
 export * from './schemas/tool-outputs/get-price';
@@ -53,6 +54,12 @@ export * from './schemas/tool-outputs/convene-committee';
 export * from './schemas/tool-outputs/get-intermarket-resonance';
 export * from './schemas/tool-outputs/get-system-diagnostics';
 export * from './schemas/tool-outputs/run-system-action';
+export * from './schemas/tool-outputs/get-onchain-activity';
+export * from './schemas/tool-outputs/get-whale-alerts';
+export * from './schemas/tool-outputs/get-defi-pools';
+export * from './schemas/tool-outputs/analyze-alpha-signal';
+export * from './schemas/tool-outputs/log-signal-onchain';
+export * from './schemas/tool-outputs/get-agent-performance';
 // UI-only message parts (planner output, citation + verify warnings)
 export * from './schemas/ui-parts';
 // Briefings (cron-emitted assistant messages in the dedicated thread)

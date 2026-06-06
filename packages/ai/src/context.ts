@@ -63,9 +63,26 @@ export async function buildLiveSnapshot(
     }
   })();
 
+  let mantleBlock: LiveSnapshot['mantleBlock'] = undefined;
+  const mantlePromise = (async () => {
+    try {
+      const { getMantleClient } = await import('@hamafx/web3');
+      const client = getMantleClient();
+      const block = await client.getBlock();
+      mantleBlock = {
+        number: Number(block.number),
+        timestamp: Number(block.timestamp) * 1000,
+        recentWhaleCount: block.transactions.length > 50 ? 2 : 0, // Mock for hackathon context
+      };
+    } catch {
+      // Mantle offline or web3 pkg not available
+    }
+  })();
+
   // Parallel fetch; per-symbol timeouts via the global AbortSignal.
   await Promise.all([
     healthPromise,
+    mantlePromise,
     ...SYMBOLS.map(async (s) => {
       try {
         const timeoutMs = 800;
@@ -85,5 +102,6 @@ export async function buildLiveSnapshot(
     session: inferSession(now),
     prices,
     ...(copilotHealth ? { copilotHealth } : {}),
+    ...(mantleBlock ? { mantleBlock } : {}),
   };
 }

@@ -91,7 +91,7 @@ void StreamSymbolTick(string symbol_name) {
       string json = StringFormat("{\"symbol\":\"%s\",\"bid\":%f,\"ask\":%f,\"ts\":%I64d}\n",
                                  symbol_name, last_tick.bid, last_tick.ask, last_tick.time_msc);
       
-      char data[];
+      uchar data[];
       int len = StringToCharArray(json, data);
       
       // Send raw byte buffer (excluding null terminator byte)

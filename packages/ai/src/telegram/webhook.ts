@@ -56,11 +56,15 @@ export async function handleTelegramWebhook(update: TelegramUpdate, env: ServerE
   // Pre-process slash commands
   let customInstructions = '';
   if (text.startsWith('/status')) {
-    customInstructions = 'The user wants a quick status update of their PnL, open trades, and margin.';
+    customInstructions = 'The user wants a quick status update of their PnL, open trades, and margin, as well as their Mantle agent on-chain status (signal count, latest block). Fetch agent performance using get_agent_performance tool and fetch onchain activity.';
   } else if (text.startsWith('/committee')) {
     customInstructions = 'The user wants to run the multi-agent committee on the mentioned pair. Immediately invoke the convene_committee tool and return the verdict.';
   } else if (text.startsWith('/snapshot')) {
     customInstructions = 'The user wants a market snapshot. Run the snapshot tool or summarize the latest macro news quickly.';
+  } else if (text.startsWith('/alpha')) {
+    customInstructions = 'The user wants to see the latest alpha signals. Look them up in the database or use the get_onchain_activity tool.';
+  } else if (text.startsWith('/whale')) {
+    customInstructions = 'The user wants to see recent whale alerts. Use the get_whale_alerts tool to summarize recent large transfers.';
   }
 
   // We map the telegram chat ID to a deterministic thread ID. 

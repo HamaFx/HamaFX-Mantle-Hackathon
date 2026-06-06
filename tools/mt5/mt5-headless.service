@@ -7,12 +7,14 @@ Type=simple
 User=ubuntu
 WorkingDirectory=/home/ubuntu
 Environment=WINEPREFIX=/home/ubuntu/.wine
-Environment=DISPLAY=:1
-ExecStartPre=-/usr/bin/Xvfb :1 -screen 0 1024x768x16 &
-ExecStart=/usr/bin/wine /home/ubuntu/.mt5/drive_c/Program\ Files/MetaTrader\ 5/terminal.exe /config:startup.ini
+Environment=WINEARCH=win64
+ExecStart=/home/ubuntu/mt5-wrapper.sh
 Restart=always
 RestartSec=10
 LimitNOFILE=65536
+KillMode=control-group
+SendSIGKILL=yes
+TimeoutStopSec=5
 
 [Install]
 WantedBy=multi-user.target

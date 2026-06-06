@@ -39,6 +39,14 @@ import { getIntermarketResonanceTool } from './get-intermarket-resonance';
 import { getSystemDiagnosticsTool } from './get-system-diagnostics';
 import { runSystemActionTool } from './run-system-action';
 
+// Hackathon: Mantle AI
+import { getOnchainActivityTool } from './get-onchain-activity';
+import { getWhaleAlertsTool } from './get-whale-alerts';
+import { getDefiPoolsTool } from './get-defi-pools';
+import { analyzeAlphaSignalTool } from './analyze-alpha-signal';
+import { logSignalOnchainTool } from './log-signal-onchain';
+import { getAgentPerformanceTool } from './get-agent-performance';
+
 export const tools = {
   get_price: withTelemetry('get_price', getPriceTool),
   get_candles: withTelemetry('get_candles', getCandlesTool),
@@ -76,6 +84,14 @@ export const tools = {
   get_intermarket_resonance: withTelemetry('get_intermarket_resonance', getIntermarketResonanceTool),
   get_system_diagnostics: withTelemetry('get_system_diagnostics', getSystemDiagnosticsTool),
   run_system_action: withTelemetry('run_system_action', runSystemActionTool),
+
+  // Hackathon: Mantle AI
+  get_onchain_activity: withTelemetry('get_onchain_activity', getOnchainActivityTool),
+  get_whale_alerts: withTelemetry('get_whale_alerts', getWhaleAlertsTool),
+  get_defi_pools: withTelemetry('get_defi_pools', getDefiPoolsTool),
+  analyze_alpha_signal: withTelemetry('analyze_alpha_signal', analyzeAlphaSignalTool),
+  log_signal_onchain: withTelemetry('log_signal_onchain', logSignalOnchainTool),
+  get_agent_performance: withTelemetry('get_agent_performance', getAgentPerformanceTool),
 };
 
 export type ToolRegistry = typeof tools;

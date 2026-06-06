@@ -8,6 +8,8 @@ export * from './journal';
 export * from './news';
 export * from './calendar';
 export * from './snapshots';
+export * from './onchain-signals';
+export * from './onchain-events';
 export * from './telemetry';
 export * from './tool-telemetry';
 export * from './briefings';

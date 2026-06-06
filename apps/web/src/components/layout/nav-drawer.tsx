@@ -23,6 +23,7 @@ import {
   MessageCircle,
   Newspaper,
   Sparkles,
+  Activity,
 } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import { usePathname, useRouter } from 'next/navigation';
@@ -54,6 +55,20 @@ const PRIMARY: readonly NavItem[] = [
     icon: LineChart,
     match: ['/chart'],
     description: 'Live candles + structure',
+  },
+  {
+    href: '/signals',
+    label: 'Alpha Signals',
+    icon: Activity,
+    match: ['/signals'],
+    description: 'On-chain AI predictions',
+  },
+  {
+    href: '/dashboard',
+    label: 'Dashboard',
+    icon: LineChart,
+    match: ['/dashboard'],
+    description: 'Agent performance metrics',
   },
   {
     href: '/news',

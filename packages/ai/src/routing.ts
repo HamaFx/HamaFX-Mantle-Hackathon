@@ -154,6 +154,7 @@ const FUNDAMENTAL_PATTERNS: Array<{ re: RegExp; weight: number }> = [
   { re: /\b(geopolit|war|tariff|sanction|risk-?on|risk-?off)\b/, weight: 2 },
   { re: /\b(scenario|outlook|forecast|expect)\b/, weight: 1 },
   { re: /\b(committee|review my trade|rate my setup|should i take|trade idea)\b/, weight: 3 },
+  { re: /\b(crypto|mantle|mnt|weth|usdt|meth|defi|pool|tvl|whale|on-chain|onchain|alpha)\b/, weight: 3 },
 ];
 
 const TECHNICAL_PATTERNS: Array<{ re: RegExp; weight: number }> = [

@@ -35,6 +35,7 @@ import {
 } from './signalr/consumer.js';
 import { TickBuffer } from './signalr/tick-buffer.js';
 import { startMT5Server } from './mt5-server.js';
+import { OnChainScanner } from './onchain-scanner.js';
 
 interface ShutdownState {
   shuttingDown: boolean;
@@ -100,6 +101,7 @@ export interface RunningWorker {
   consumer: SignalRConsumer;
   buffer: TickBuffer;
   aggregator: Candle1mAggregator;
+  scanner: OnChainScanner;
   /** Idempotent. Cleanly tears down timers + the hub. */
   stop(): Promise<void>;
 }
@@ -229,9 +231,13 @@ export async function runWorker(args: RunWorkerArgs): Promise<RunningWorker> {
     // Force-close the open 1m bar so we don't lose the partial bar at the
     // edge. Idempotent if the aggregator is already empty.
     aggregator.closeAll();
+    scanner.stop();
   };
 
-  return { consumer, buffer, aggregator, stop };
+  const scanner = new OnChainScanner(db, log.with({ module: 'onchain-scanner' }), 30_000);
+  scanner.start();
+
+  return { consumer, buffer, aggregator, scanner, stop };
 }
 
 export async function main(): Promise<void> {

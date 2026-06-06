@@ -13,6 +13,17 @@ export function isSymbol(value: unknown): value is Symbol {
   return typeof value === 'string' && (SYMBOLS as readonly string[]).includes(value);
 }
 
+export const CRYPTO_SYMBOLS = ['MNT', 'WETH', 'USDT', 'mETH'] as const;
+export type CryptoSymbol = (typeof CRYPTO_SYMBOLS)[number];
+export const CryptoSymbolSchema = z.enum(CRYPTO_SYMBOLS);
+
+export function isCryptoSymbol(value: unknown): value is CryptoSymbol {
+  return typeof value === 'string' && (CRYPTO_SYMBOLS as readonly string[]).includes(value);
+}
+
+export const ALL_SYMBOLS = [...SYMBOLS, ...CRYPTO_SYMBOLS] as const;
+export type AnySymbol = Symbol | CryptoSymbol;
+
 /** Standard pip size per symbol (5-decimal FX, 1-decimal gold). */
 export function pipSize(symbol: Symbol): number {
   switch (symbol) {

@@ -165,6 +165,11 @@ const PublicEnv = z.object({
   NEXT_PUBLIC_VAPID_PUBLIC_KEY: z.string().optional(),
 });
 
+const BlockchainEnv = z.object({
+  ONCHAIN_RPC_URL: z.string().url().default('https://rpc.sepolia.mantle.xyz'),
+  ONCHAIN_IDENTITY_ADDRESS: z.string().optional(),
+});
+
 const RuntimeEnv = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   /** Daily AI cost ceiling in USD. When crossed, /api/chat returns 503. */
@@ -192,6 +197,7 @@ export const ServerEnvSchema = z.intersection(
     .merge(ProvidersEnv)
     .merge(NotifyEnv)
     .merge(PublicEnv)
+    .merge(BlockchainEnv)
     .merge(RuntimeEnv),
 );
 
