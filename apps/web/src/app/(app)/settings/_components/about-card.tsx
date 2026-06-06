@@ -47,7 +47,7 @@ export async function AboutCard() {
           Build {buildId ?? 'unknown'} · Next.js 15 · Vercel deploy
         </p>
         <p className="text-fg-subtle/70">
-          XAUUSD · EURUSD · GBPUSD — personal copilot
+          MNTUSDT · BTCUSDT · ETHUSDT — Web3 AI Agent
         </p>
       </div>
     </section>

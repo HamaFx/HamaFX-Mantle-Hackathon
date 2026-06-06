@@ -50,7 +50,7 @@ const PRIMARY: readonly NavItem[] = [
     description: 'Ask anything about your symbols',
   },
   {
-    href: '/chart/XAUUSD',
+    href: '/chart/MNTUSDT',
     label: 'Chart',
     icon: LineChart,
     match: ['/chart'],
@@ -154,10 +154,9 @@ export function NavDrawer() {
               </span>
               <div className="flex flex-col gap-0.5">
                 <span className="text-fg text-base font-bold tracking-tight">
-                  Hama<span className="text-brand">FX</span>
-                  <span className="text-fg-subtle font-normal">·Ai</span>
+                  Hama <span className="text-brand">DeFAI</span>
                 </span>
-                <span className="text-fg-muted text-xs">Personal trading copilot</span>
+                <span className="text-fg-muted text-xs">Mantle AI Agent</span>
               </div>
             </div>
           </DrawerPrimitive.Title>

@@ -4,9 +4,9 @@ import type { MetadataRoute } from 'next';
 // `#0a0a0a` is the closest sRGB approximation.
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'HamaFX-Ai',
-    short_name: 'HamaFX',
-    description: 'Personal AI trading copilot for XAUUSD, EURUSD, GBPUSD.',
+    name: 'Hama DeFAI',
+    short_name: 'Hama DeFAI',
+    description: 'Personal AI trading copilot and on-chain agent for Mantle.',
     start_url: '/chat',
     display: 'standalone',
     orientation: 'portrait',

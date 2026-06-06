@@ -20,11 +20,11 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'HamaFX-Ai',
-    template: '%s · HamaFX-Ai',
+    default: 'Hama DeFAI',
+    template: '%s · Hama DeFAI',
   },
-  description: 'Personal AI trading copilot for XAUUSD, EURUSD, GBPUSD.',
-  applicationName: 'HamaFX-Ai',
+  description: 'Personal AI trading copilot and on-chain agent for Mantle.',
+  applicationName: 'Hama DeFAI',
   formatDetection: {
     telephone: false,
     address: false,

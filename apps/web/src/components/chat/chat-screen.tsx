@@ -45,7 +45,7 @@ interface ChatScreenProps {
   initialTitle: string;
   initialMessages: UIMessage[];
   initialThreads: ThreadSummary[];
-  pinnedSymbol: 'XAUUSD' | 'EURUSD' | 'GBPUSD' | null;
+  pinnedSymbol: 'MNTUSDT' | 'BTCUSDT' | 'ETHUSDT' | null;
   /** Optional prompt to auto-submit on mount. Used by deep-link
    *  affordances elsewhere in the app (Ask AI from a news article or
    *  calendar event). Sent at most once per thread. */
@@ -144,7 +144,7 @@ export function ChatScreen({
         if (t?.titleSource === 'llm' && t.title && !cancelled) {
           setTitle(t.title);
           if (typeof document !== 'undefined') {
-            document.title = `${t.title} · HamaFX-Ai`;
+            document.title = `${t.title} · Hama DeFAI`;
           }
         }
       } catch {
@@ -287,7 +287,7 @@ export function ChatScreen({
           onStop={() => stop()}
           isStreaming={isStreaming}
           disabled={false}
-          placeholder={pinnedSymbol ? `Ask about ${pinnedSymbol}…` : 'Ask about XAU, EUR, GBP…'}
+          placeholder={pinnedSymbol ? `Ask about ${pinnedSymbol}…` : 'Ask about MNT, BTC, ETH…'}
         />
       </div>
     </div>
@@ -297,7 +297,7 @@ export function ChatScreen({
 // ---------------------------------------------------------------------------
 
 interface EmptyChatStateProps {
-  pinnedSymbol: 'XAUUSD' | 'EURUSD' | 'GBPUSD' | null;
+  pinnedSymbol: 'MNTUSDT' | 'BTCUSDT' | 'ETHUSDT' | null;
   disabled?: boolean;
   onSelect: (text: string) => void;
 }
@@ -321,7 +321,7 @@ function EmptyChatState({ pinnedSymbol, disabled, onSelect }: EmptyChatStateProp
         <p className="text-fg-muted text-sm leading-relaxed">
           {pinnedSymbol
             ? `Ask about ${pinnedSymbol} bias, structure, news, or set an alert.`
-            : 'Ask about gold, EUR, GBP — bias, structure, news, or set an alert.'}
+            : 'Ask about Mantle, BTC, ETH — bias, on-chain alpha, news, or set an alert.'}
         </p>
       </div>
 
