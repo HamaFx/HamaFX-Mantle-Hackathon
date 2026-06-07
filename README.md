@@ -1,6 +1,5 @@
 <div align="center">
-  <img src="https://cryptologos.cc/logos/mantle-mnt-logo.svg" alt="Mantle" width="80" />
-  <h1>🔮 HamaFX-Ai: Mantle Alpha Agent</h1>
+  <h1>💎 HamaFX-Ai: Mantle Alpha Agent</h1>
   <p><strong>Mantle Turing Test Hackathon 2026</strong> | <em>Track 2: AI Alpha & Data</em></p>
 
   [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
@@ -65,11 +64,11 @@ graph TD
         Risk["Risk Manager"]
     end
 
-    RPC -->|"Live Blocks"| Worker
-    Worker -->|"Whale/DeFi Events"| DB
+    RPC -->|Live Blocks| Worker
+    Worker -->|Whale/DeFi Events| DB
     
-    User["User via Next.js UI"] -->|"Requests Analysis"| AI
-    DB -->|"Context"| AI
+    User["User via Next.js UI"] -->|Requests Analysis| AI
+    DB -->|Context| AI
     
     AI --> Econ
     AI --> Tech
@@ -79,8 +78,8 @@ graph TD
     Tech --> Moderator
     Risk --> Moderator
     
-    Moderator -->|"Logs Signal"| SC
-    Moderator -->|"Alerts"| Telegram["Telegram Bot"]
+    Moderator -->|Logs Signal| SC
+    Moderator -->|Alerts| Telegram["Telegram Bot"]
 ```
 
 ---
