@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://assets.mantle.xyz/mantle-logo.svg" alt="Mantle" width="80" />
+  <img src=".github/assets/mantle-logo.png" alt="Mantle" width="80" />
   <h1>🔮 HamaFX-Ai: Mantle Alpha Agent</h1>
   <p><strong>Mantle Turing Test Hackathon 2026</strong> | <em>Track 2: AI Alpha & Data</em></p>
 
@@ -46,42 +46,7 @@ High-conviction alpha is time-sensitive. If the committee generates a signal wit
 
 ## 🏗 System Architecture
 
-```mermaid
-graph TD
-    subgraph MantleNetwork
-        RPC[Mantle RPC Node]
-        SC[MantleAlphaLogger Contract]
-    end
-
-    subgraph HamaFXBackend
-        Worker[Background Scanner Worker]
-        DB[(Supabase PostgreSQL)]
-        AI[Vercel AI SDK Core]
-    end
-
-    subgraph SubAgents
-        Econ[Economist]
-        Tech[Technician]
-        Risk[Risk Manager]
-    end
-
-    RPC -->|Live Blocks| Worker
-    Worker -->|Whale/DeFi Events| DB
-    
-    User[User via Next.js UI] -->|Requests Analysis| AI
-    DB -->|Context| AI
-    
-    AI --> Econ
-    AI --> Tech
-    AI --> Risk
-    
-    Econ --> Moderator[Moderator Agent]
-    Tech --> Moderator
-    Risk --> Moderator
-    
-    Moderator -->|Logs Signal| SC
-    Moderator -->|Alerts| Telegram[Telegram Bot]
-```
+![System Architecture](.github/assets/architecture.png)
 
 ---
 
