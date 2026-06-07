@@ -48,18 +48,18 @@ High-conviction alpha is time-sensitive. If the committee generates a signal wit
 
 ```mermaid
 graph TD
-    subgraph Mantle Network
+    subgraph MantleNetwork [Mantle Network]
         RPC[Mantle RPC Node]
         SC[MantleAlphaLogger Contract]
     end
 
-    subgraph HamaFX Backend
+    subgraph HamaFXBackend [HamaFX Backend]
         Worker[Background Scanner Worker]
         DB[(Supabase PostgreSQL)]
         AI[Vercel AI SDK Core]
     end
 
-    subgraph Sub-Agents
+    subgraph SubAgents [Sub-Agents]
         Econ[Economist]
         Tech[Technician]
         Risk[Risk Manager]
