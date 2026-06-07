@@ -22,30 +22,30 @@ describe('decideMatch', () => {
 describe('describeRule', () => {
   it('formats price-cross rule', () => {
     expect(
-      describeRule({ type: 'priceCross', symbol: 'XAUUSD', level: 2400, direction: 'above' }),
-    ).toBe('XAUUSD price above 2400');
+      describeRule({ type: 'priceCross', symbol: 'BTCUSDT', level: 2400, direction: 'above' }),
+    ).toBe('BTCUSDT price above 2400');
   });
   it('formats candle-close rule', () => {
     expect(
       describeRule({
         type: 'candleClose',
-        symbol: 'EURUSD',
+        symbol: 'ETHUSDT',
         tf: '1h',
         level: 1.085,
         direction: 'below',
       }),
-    ).toBe('EURUSD 1h close below 1.085');
+    ).toBe('ETHUSDT 1h close below 1.085');
   });
   it('formats indicator-cross rule', () => {
     expect(
       describeRule({
         type: 'indicatorCross',
-        symbol: 'GBPUSD',
+        symbol: 'MNTUSDT',
         tf: '15m',
         indicator: 'rsi:14',
         level: 70,
         direction: 'above',
       }),
-    ).toBe('GBPUSD 15m rsi:14 above 70');
+    ).toBe('MNTUSDT 15m rsi:14 above 70');
   });
 });

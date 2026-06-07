@@ -74,7 +74,7 @@ export const runSystemActionTool = tool({
           .from(schema.snapshots)
           .where(
             and(
-              eq(schema.snapshots.symbol, 'XAUUSD'),
+              eq(schema.snapshots.symbol, 'BTCUSDT'),
               eq(schema.snapshots.kind, 'daily'),
               gte(schema.snapshots.asOf, startDate),
               lte(schema.snapshots.asOf, today)
@@ -192,7 +192,7 @@ export const runSystemActionTool = tool({
       
       else if (action === 'flush_cache') {
         consoleLogs.push('[cache] Flushing Redis/in-memory price feed buffers...');
-        consoleLogs.push('[cache] Evicted cached prices for tickers: XAUUSD, EURUSD, GBPUSD.');
+        consoleLogs.push('[cache] Evicted cached prices for tickers: BTCUSDT, ETHUSDT, MNTUSDT.');
         consoleLogs.push('[cache] Active price snapshot re-fetched and warmed.');
         message = 'Active pricing caches cleared and hydrated successfully.';
       } 

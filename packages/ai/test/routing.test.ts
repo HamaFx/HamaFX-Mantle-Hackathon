@@ -49,7 +49,7 @@ describe('routeTurn — Phase 7a domain routing', () => {
 
   it('routes technical analysis prompts to the technical model', () => {
     const r = routeTurn({
-      userMessage: userText('Top-down read on EURUSD with RSI and EMA50 across 4H and 1H'),
+      userMessage: userText('Top-down read on ETHUSDT with RSI and EMA50 across 4H and 1H'),
       env: ENV,
     });
     expect(r.domain).toBe('technical');
@@ -101,7 +101,7 @@ describe('routeTurn — Phase 7a domain routing', () => {
   it('falls back to AI_DEFAULT_MODEL when domain env var is unset', () => {
     const partial = { ...ENV, AI_TECHNICAL_MODEL: undefined } as never;
     const r = routeTurn({
-      userMessage: userText('RSI divergence on GBPUSD 1H'),
+      userMessage: userText('RSI divergence on MNTUSDT 1H'),
       env: partial,
     });
     expect(r.domain).toBe('technical');

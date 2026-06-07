@@ -24,8 +24,8 @@ export default async function NewsPage() {
   return (
     <div className="flex flex-col gap-4">
       <PageHeader
-        title="News"
-        description="Headlines tagged for XAU / EUR / GBP / USD — Finnhub primary, Marketaux fallback."
+        title="Web3 Alpha Feed"
+        description="Headlines tagged for MNT / BTC / ETH / DeFi — AI-curated crypto alpha."
       />
 
       {articles.length === 0 ? (

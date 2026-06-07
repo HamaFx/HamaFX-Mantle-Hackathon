@@ -159,3 +159,25 @@ export async function getSignalCount(): Promise<number> {
   });
   return Number(count);
 }
+
+export function getAgentWalletAddress(): `0x${string}` {
+  try {
+    const wallet = getWalletClient();
+    return wallet.account!.address;
+  } catch {
+    return "0x0000000000000000000000000000000000000000";
+  }
+}
+
+export async function getAgentBalance(): Promise<number> {
+  try {
+    const client = getMantleClient();
+    const address = getAgentWalletAddress();
+    if (address === "0x0000000000000000000000000000000000000000") return 0;
+    const balance = await client.getBalance({ address });
+    return Number(balance) / 1e18; // Convert Wei to MNT
+  } catch {
+    return 0;
+  }
+}
+

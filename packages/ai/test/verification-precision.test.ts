@@ -28,7 +28,7 @@ function withTools(names: string[]) {
 }
 
 describe('PRICE_TOKEN — band-specific matching', () => {
-  it('matches XAUUSD price-shaped values', () => {
+  it('matches BTCUSDT price-shaped values', () => {
     const r = enforceCitations({
       text: 'Gold is at 2392.45 with no support.',
       responseMessages: noTools(),
@@ -36,9 +36,9 @@ describe('PRICE_TOKEN — band-specific matching', () => {
     expect(r).not.toBeNull();
   });
 
-  it('matches EURUSD price-shaped values', () => {
+  it('matches ETHUSDT price-shaped values', () => {
     const r = enforceCitations({
-      text: 'EURUSD trading at 1.0843 right now.',
+      text: 'ETHUSDT trading at 1.0843 right now.',
       responseMessages: noTools(),
     });
     expect(r).not.toBeNull();
@@ -85,7 +85,7 @@ describe('PRICE_TOKEN — band-specific matching', () => {
 describe('ATTRIBUTION_TOKEN — strict reference verbs', () => {
   it('defuses on "according to"', () => {
     const r = enforceCitations({
-      text: 'According to the latest read, XAUUSD is at 2392.45.',
+      text: 'According to the latest read, BTCUSDT is at 2392.45.',
       responseMessages: noTools(),
     });
     expect(r).toBeNull();
@@ -93,7 +93,7 @@ describe('ATTRIBUTION_TOKEN — strict reference verbs', () => {
 
   it('defuses on "per"', () => {
     const r = enforceCitations({
-      text: 'Per the tick feed, EURUSD is at 1.0843.',
+      text: 'Per the tick feed, ETHUSDT is at 1.0843.',
       responseMessages: noTools(),
     });
     expect(r).toBeNull();
@@ -101,7 +101,7 @@ describe('ATTRIBUTION_TOKEN — strict reference verbs', () => {
 
   it('defuses on "via"', () => {
     const r = enforceCitations({
-      text: 'Via BiQuote, XAUUSD trades 2400.10.',
+      text: 'Via BiQuote, BTCUSDT trades 2400.10.',
       responseMessages: noTools(),
     });
     expect(r).toBeNull();
@@ -110,7 +110,7 @@ describe('ATTRIBUTION_TOKEN — strict reference verbs', () => {
   it('does NOT defuse on bare "from" / "source" alone', () => {
     // The pre-fix regex accepted these, producing false negatives.
     const r = enforceCitations({
-      text: 'Looking from yesterday, XAUUSD is at 2392.45 from now.',
+      text: 'Looking from yesterday, BTCUSDT is at 2392.45 from now.',
       responseMessages: noTools(),
     });
     // No proper attribution verb → flags.
@@ -121,7 +121,7 @@ describe('ATTRIBUTION_TOKEN — strict reference verbs', () => {
 describe('Tool-call detection (not tool-result)', () => {
   it('counts tool-call parts as evidence', () => {
     const r = enforceCitations({
-      text: 'XAUUSD at 2392.45 right now.',
+      text: 'BTCUSDT at 2392.45 right now.',
       responseMessages: withTools(['get_price']),
     });
     expect(r).toBeNull();
@@ -143,7 +143,7 @@ describe('Tool-call detection (not tool-result)', () => {
       },
     ];
     const r = enforceCitations({
-      text: 'XAUUSD at 2392.45 right now.',
+      text: 'BTCUSDT at 2392.45 right now.',
       responseMessages: messages,
     });
     expect(r).not.toBeNull();
@@ -154,7 +154,7 @@ describe('Single-line muted footer', () => {
   it('emits exactly one summary line regardless of claim count', () => {
     const r = enforceCitations({
       text:
-        'XAUUSD at 2392.45, EURUSD at 1.0843, GBPUSD at 1.2700, ' +
+        'BTCUSDT at 2392.45, ETHUSDT at 1.0843, MNTUSDT at 1.2700, ' +
         'and CPI / NFP / FOMC are all driving this.',
       responseMessages: noTools(),
     });

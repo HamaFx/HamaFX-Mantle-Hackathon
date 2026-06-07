@@ -52,7 +52,7 @@ describe('runSnapshots', () => {
     vi.mocked(ai.upsertSnapshot).mockResolvedValue(undefined as never);
 
     const r = await runSnapshots({ log });
-    expect(r.processed).toBe(3); // XAUUSD, EURUSD, GBPUSD
+    expect(r.processed).toBe(3); // BTCUSDT, ETHUSDT, MNTUSDT
     expect(r.note).toMatch(/symbols=3\/3/);
     expect(r.note).toMatch(/pruned=0/);
     expect(r.note).toMatch(/candles_1m_total=0/);

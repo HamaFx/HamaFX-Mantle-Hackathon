@@ -113,11 +113,11 @@ describe('getPrice — provider order (Phase 8: biquote first)', () => {
     globalThis.fetch = createRoutedFetch([
       {
         match: (u) => u.includes('biquote.io/api/'),
-        respond: () => ({ body: VALID_BIQUOTE_TICK('XAUUSD', 2345.678) }),
+        respond: () => ({ body: VALID_BIQUOTE_TICK('BTCUSDT', 2345.678) }),
       },
     ]);
 
-    const tick = await getPrice('XAUUSD');
+    const tick = await getPrice('BTCUSDT');
     expect(tick.source).toBe('biquote');
     expect(tick.mid).toBeCloseTo(2345.678);
     expect(tick.bid).toBe(tick.mid);
@@ -128,13 +128,13 @@ describe('getPrice — provider order (Phase 8: biquote first)', () => {
     const fetchSpy = createRoutedFetch([
       {
         match: (u) => u.includes('biquote.io/api/'),
-        respond: () => ({ body: VALID_BIQUOTE_TICK('EURUSD', 1.085) }),
+        respond: () => ({ body: VALID_BIQUOTE_TICK('ETHUSDT', 1.085) }),
       },
     ]);
     globalThis.fetch = fetchSpy;
 
-    await getPrice('EURUSD');
-    await getPrice('EURUSD');
+    await getPrice('ETHUSDT');
+    await getPrice('ETHUSDT');
     // First call hits BiQuote; second is served from cache.
     expect((fetchSpy as unknown as ReturnType<typeof vi.fn>)).toHaveBeenCalledTimes(1);
   });
@@ -161,7 +161,7 @@ describe('getPrice — provider order (Phase 8: biquote first)', () => {
       },
     ]);
 
-    const tick = await getPrice('GBPUSD', {
+    const tick = await getPrice('MNTUSDT', {
       apiKeys: { finnhub: 'Y' },
     });
     expect(tick.source).toBe('finnhub');
@@ -174,11 +174,11 @@ describe('getPrice — provider order (Phase 8: biquote first)', () => {
     globalThis.fetch = createRoutedFetch([
       {
         match: (u) => u.includes('biquote.io/api/'),
-        respond: () => ({ body: VALID_BIQUOTE_TICK('XAUUSD', 2400) }),
+        respond: () => ({ body: VALID_BIQUOTE_TICK('BTCUSDT', 2400) }),
       },
     ]);
     // No apiKeys provided — only the keyless BiQuote attempt is wired.
-    const tick = await getPrice('XAUUSD');
+    const tick = await getPrice('BTCUSDT');
     expect(tick.source).toBe('biquote');
   });
 });
@@ -192,11 +192,11 @@ describe('getPriceWithMeta — Phase 7a SWR (still works post-PR-4)', () => {
     globalThis.fetch = createRoutedFetch([
       {
         match: (u) => u.includes('biquote.io/api/'),
-        respond: () => ({ body: VALID_BIQUOTE_TICK('XAUUSD', 2345.6) }),
+        respond: () => ({ body: VALID_BIQUOTE_TICK('BTCUSDT', 2345.6) }),
       },
     ]);
 
-    const fresh = await getPriceWithMeta('XAUUSD');
+    const fresh = await getPriceWithMeta('BTCUSDT');
     expect(fresh.stale).toBe(false);
     expect(fresh.tick.mid).toBeCloseTo(2345.6);
 
@@ -211,7 +211,7 @@ describe('getPriceWithMeta — Phase 7a SWR (still works post-PR-4)', () => {
       },
     ]);
 
-    const stale = await getPriceWithMeta('XAUUSD');
+    const stale = await getPriceWithMeta('BTCUSDT');
     expect(stale.stale).toBe(true);
     expect(stale.tick.mid).toBeCloseTo(2345.6);
   });
@@ -230,7 +230,7 @@ describe('getPrice — live_ticks pseudo-provider (Phase 8 PR-8)', () => {
       ageMs: 250,
     }));
 
-    const tick = await getPrice('XAUUSD');
+    const tick = await getPrice('BTCUSDT');
     expect(tick.source).toBe('biquote-signalr');
     expect(tick.mid).toBe(2390.5);
     // Crucially: zero outbound HTTP — the worker-served path is sub-ms.
@@ -242,11 +242,11 @@ describe('getPrice — live_ticks pseudo-provider (Phase 8 PR-8)', () => {
     globalThis.fetch = createRoutedFetch([
       {
         match: (u) => u.includes('biquote.io/api/'),
-        respond: () => ({ body: VALID_BIQUOTE_TICK('XAUUSD', 2400) }),
+        respond: () => ({ body: VALID_BIQUOTE_TICK('BTCUSDT', 2400) }),
       },
     ]);
 
-    const tick = await getPrice('XAUUSD');
+    const tick = await getPrice('BTCUSDT');
     expect(tick.source).toBe('biquote');
     expect(tick.mid).toBe(2400);
   });

@@ -12,7 +12,7 @@ import {
 } from '../src/signalr/consumer';
 
 const VALID_BIQUOTE_TICK = {
-  symbol: 'XAUUSD',
+  symbol: 'BTCUSDT',
   description: 'Gold vs US Dollar',
   bid: 2390.12,
   ask: 2390.32,
@@ -97,7 +97,7 @@ describe('SignalRConsumer.start', () => {
     expect(state.startCalls).toBe(1);
     expect(state.invokes).toContainEqual({
       method: 'Subscribe',
-      args: [['XAUUSD', 'EURUSD', 'GBPUSD']],
+      args: [['BTCUSDT', 'ETHUSDT', 'MNTUSDT']],
     });
     expect(consumer.isStarted()).toBe(true);
   });
@@ -106,13 +106,13 @@ describe('SignalRConsumer.start', () => {
     const { build, state } = createFakeBuildConnection();
     const consumer = new SignalRConsumer({
       hubUrl: 'https://biquote.io/hubs/tick',
-      symbols: ['XAUUSD'],
+      symbols: ['BTCUSDT'],
       onTick: () => undefined,
       buildConnection: build,
       log,
     });
     await consumer.start();
-    expect(state.invokes[0]?.args).toEqual([['XAUUSD']]);
+    expect(state.invokes[0]?.args).toEqual([['BTCUSDT']]);
   });
 
   it('is idempotent — calling start twice does not re-open or re-subscribe', async () => {
@@ -146,7 +146,7 @@ describe('SignalRConsumer.handleTick', () => {
 
     expect(ticks).toHaveLength(1);
     const t = ticks[0]!;
-    expect(t.symbol).toBe('XAUUSD');
+    expect(t.symbol).toBe('BTCUSDT');
     expect(t.bid).toBeCloseTo(2390.12);
     expect(t.ask).toBeCloseTo(2390.32);
     expect(t.mid).toBeCloseTo(2390.22);
@@ -168,7 +168,7 @@ describe('SignalRConsumer.handleTick', () => {
     consumer.handleTick({ malformed: true });
     consumer.handleTick(null);
     // missing required fields
-    consumer.handleTick({ symbol: 'XAUUSD' });
+    consumer.handleTick({ symbol: 'BTCUSDT' });
 
     expect(onTick).not.toHaveBeenCalled();
   });
@@ -185,7 +185,7 @@ describe('SignalRConsumer.handleTick', () => {
     await consumer.start();
 
     // BiquoteSignalRTickSchema accepts any string symbol, but our consumer
-    // drops anything that isn't one of XAUUSD/EURUSD/GBPUSD.
+    // drops anything that isn't one of BTCUSDT/ETHUSDT/MNTUSDT.
     consumer.handleTick({ ...VALID_BIQUOTE_TICK, symbol: 'BTCUSD' });
     expect(onTick).not.toHaveBeenCalled();
   });

@@ -76,17 +76,10 @@ const PRIMARY: readonly NavItem[] = [
     icon: Newspaper,
     description: 'Tagged headlines',
   },
-  {
-    href: '/calendar',
-    label: 'Calendar',
-    icon: Calendar,
-    description: 'Macro events',
-  },
 ];
 
 const SECONDARY: readonly NavItem[] = [
   { href: '/alerts', label: 'Alerts', icon: Bell, description: 'Price triggers' },
-  { href: '/journal', label: 'Journal', icon: BookOpen, description: 'Trades & R-multiples' },
   { href: '/settings', label: 'Settings', icon: Cog, description: 'Notifications, usage' },
 ];
 

@@ -23,9 +23,9 @@ describe('TickBuffer', () => {
 
   it('coalesces multiple ticks per symbol to the latest', () => {
     const buf = new TickBuffer();
-    buf.push(tick('XAUUSD', 2390));
-    buf.push(tick('XAUUSD', 2391));
-    buf.push(tick('XAUUSD', 2392));
+    buf.push(tick('BTCUSDT', 2390));
+    buf.push(tick('BTCUSDT', 2391));
+    buf.push(tick('BTCUSDT', 2392));
     expect(buf.size()).toBe(1);
     const drained = buf.drain();
     expect(drained).toHaveLength(1);
@@ -35,17 +35,17 @@ describe('TickBuffer', () => {
 
   it('keeps a separate slot per symbol', () => {
     const buf = new TickBuffer();
-    buf.push(tick('XAUUSD', 2390));
-    buf.push(tick('EURUSD', 1.085));
-    buf.push(tick('GBPUSD', 1.27));
+    buf.push(tick('BTCUSDT', 2390));
+    buf.push(tick('ETHUSDT', 1.085));
+    buf.push(tick('MNTUSDT', 1.27));
     expect(buf.size()).toBe(3);
     const drained = buf.drain();
-    expect(drained.map((d) => d.tick.symbol).sort()).toEqual(['EURUSD', 'GBPUSD', 'XAUUSD']);
+    expect(drained.map((d) => d.tick.symbol).sort()).toEqual(['ETHUSDT', 'MNTUSDT', 'BTCUSDT']);
   });
 
   it('clears after drain', () => {
     const buf = new TickBuffer();
-    buf.push(tick('XAUUSD', 2390));
+    buf.push(tick('BTCUSDT', 2390));
     buf.drain();
     expect(buf.size()).toBe(0);
     expect(buf.drain()).toEqual([]);

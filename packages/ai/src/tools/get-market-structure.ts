@@ -1,6 +1,6 @@
 // Tool: get_market_structure.
 //
-// Lets the agent ask "what does structure look like on EURUSD 1h?" and
+// Lets the agent ask "what does structure look like on ETHUSDT 1h?" and
 // get back swings, BOS/CHoCH events, fair-value gaps, order blocks, and
 // liquidity sweeps in one round-trip. Outputs are sparse events (not
 // per-candle scalars) so they live in their own envelope alongside the

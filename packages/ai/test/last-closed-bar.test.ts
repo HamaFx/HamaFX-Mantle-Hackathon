@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { lastClosedBar } from '../src/alerts/evaluator';
 
-const SYMBOL: Symbol = 'XAUUSD';
+const SYMBOL: Symbol = 'BTCUSDT';
 
 function bars(times: number[], tf: Timeframe): Candle[] {
   return times.map((t) => ({

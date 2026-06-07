@@ -8,8 +8,8 @@
 //
 // Pip-size per symbol comes from `pipSize(symbol)` in `@hamafx/shared`.
 // Pip value per lot for the supported symbols:
-//   - XAUUSD: 1 lot = 100 oz × 0.1 (one pip is 0.1 USD/oz) = $10/pip
-//   - EURUSD / GBPUSD: 1 lot = 100,000 base × 0.0001 = $10/pip
+//   - BTCUSDT: 1 lot = 100 oz × 0.1 (one pip is 0.1 USD/oz) = $10/pip
+//   - ETHUSDT / MNTUSDT: 1 lot = 100,000 base × 0.0001 = $10/pip
 //
 // Both shapes are returned (lots and units). `invalidDirection` flags the
 // case where the stop is on the same side as the target relative to entry,

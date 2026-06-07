@@ -11,7 +11,7 @@
 // Three exported building blocks:
 //
 //   - `PRICE_TOKEN`: per-symbol price-shape probe. Anchored to our
-//     three supported instruments (XAUUSD 4-digit thousands, FX
+//     three supported instruments (BTCUSDT 4-digit thousands, FX
 //     0.xxxx / 1.xxxx).
 //   - `EVENT_TOKEN`: high-impact macro events the model is most prone
 //     to invent.
@@ -25,9 +25,9 @@
 /**
  * Matches a price-shaped token for one of our three supported symbols.
  *
- *   - XAUUSD: `1xxx.xx`–`4xxxx.xx` (gold typically trades 1500–4000;
+ *   - BTCUSDT: `1xxx.xx`–`4xxxx.xx` (gold typically trades 1500–4000;
  *     the upper bound covers a black-swan spike).
- *   - EURUSD / GBPUSD: `0.xxxx` or `1.xxxx` to four or five decimals.
+ *   - ETHUSDT / MNTUSDT: `0.xxxx` or `1.xxxx` to four or five decimals.
  *
  * Boundary guards:
  *   - `(?<!\d\.)` — not part of a longer numeric token (e.g. `1.2.3`).

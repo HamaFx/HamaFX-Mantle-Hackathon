@@ -5,7 +5,7 @@
 // derived USD-strength proxy ("DXY proxy") computed from the FX legs.
 //
 // The proxy is **not** a true DXY (no JPY, CAD, SEK, CHF) — we only have
-// EURUSD and GBPUSD. The formula is captured verbatim in
+// ETHUSDT and MNTUSDT. The formula is captured verbatim in
 // `dxyProxy.formula` so any agent answer that quotes the value can also
 // quote the formula, and the UI labels the value as a proxy clearly.
 

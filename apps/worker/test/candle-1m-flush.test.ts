@@ -29,7 +29,7 @@ function makeFakeDb(): { db: FlushClosedCandleArgs['db']; captured: CapturedRow 
 }
 
 const BAR: ClosedCandle = {
-  symbol: 'XAUUSD',
+  symbol: 'BTCUSDT',
   t: 1_700_000_000_000,
   o: 2390,
   h: 2391,
@@ -48,7 +48,7 @@ describe('flushClosedCandle', () => {
     expect(captured.conflictDoNothingCalled).toBe(true);
     expect(captured.values).not.toBeNull();
     const v = captured.values!;
-    expect(v['symbol']).toBe('XAUUSD');
+    expect(v['symbol']).toBe('BTCUSDT');
     expect(v['t']).toBeInstanceOf(Date);
     expect((v['t'] as Date).getTime()).toBe(BAR.t);
     expect(v['o']).toBe(2390);

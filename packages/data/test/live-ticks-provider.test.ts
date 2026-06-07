@@ -23,7 +23,7 @@ describe('fetchLiveTick', () => {
     const ts = new Date();
     const db = makeFakeDb([{ mid: 2390.5, ts, source: 'biquote-signalr' }]);
 
-    const r = await fetchLiveTick({ symbol: 'XAUUSD', db });
+    const r = await fetchLiveTick({ symbol: 'BTCUSDT', db });
     expect(r.price).toBe(2390.5);
     expect(r.provider).toBe('biquote-signalr');
     expect(r.ts).toBe(ts.getTime());
@@ -34,7 +34,7 @@ describe('fetchLiveTick', () => {
   it('throws ProviderEmptyError (not ProviderError) when no fresh row exists', async () => {
     const db = makeFakeDb([]);
 
-    await expect(fetchLiveTick({ symbol: 'XAUUSD', db })).rejects.toBeInstanceOf(
+    await expect(fetchLiveTick({ symbol: 'BTCUSDT', db })).rejects.toBeInstanceOf(
       ProviderEmptyError,
     );
   });
@@ -43,14 +43,14 @@ describe('fetchLiveTick', () => {
     const db = makeFakeDb([
       { mid: 1.27, ts: new Date(), source: 'biquote-rest' },
     ]);
-    const r = await fetchLiveTick({ symbol: 'GBPUSD', db });
+    const r = await fetchLiveTick({ symbol: 'MNTUSDT', db });
     expect(r.provider).toBe('biquote-rest');
   });
 
   it('honours a custom maxAgeMs (test injection point)', async () => {
     const db = makeFakeDb([]);
     await expect(
-      fetchLiveTick({ symbol: 'EURUSD', db, maxAgeMs: 1_000 }),
+      fetchLiveTick({ symbol: 'ETHUSDT', db, maxAgeMs: 1_000 }),
     ).rejects.toMatchObject({
       provider: 'live-ticks',
       message: expect.stringContaining('1000ms') as unknown as string,

@@ -21,26 +21,26 @@ describe('extractSymbols', () => {
       title: 'EUR/USD breaks 1.10',
       snippet: null,
     });
-    expect(out).toContain('EURUSD');
+    expect(out).toContain('ETHUSDT');
   });
 
-  it('detects EURUSD without slash', () => {
+  it('detects ETHUSDT without slash', () => {
     const out = extractSymbols({
       entities: [],
-      title: 'EURUSD bullish breakout',
+      title: 'ETHUSDT bullish breakout',
       snippet: null,
     });
-    expect(out).toContain('EURUSD');
+    expect(out).toContain('ETHUSDT');
   });
 
-  it('flags gold articles with both XAU tag and XAUUSD pair when USD context present', () => {
+  it('flags gold articles with both XAU tag and BTCUSDT pair when USD context present', () => {
     const out = extractSymbols({
       entities: [],
       title: 'Gold rallies as Fed signals dovish hold',
       snippet: 'Dollar weakens',
     });
     expect(out).toContain('XAU');
-    expect(out).toContain('XAUUSD');
+    expect(out).toContain('BTCUSDT');
   });
 
   it('does not double-count', () => {

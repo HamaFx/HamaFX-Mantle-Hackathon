@@ -26,13 +26,13 @@ describe('Candle1mAggregator', () => {
     const closed: ClosedCandle[] = [];
     const agg = new Candle1mAggregator((b) => closed.push(b));
 
-    agg.feed(tick('XAUUSD', 2390, 0));
-    agg.feed(tick('XAUUSD', 2391, 1_000));
-    agg.feed(tick('XAUUSD', 2389, 30_000));
-    agg.feed(tick('XAUUSD', 2390.5, 59_999));
+    agg.feed(tick('BTCUSDT', 2390, 0));
+    agg.feed(tick('BTCUSDT', 2391, 1_000));
+    agg.feed(tick('BTCUSDT', 2389, 30_000));
+    agg.feed(tick('BTCUSDT', 2390.5, 59_999));
 
     expect(closed).toHaveLength(0);
-    const open = agg.peek('XAUUSD');
+    const open = agg.peek('BTCUSDT');
     expect(open?.o).toBe(2390);
     expect(open?.c).toBe(2390.5);
     expect(open?.h).toBe(2391);
@@ -44,14 +44,14 @@ describe('Candle1mAggregator', () => {
     const closed: ClosedCandle[] = [];
     const agg = new Candle1mAggregator((b) => closed.push(b));
 
-    agg.feed(tick('XAUUSD', 2390, 0));
-    agg.feed(tick('XAUUSD', 2391, 30_000));
+    agg.feed(tick('BTCUSDT', 2390, 0));
+    agg.feed(tick('BTCUSDT', 2391, 30_000));
     // Roll into the next minute.
-    agg.feed(tick('XAUUSD', 2392, MINUTE_MS + 5_000));
+    agg.feed(tick('BTCUSDT', 2392, MINUTE_MS + 5_000));
 
     expect(closed).toHaveLength(1);
     const bar = closed[0]!;
-    expect(bar.symbol).toBe('XAUUSD');
+    expect(bar.symbol).toBe('BTCUSDT');
     expect(bar.t).toBe(BASE_TS); // bar OPEN time, aligned to minute
     expect(bar.o).toBe(2390); // first tick mid
     expect(bar.c).toBe(2391); // last tick mid in the closing minute
@@ -66,10 +66,10 @@ describe('Candle1mAggregator', () => {
     const closed: ClosedCandle[] = [];
     const agg = new Candle1mAggregator((b) => closed.push(b));
 
-    agg.feed(tick('XAUUSD', 2390, 0));
-    agg.feed(tick('XAUUSD', 2392, MINUTE_MS + 1_000));
+    agg.feed(tick('BTCUSDT', 2390, 0));
+    agg.feed(tick('BTCUSDT', 2392, MINUTE_MS + 1_000));
 
-    const open = agg.peek('XAUUSD');
+    const open = agg.peek('BTCUSDT');
     expect(open?.o).toBe(2392);
     expect(open?.c).toBe(2392);
     expect(open?.h).toBe(2392);
@@ -81,13 +81,13 @@ describe('Candle1mAggregator', () => {
     const closed: ClosedCandle[] = [];
     const agg = new Candle1mAggregator((b) => closed.push(b));
 
-    agg.feed(tick('XAUUSD', 2390, 0));
-    agg.feed(tick('EURUSD', 1.085, 0));
-    agg.feed(tick('GBPUSD', 1.27, 0));
+    agg.feed(tick('BTCUSDT', 2390, 0));
+    agg.feed(tick('ETHUSDT', 1.085, 0));
+    agg.feed(tick('MNTUSDT', 1.27, 0));
 
-    expect(agg.peek('XAUUSD')?.o).toBe(2390);
-    expect(agg.peek('EURUSD')?.o).toBe(1.085);
-    expect(agg.peek('GBPUSD')?.o).toBe(1.27);
+    expect(agg.peek('BTCUSDT')?.o).toBe(2390);
+    expect(agg.peek('ETHUSDT')?.o).toBe(1.085);
+    expect(agg.peek('MNTUSDT')?.o).toBe(1.27);
     expect(closed).toHaveLength(0);
   });
 
@@ -96,14 +96,14 @@ describe('Candle1mAggregator', () => {
     const closed: ClosedCandle[] = [];
     const agg = new Candle1mAggregator((b) => closed.push(b));
 
-    agg.feed(tick('XAUUSD', 2390, 0));
-    agg.feed(tick('XAUUSD', 2400, 5 * MINUTE_MS + 1_000));
+    agg.feed(tick('BTCUSDT', 2390, 0));
+    agg.feed(tick('BTCUSDT', 2400, 5 * MINUTE_MS + 1_000));
 
     expect(closed).toHaveLength(1);
     expect(closed[0]?.t).toBe(BASE_TS);
     expect(closed[0]?.c).toBe(2390); // last tick of the closing minute
 
-    const open = agg.peek('XAUUSD');
+    const open = agg.peek('BTCUSDT');
     expect(open?.o).toBe(2400);
   });
 
@@ -111,10 +111,10 @@ describe('Candle1mAggregator', () => {
     const closed: ClosedCandle[] = [];
     const agg = new Candle1mAggregator((b) => closed.push(b));
 
-    agg.feed(tick('XAUUSD', 2390, MINUTE_MS)); // minute 1 opens
-    agg.feed(tick('XAUUSD', 2391, MINUTE_MS + 30_000)); // still minute 1
-    agg.feed(tick('XAUUSD', 9999, 100)); // stale — minute 0
-    agg.feed(tick('XAUUSD', 2392, 2 * MINUTE_MS + 5_000)); // rollover
+    agg.feed(tick('BTCUSDT', 2390, MINUTE_MS)); // minute 1 opens
+    agg.feed(tick('BTCUSDT', 2391, MINUTE_MS + 30_000)); // still minute 1
+    agg.feed(tick('BTCUSDT', 9999, 100)); // stale — minute 0
+    agg.feed(tick('BTCUSDT', 2392, 2 * MINUTE_MS + 5_000)); // rollover
 
     expect(closed).toHaveLength(1);
     const bar = closed[0]!;
@@ -127,13 +127,13 @@ describe('Candle1mAggregator', () => {
     const closed: ClosedCandle[] = [];
     const agg = new Candle1mAggregator((b) => closed.push(b));
 
-    agg.feed(tick('XAUUSD', 2390, 0));
-    agg.feed(tick('EURUSD', 1.085, 0));
+    agg.feed(tick('BTCUSDT', 2390, 0));
+    agg.feed(tick('ETHUSDT', 1.085, 0));
 
     agg.closeAll();
     expect(closed).toHaveLength(2);
-    expect(agg.peek('XAUUSD')).toBeUndefined();
-    expect(agg.peek('EURUSD')).toBeUndefined();
+    expect(agg.peek('BTCUSDT')).toBeUndefined();
+    expect(agg.peek('ETHUSDT')).toBeUndefined();
 
     // Idempotent — a second call is a no-op.
     agg.closeAll();
@@ -145,9 +145,9 @@ describe('Candle1mAggregator', () => {
     const agg = new Candle1mAggregator((b) => closed.push(b));
 
     // First tick lands 42s into the minute.
-    agg.feed(tick('XAUUSD', 2390, 42_000));
+    agg.feed(tick('BTCUSDT', 2390, 42_000));
     // Rollover.
-    agg.feed(tick('XAUUSD', 2400, MINUTE_MS + 1_000));
+    agg.feed(tick('BTCUSDT', 2400, MINUTE_MS + 1_000));
 
     expect(closed[0]?.t).toBe(BASE_TS);
   });

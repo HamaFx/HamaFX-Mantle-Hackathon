@@ -19,9 +19,9 @@ const exec = computeRiskTool.execute as unknown as (input: unknown) => Promise<{
 }>;
 
 describe('compute_risk — Phase 7b', () => {
-  it('sizes a 1 % EURUSD long correctly', async () => {
+  it('sizes a 1 % ETHUSDT long correctly', async () => {
     const r = await exec({
-      symbol: 'EURUSD',
+      symbol: 'ETHUSDT',
       side: 'long',
       entry: 1.085,
       stop: 1.082,
@@ -39,9 +39,9 @@ describe('compute_risk — Phase 7b', () => {
     expect(r.invalidDirection).toBe(false);
   });
 
-  it('sizes XAUUSD with the gold pip schedule', async () => {
+  it('sizes BTCUSDT with the gold pip schedule', async () => {
     const r = await exec({
-      symbol: 'XAUUSD',
+      symbol: 'BTCUSDT',
       side: 'short',
       entry: 2400,
       stop: 2410,
@@ -60,7 +60,7 @@ describe('compute_risk — Phase 7b', () => {
 
   it('returns null reward + RR when target is omitted', async () => {
     const r = await exec({
-      symbol: 'GBPUSD',
+      symbol: 'MNTUSDT',
       side: 'long',
       entry: 1.27,
       stop: 1.265,
@@ -75,7 +75,7 @@ describe('compute_risk — Phase 7b', () => {
 
   it('flags invalidDirection when stop is on the wrong side of entry', async () => {
     const long = await exec({
-      symbol: 'EURUSD',
+      symbol: 'ETHUSDT',
       side: 'long',
       entry: 1.08,
       stop: 1.085, // above entry — wrong for a long
@@ -86,7 +86,7 @@ describe('compute_risk — Phase 7b', () => {
     expect(long.invalidDirection).toBe(true);
 
     const short = await exec({
-      symbol: 'EURUSD',
+      symbol: 'ETHUSDT',
       side: 'short',
       entry: 1.08,
       stop: 1.075, // below entry — wrong for a short
@@ -104,7 +104,7 @@ describe('compute_risk — Phase 7b', () => {
     const schema = computeRiskTool.inputSchema as { safeParse: (v: unknown) => { success: boolean } };
     expect(
       schema.safeParse({
-        symbol: 'EURUSD',
+        symbol: 'ETHUSDT',
         side: 'long',
         entry: 1.08,
         stop: 1.075,
@@ -116,7 +116,7 @@ describe('compute_risk — Phase 7b', () => {
 
   it('emits a useful summary string the agent can echo verbatim', async () => {
     const r = await exec({
-      symbol: 'EURUSD',
+      symbol: 'ETHUSDT',
       side: 'long',
       entry: 1.085,
       stop: 1.082,
@@ -124,7 +124,7 @@ describe('compute_risk — Phase 7b', () => {
       accountUsd: 10_000,
       riskPct: 1,
     });
-    expect(r.summary).toMatch(/Long EURUSD/);
+    expect(r.summary).toMatch(/Long ETHUSDT/);
     expect(r.summary).toMatch(/lots/);
     expect(r.summary).toMatch(/at risk/);
     expect(r.summary).toMatch(/RR/);

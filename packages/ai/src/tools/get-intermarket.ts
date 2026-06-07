@@ -25,7 +25,7 @@ declare module '@hamafx/shared' {
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 const DXY_FORMULA =
-  'DXY proxy = 100 / (EURUSD^0.5 * GBPUSD^0.5). Two-leg approximation; not a true DXY.';
+  'DXY proxy = 100 / (ETHUSDT^0.5 * MNTUSDT^0.5). Two-leg approximation; not a true DXY.';
 
 export const getIntermarketTool = tool({
   description:

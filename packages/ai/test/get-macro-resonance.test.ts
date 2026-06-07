@@ -49,10 +49,10 @@ describe('getIntermarketResonanceTool', () => {
         signal: null,
         budget: { spent: 0, max: 5 },
       },
-      () => Promise.resolve(getIntermarketResonanceTool.execute!({ symbol: 'XAUUSD', days: 10 }, {} as any)),
+      () => Promise.resolve(getIntermarketResonanceTool.execute!({ symbol: 'BTCUSDT', days: 10 }, {} as any)),
     )) as GetIntermarketResonanceOutput;
 
-    expect(result.symbol).toBe('XAUUSD');
+    expect(result.symbol).toBe('BTCUSDT');
     expect(result.days).toBe(10);
     expect(result.observations.length).toBe(2);
     

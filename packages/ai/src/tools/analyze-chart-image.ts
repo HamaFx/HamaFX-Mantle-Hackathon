@@ -104,7 +104,7 @@ export const analyzeChartImageTool = {
         content: [
           {
             type: 'text',
-            text: `${hint || 'Analyse this chart screenshot.'} Identify the symbol (XAUUSD/EURUSD/GBPUSD or null) and timeframe; list the visible price levels with short labels; describe the trend / bias; emit a one-paragraph observation.`,
+            text: `${hint || 'Analyse this chart screenshot.'} Identify the symbol (BTCUSDT/ETHUSDT/MNTUSDT or null) and timeframe; list the visible price levels with short labels; describe the trend / bias; emit a one-paragraph observation.`,
           },
           asContentImagePart(imagePart),
         ],

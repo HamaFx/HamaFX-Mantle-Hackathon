@@ -23,31 +23,31 @@ interface Prompt {
 const PROMPTS: readonly Prompt[] = [
   {
     icon: TrendingUp,
-    label: "What's the bias on Mantle?",
+    label: "Analyze Mantle on-chain alpha",
     bg: 'oklch(78% 0.16 78 / 0.18)',
     fg: 'text-brand',
   },
   {
     icon: LineChart,
-    label: 'Top-down MNTUSDT 4H→15M',
+    label: 'Scan for MNT whale alerts',
     bg: 'oklch(74% 0.16 230 / 0.15)',
     fg: 'text-info',
   },
   {
     icon: BarChart3,
-    label: 'Show me the structure',
+    label: 'Check DeFi pools on Merchant Moe',
     bg: 'oklch(74% 0.16 230 / 0.15)',
     fg: 'text-info',
   },
   {
     icon: CalendarDays,
-    label: "Today's calendar",
+    label: "Give me a crypto news briefing",
     bg: 'oklch(72% 0.18 295 / 0.18)',
     fg: 'text-accent',
   },
   {
     icon: Bell,
-    label: 'Alert MNTUSDT above 2.4',
+    label: 'Generate an on-chain signal',
     bg: 'oklch(82% 0.16 80 / 0.15)',
     fg: 'text-warn',
   },

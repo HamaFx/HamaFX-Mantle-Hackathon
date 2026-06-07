@@ -383,7 +383,7 @@ function isoWeekKey(d: Date): string {
 /**
  * Map a CFD currency tag to one of our three supported pairs for the
  * briefing's memory-index symbol context. USD-driven events get pinned
- * to XAUUSD because gold is the most directly USD-exposed leg in our
+ * to BTCUSDT because gold is the most directly USD-exposed leg in our
  * scope.
  */
 function symbolFromCurrency(currency: EventCurrency): Symbol {

@@ -320,8 +320,8 @@ function EmptyChatState({ pinnedSymbol, disabled, onSelect }: EmptyChatStateProp
         <h2 className="text-fg text-2xl font-bold tracking-tight">How can I help?</h2>
         <p className="text-fg-muted text-sm leading-relaxed">
           {pinnedSymbol
-            ? `Ask about ${pinnedSymbol} bias, structure, news, or set an alert.`
-            : 'Ask about Mantle, BTC, ETH — bias, on-chain alpha, news, or set an alert.'}
+            ? `Ask about ${pinnedSymbol} on-chain alpha, news, or set an alert.`
+            : 'Ask about Mantle, BTC, ETH — on-chain alpha, whale alerts, DeFi pools, or news.'}
         </p>
       </div>
 

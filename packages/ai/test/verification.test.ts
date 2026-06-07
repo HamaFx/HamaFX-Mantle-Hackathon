@@ -26,7 +26,7 @@ describe('citation enforcement — Phase 7c', () => {
 
   it('returns null when prices are quoted AND a numeric tool was called', () => {
     const r = enforceCitations({
-      text: 'XAUUSD is trading at 2392.45 right now.',
+      text: 'BTCUSDT is trading at 2392.45 right now.',
       responseMessages: toolCallMessages(['get_price']),
     });
     expect(r).toBeNull();
@@ -34,7 +34,7 @@ describe('citation enforcement — Phase 7c', () => {
 
   it('flags a price quote when no numeric tool was called', () => {
     const r = enforceCitations({
-      text: 'XAUUSD is at 2392.45 — this looks bullish.',
+      text: 'BTCUSDT is at 2392.45 — this looks bullish.',
       responseMessages: [],
     });
     expect(r).not.toBeNull();
@@ -44,7 +44,7 @@ describe('citation enforcement — Phase 7c', () => {
 
   it('skips price-shaped tokens that have an attribution clue in the same sentence', () => {
     const r = enforceCitations({
-      text: 'Per the latest tick, XAUUSD is at 2392.45 according to the feed.',
+      text: 'Per the latest tick, BTCUSDT is at 2392.45 according to the feed.',
       responseMessages: [],
     });
     // The "according to" / "per" clue defuses the warning.
@@ -74,7 +74,7 @@ describe('citation enforcement — Phase 7c', () => {
 
   it('lists invoked tools so the chat part can show context', () => {
     const r = enforceCitations({
-      text: 'XAUUSD at 2400.05 looks weak.',
+      text: 'BTCUSDT at 2400.05 looks weak.',
       responseMessages: toolCallMessages(['get_news']),
     });
     expect(r).not.toBeNull();

@@ -25,7 +25,7 @@ declare module '@hamafx/shared' {
 
 export const getPriceTool = tool({
   description:
-    'Fetch the most recent mid price for one or more supported symbols (XAUUSD, EURUSD, GBPUSD). Use only when the LIVE_SNAPSHOT in the system prompt is missing the symbol or older than 10 seconds.',
+    'Fetch the most recent mid price for one or more supported symbols (BTCUSDT, ETHUSDT, MNTUSDT). Use only when the LIVE_SNAPSHOT in the system prompt is missing the symbol or older than 10 seconds.',
   inputSchema: InputSchema,
   execute: async ({ symbols }): Promise<GetPriceOutput> => {
     const ticks = await Promise.all(

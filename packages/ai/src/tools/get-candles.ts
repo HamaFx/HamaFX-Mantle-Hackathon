@@ -24,7 +24,7 @@ declare module '@hamafx/shared' {
 
 export const getCandlesTool = tool({
   description:
-    'Fetch OHLC candles for one symbol at one timeframe (e.g. XAUUSD 1h). Use to confirm a recent swing high/low or to feed a pattern read. For RSI/MACD/EMA/etc. prefer get_indicators.',
+    'Fetch OHLC candles for one symbol at one timeframe (e.g. BTCUSDT 1h). Use to confirm a recent swing high/low or to feed a pattern read. For RSI/MACD/EMA/etc. prefer get_indicators.',
   inputSchema: InputSchema,
   execute: async ({ symbol, tf, count }): Promise<GetCandlesOutput> => {
     const candles = await getCandles(symbol, tf, { count });

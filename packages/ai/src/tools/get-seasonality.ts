@@ -30,7 +30,7 @@ const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as cons
 
 export const getSeasonalityTool = tool({
   description:
-    "Per-month / per-weekday / per-hour return seasonality for a symbol. Returns median percent return, IQR, win rate, and sample count per bucket. Use for 'is January typically strong for gold', 'what's the best weekday for EURUSD', 'when does GBPUSD usually trend during the day'. Sets `thin: true` when fewer than 30 samples per bucket are available.",
+    "Per-month / per-weekday / per-hour return seasonality for a symbol. Returns median percent return, IQR, win rate, and sample count per bucket. Use for 'is January typically strong for gold', 'what's the best weekday for ETHUSDT', 'when does MNTUSDT usually trend during the day'. Sets `thin: true` when fewer than 30 samples per bucket are available.",
   inputSchema: InputSchema,
   execute: async ({ symbol, granularity }): Promise<GetSeasonalityOutput> => {
     const tf = granularity === 'hour' ? '1h' : '1d';

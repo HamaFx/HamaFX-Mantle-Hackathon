@@ -12,9 +12,9 @@ import { ProviderError } from '../src/errors';
 
 describe('biquote map', () => {
   it('maps every supported symbol identically (BiQuote uses our codes)', () => {
-    expect(toBiquoteSymbol('XAUUSD')).toBe('XAUUSD');
-    expect(toBiquoteSymbol('EURUSD')).toBe('EURUSD');
-    expect(toBiquoteSymbol('GBPUSD')).toBe('GBPUSD');
+    expect(toBiquoteSymbol('BTCUSDT')).toBe('BTCUSDT');
+    expect(toBiquoteSymbol('ETHUSDT')).toBe('ETHUSDT');
+    expect(toBiquoteSymbol('MNTUSDT')).toBe('MNTUSDT');
   });
 
   it('maps every BiQuote-supported timeframe', () => {
@@ -45,9 +45,9 @@ describe('biquote map', () => {
 
 describe('assertSupportedSymbol', () => {
   it('returns the symbol unchanged for valid inputs', () => {
-    expect(assertSupportedSymbol('XAUUSD')).toBe('XAUUSD');
-    expect(assertSupportedSymbol('EURUSD')).toBe('EURUSD');
-    expect(assertSupportedSymbol('GBPUSD')).toBe('GBPUSD');
+    expect(assertSupportedSymbol('BTCUSDT')).toBe('BTCUSDT');
+    expect(assertSupportedSymbol('ETHUSDT')).toBe('ETHUSDT');
+    expect(assertSupportedSymbol('MNTUSDT')).toBe('MNTUSDT');
   });
 
   it('throws ProviderError for any unsupported instrument', () => {

@@ -48,7 +48,7 @@ import { getCandles, getPrice } from '@hamafx/data';
 import { evaluateAlerts } from '../src/alerts/evaluator';
 import { listEvaluable } from '../src/alerts/persistence';
 
-function makeAlert(id: string, sym: string = 'XAUUSD'): {
+function makeAlert(id: string, sym: string = 'BTCUSDT'): {
   id: string;
   rule: {
     type: 'priceCross';
@@ -98,7 +98,7 @@ describe('evaluateAlerts — parallel readings', () => {
       await new Promise((r) => setTimeout(r, 100));
       active -= 1;
       return {
-        symbol: 'XAUUSD',
+        symbol: 'BTCUSDT',
         bid: 2390,
         ask: 2390,
         mid: 2390,
@@ -131,7 +131,7 @@ describe('evaluateAlerts — parallel readings', () => {
       const callCount = vi.mocked(getPrice).mock.calls.length;
       if (callCount === 2) throw new Error('upstream blew up');
       return {
-        symbol: 'XAUUSD',
+        symbol: 'BTCUSDT',
         bid: 2390,
         ask: 2390,
         mid: 2390,

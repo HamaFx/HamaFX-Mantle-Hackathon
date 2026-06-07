@@ -49,7 +49,7 @@ describe('fetchCandles1m', () => {
     ];
     const db = makeFakeDb(rows);
 
-    const r = await fetchCandles1m({ symbol: 'XAUUSD', count: 100, db });
+    const r = await fetchCandles1m({ symbol: 'BTCUSDT', count: 100, db });
     expect(r.bars).toHaveLength(3);
     expect(r.bars[0]?.o).toBe(2389);
     expect(r.bars[2]?.o).toBe(2391);
@@ -59,7 +59,7 @@ describe('fetchCandles1m', () => {
   it('throws ProviderEmptyError when no rows exist', async () => {
     const db = makeFakeDb([]);
     await expect(
-      fetchCandles1m({ symbol: 'XAUUSD', count: 100, db }),
+      fetchCandles1m({ symbol: 'BTCUSDT', count: 100, db }),
     ).rejects.toBeInstanceOf(ProviderEmptyError);
   });
 
@@ -67,7 +67,7 @@ describe('fetchCandles1m', () => {
     const stale = bar(new Date(Date.now() - 5 * 60_000).toISOString(), 2390);
     const db = makeFakeDb([stale]);
     await expect(
-      fetchCandles1m({ symbol: 'XAUUSD', count: 100, db }),
+      fetchCandles1m({ symbol: 'BTCUSDT', count: 100, db }),
     ).rejects.toMatchObject({
       provider: 'candles-1m',
       message: expect.stringContaining('stale') as unknown as string,
@@ -81,7 +81,7 @@ describe('fetchCandles1m', () => {
     );
     const db = makeFakeDb(rows);
 
-    const r = await fetchCandles1m({ symbol: 'XAUUSD', count: 99999, db });
+    const r = await fetchCandles1m({ symbol: 'BTCUSDT', count: 99999, db });
     expect(r.bars.length).toBeLessThanOrEqual(5000);
     expect(r.bars.length).toBe(200); // all available rows, capped to 5000
   });
@@ -93,7 +93,7 @@ describe('fetchCandles1m', () => {
     );
     const db = makeFakeDb(rows);
 
-    const r = await fetchCandles1m({ symbol: 'XAUUSD', count: 10, db });
+    const r = await fetchCandles1m({ symbol: 'BTCUSDT', count: 10, db });
     expect(r.bars).toHaveLength(10);
     // Last bar is the freshest (last row)
     expect(r.bars[r.bars.length - 1]?.o).toBe(2439);

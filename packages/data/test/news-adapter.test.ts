@@ -60,7 +60,7 @@ describe('fetchNews (marketaux)', () => {
     expect(gold.id).toBe(articleIdFromUrl('https://example.com/gold-rally'));
     expect(gold.title).toContain('Gold');
     expect(gold.publisher).toBe('Reuters');
-    expect(gold.symbols).toEqual(expect.arrayContaining(['XAU', 'XAUUSD', 'USD']));
+    expect(gold.symbols).toEqual(expect.arrayContaining(['XAU', 'BTCUSDT', 'USD']));
     expect(gold.sentiment).toBe('positive');
     expect(gold.sentimentScore).toBeGreaterThan(0);
   });
@@ -74,7 +74,7 @@ describe('fetchNews (marketaux)', () => {
     ) as unknown as typeof fetch;
 
     const articles = await fetchNews({
-      symbol: 'XAUUSD',
+      symbol: 'BTCUSDT',
       apiKeys: { marketaux: 'X' },
     });
     // Apple article filtered out.

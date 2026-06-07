@@ -38,7 +38,7 @@ declare module '@hamafx/shared' {
 // legacy `setSummarizeThreadContext()` was removed.
 
 const SYSTEM_PROMPT =
-  'You synthesise the active trading-chat thread into JSON. Output JSON ONLY: { "synopsis": "<3-5 sentence paragraph>", "insights": [{ "text": "<short imperative>", "symbol": "XAUUSD"|"EURUSD"|"GBPUSD"|null }, ...] }. Provide 3 insights. No greetings, no preamble, no markdown fences.';
+  'You synthesise the active trading-chat thread into JSON. Output JSON ONLY: { "synopsis": "<3-5 sentence paragraph>", "insights": [{ "text": "<short imperative>", "symbol": "BTCUSDT"|"ETHUSDT"|"MNTUSDT"|null }, ...] }. Provide 3 insights. No greetings, no preamble, no markdown fences.';
 
 const NO_CONTEXT_OUTPUT = (threadId: string): SummarizeThreadOutput => ({
   threadId,

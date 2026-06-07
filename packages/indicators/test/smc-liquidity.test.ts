@@ -6,7 +6,7 @@ import { findSwings } from '../src/smc/swings';
 
 function bar(i: number, o: number, h: number, l: number, c: number): Candle {
   return {
-    symbol: 'XAUUSD',
+    symbol: 'BTCUSDT',
     tf: '1h',
     t: i * 3_600_000,
     o,

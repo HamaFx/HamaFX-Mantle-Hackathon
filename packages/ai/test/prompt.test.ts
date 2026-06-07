@@ -5,7 +5,7 @@ import { buildSystemPrompt } from '../src/prompt/system';
 describe('buildSystemPrompt', () => {
   it('returns the base prompt when given no snapshot', () => {
     const out = buildSystemPrompt(null);
-    expect(out).toContain('XAUUSD');
+    expect(out).toContain('BTCUSDT');
     expect(out).toContain('Hard rules');
     // The base prompt mentions LIVE_SNAPSHOT as a reference; only the
     // injected header block uses "(auto-injected" — that's what should be absent.
@@ -17,8 +17,8 @@ describe('buildSystemPrompt', () => {
       asOf: '2026-05-26T12:00:00.000Z',
       session: 'london',
       prices: {
-        XAUUSD: {
-          symbol: 'XAUUSD',
+        BTCUSDT: {
+          symbol: 'BTCUSDT',
           bid: 2345.6,
           ask: 2345.6,
           mid: 2345.6,
@@ -29,7 +29,7 @@ describe('buildSystemPrompt', () => {
     });
     expect(out).toContain('LIVE_SNAPSHOT');
     expect(out).toContain('Session: london');
-    expect(out).toContain('XAUUSD: 2345.6');
+    expect(out).toContain('BTCUSDT: 2345.6');
     expect(out).toContain('biquote-signalr');
   });
 

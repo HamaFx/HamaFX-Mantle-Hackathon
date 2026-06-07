@@ -57,16 +57,16 @@ describe('flushLiveTicks', () => {
   it('UPSERTs one row per buffered symbol', async () => {
     const { db, captured } = makeFakeDb();
     const buffer = new TickBuffer();
-    buffer.push(tick('XAUUSD', 2390));
-    buffer.push(tick('EURUSD', 1.085));
-    buffer.push(tick('GBPUSD', 1.27));
+    buffer.push(tick('BTCUSDT', 2390));
+    buffer.push(tick('ETHUSDT', 1.085));
+    buffer.push(tick('MNTUSDT', 1.27));
 
     const r = await flushLiveTicks({ db, buffer, log });
 
     expect(r.written).toBe(3);
     expect(captured.rows).toHaveLength(3);
     const symbols = captured.rows.map((row) => row['symbol']).sort();
-    expect(symbols).toEqual(['EURUSD', 'GBPUSD', 'XAUUSD']);
+    expect(symbols).toEqual(['ETHUSDT', 'MNTUSDT', 'BTCUSDT']);
 
     // ts is converted to Date for the timestamptz column
     for (const row of captured.rows) {
@@ -78,10 +78,10 @@ describe('flushLiveTicks', () => {
   it('reports total observed ticks across all symbols', async () => {
     const { db } = makeFakeDb();
     const buffer = new TickBuffer();
-    buffer.push(tick('XAUUSD', 2390));
-    buffer.push(tick('XAUUSD', 2391));
-    buffer.push(tick('XAUUSD', 2392));
-    buffer.push(tick('EURUSD', 1.085));
+    buffer.push(tick('BTCUSDT', 2390));
+    buffer.push(tick('BTCUSDT', 2391));
+    buffer.push(tick('BTCUSDT', 2392));
+    buffer.push(tick('ETHUSDT', 1.085));
 
     const r = await flushLiveTicks({ db, buffer, log });
     expect(r.written).toBe(2);
@@ -91,7 +91,7 @@ describe('flushLiveTicks', () => {
   it('clears the buffer after a successful flush', async () => {
     const { db } = makeFakeDb();
     const buffer = new TickBuffer();
-    buffer.push(tick('XAUUSD', 2390));
+    buffer.push(tick('BTCUSDT', 2390));
 
     await flushLiveTicks({ db, buffer, log });
     expect(buffer.size()).toBe(0);
@@ -100,7 +100,7 @@ describe('flushLiveTicks', () => {
   it('configures ON CONFLICT to update bid/ask/mid/ts/source', async () => {
     const { db, captured } = makeFakeDb();
     const buffer = new TickBuffer();
-    buffer.push(tick('XAUUSD', 2390));
+    buffer.push(tick('BTCUSDT', 2390));
 
     await flushLiveTicks({ db, buffer, log });
     expect(captured.conflictConfig).not.toBeNull();

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import { PageHeader } from '@/components/layout/page-header';
 
+import { Web3Card } from './_components/web3-card';
 import { AboutCard } from './_components/about-card';
 import { AgentCard } from './_components/agent-card';
 import { AIPrefsCard } from './_components/ai-prefs-card';
@@ -26,6 +27,7 @@ export default function SettingsPage() {
 
       <SystemStatusCard />
       <UsageGlance />
+      <Web3Card />
       <AgentCard />
       <AIPrefsCard />
       <NotificationsCard />

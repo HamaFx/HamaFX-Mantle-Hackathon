@@ -212,9 +212,9 @@ export default async function SignalsPage() {
                         href={sig.explorerUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand ring-1 ring-brand/30 hover:bg-brand/20 transition-colors"
+                        className="inline-flex items-center gap-1.5 rounded-full bg-brand/10 px-4 py-1.5 text-[11px] font-bold tracking-wide uppercase text-brand ring-1 ring-brand/30 hover:bg-brand/20 transition-all hover:scale-105"
                       >
-                        🔗 MantleScan ↗
+                        <span className="text-sm leading-none">⚑</span> Verify on Mantle
                       </a>
                     ) : (
                       <span className="text-xs text-fg-subtle">Pending…</span>

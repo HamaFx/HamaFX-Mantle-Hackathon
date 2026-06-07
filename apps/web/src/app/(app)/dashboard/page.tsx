@@ -1,4 +1,4 @@
-import { getSignalCount, getAlphaLoggerAddress, getExplorerUrl } from '@hamafx/web3';
+import { getSignalCount, getAlphaLoggerAddress, getExplorerUrl, getAgentWalletAddress, getAgentBalance } from '@hamafx/web3';
 import { getDb, schema } from '@hamafx/db';
 import { desc, sql } from 'drizzle-orm';
 import React from 'react';
@@ -46,10 +46,14 @@ export default async function DashboardPage() {
   let contractSignalCount = 0;
   let contractAddress = '';
   let contractExplorerUrl = '';
+  let agentWalletAddress = '0x0000000000000000000000000000000000000000';
+  let agentBalance = 0;
   try {
     contractSignalCount = await getSignalCount();
     contractAddress = getAlphaLoggerAddress();
     contractExplorerUrl = getExplorerUrl('address', contractAddress);
+    agentWalletAddress = getAgentWalletAddress();
+    agentBalance = await getAgentBalance();
   } catch {
     // Contract not yet deployed or env not set — show graceful placeholder
   }
@@ -129,23 +133,33 @@ export default async function DashboardPage() {
               </div>
             </div>
             <div>
+              <div className="text-xs text-fg-muted mb-1 font-medium uppercase tracking-wider">Agent Wallet</div>
+              <div className="font-mono text-xs text-fg break-all">
+                {agentWalletAddress === "0x0000000000000000000000000000000000000000" 
+                  ? "Wallet not connected" 
+                  : agentWalletAddress}
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-fg-muted mb-1 font-medium uppercase tracking-wider">Gas Balance</div>
+              <div className="font-semibold text-brand">
+                {agentBalance.toFixed(4)} MNT
+              </div>
+            </div>
+            <div>
               <div className="text-xs text-fg-muted mb-1 font-medium uppercase tracking-wider">Smart Contract</div>
               {isContractDeployed ? (
                 <a
                   href={contractExplorerUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-mono text-xs text-brand hover:underline break-all"
+                  className="font-mono text-xs text-info hover:underline break-all"
                 >
                   {contractAddress} ↗
                 </a>
               ) : (
                 <span className="text-xs text-fg-subtle font-mono">Not yet deployed</span>
               )}
-            </div>
-            <div>
-              <div className="text-xs text-fg-muted mb-1 font-medium uppercase tracking-wider">Track</div>
-              <div className="text-sm text-fg">Track 2 — AI Alpha &amp; Data</div>
             </div>
           </div>
 

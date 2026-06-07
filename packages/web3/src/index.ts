@@ -3,6 +3,8 @@ export {
   logSignalOnChain,
   getSignalCount,
   getAlphaLoggerAddress,
+  getAgentWalletAddress,
+  getAgentBalance,
   type LogSignalArgs,
   type LogSignalResult,
 } from "./alpha-logger";

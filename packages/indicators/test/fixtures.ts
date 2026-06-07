@@ -8,7 +8,7 @@ export function makeCandles(
   opts?: { highs?: number[]; lows?: number[] },
 ): Candle[] {
   return closes.map((c, i) => ({
-    symbol: 'XAUUSD' as const,
+    symbol: 'BTCUSDT' as const,
     tf: '1h' as const,
     t: i * 3_600_000,
     o: c,

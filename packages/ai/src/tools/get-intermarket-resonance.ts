@@ -23,10 +23,10 @@ declare module '@hamafx/shared' {
 
 export const getIntermarketResonanceTool = tool({
   description:
-    "Evaluate Gold (XAUUSD) or major currencies' intermarket divergence against US 10-Year Real Yields (Opportunity Cost) and inflation expectations. Calculates z-score 'Hedging Premium' divergence index. Use when the user asks 'Are yields matching gold price' or 'Analyze institutional safe-haven premium'.",
+    "Evaluate Gold (BTCUSDT) or major currencies' intermarket divergence against US 10-Year Real Yields (Opportunity Cost) and inflation expectations. Calculates z-score 'Hedging Premium' divergence index. Use when the user asks 'Are yields matching gold price' or 'Analyze institutional safe-haven premium'.",
   inputSchema: InputSchema,
   execute: async ({ symbol, days }): Promise<GetIntermarketResonanceOutput> => {
-    const requestedSymbol: Symbol = symbol ?? 'XAUUSD';
+    const requestedSymbol: Symbol = symbol ?? 'BTCUSDT';
     const db = getDb();
 
     // 1. Query the intermarket_resonance table

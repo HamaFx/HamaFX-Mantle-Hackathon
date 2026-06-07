@@ -14,7 +14,6 @@ import { resolveModel, getVertexGoogleSearchTool } from '../model';
 
 import { analyzeFundamentalTool } from './analyze-fundamental';
 import { analyzeTechnicalTool } from './analyze-technical';
-import { getJournalStatsTool } from './get-journal-stats';
 import { computeRiskTool } from './compute-risk';
 
 const InputSchema = ConveneCommitteeInputSchema;
@@ -34,10 +33,9 @@ export const conveneCommitteeTool = tool({
     const { symbol, side, entry, stop, target } = input;
 
     // 1. Pre-fetch context data in parallel
-    const [fundamentalData, technicalData, journalData, riskData] = await Promise.all([
+    const [fundamentalData, technicalData, riskData] = await Promise.all([
       analyzeFundamentalTool.execute!({ symbol, horizonHours: 48 }, { toolCallId: 'internal', messages: [] } as any),
       analyzeTechnicalTool.execute!({ symbol, timeframes: ['1d', '4h', '1h', '15m'] }, { toolCallId: 'internal', messages: [] } as any),
-      getJournalStatsTool.execute!({ symbol }, { toolCallId: 'internal', messages: [] } as any),
       stop ? computeRiskTool.execute!({ symbol, side, entry, stop, target: target ?? undefined, accountUsd: 1000, riskPct: 1 }, { toolCallId: 'internal', messages: [] } as any) : Promise.resolve(null),
     ]);
 
@@ -45,7 +43,7 @@ export const conveneCommitteeTool = tool({
     const [economist, technician, riskManager] = await Promise.all([
       runEconomist(input, fundamentalData, ctx.env),
       runTechnician(input, technicalData, ctx.env),
-      runRiskManager(input, journalData, riskData, ctx.env),
+      runRiskManager(input, null, riskData, ctx.env),
     ]);
 
     // 3. Run the Moderator

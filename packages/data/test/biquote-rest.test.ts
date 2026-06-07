@@ -18,7 +18,7 @@ function jsonResponse(body: unknown, status = 200): Response {
 }
 
 const VALID_TICK = {
-  symbol: 'XAUUSD',
+  symbol: 'BTCUSDT',
   bid: 2390.12,
   ask: 2390.32,
   mid: 2390.22,
@@ -49,7 +49,7 @@ function bar(openTime: string, opts: Partial<{ isOpen: boolean }> = {}): unknown
 }
 
 /** Wrap an array of bars in BiQuote's current envelope: `{ symbol, interval, bars }`. */
-function ohlcEnvelope(bars: unknown[], symbol = 'XAUUSD', interval = '1m'): unknown {
+function ohlcEnvelope(bars: unknown[], symbol = 'BTCUSDT', interval = '1m'): unknown {
   return { symbol, interval, bars };
 }
 
@@ -67,30 +67,30 @@ describe('biquote fetchTick', () => {
     const fetchSpy = vi.fn().mockResolvedValue(jsonResponse(VALID_TICK));
     globalThis.fetch = fetchSpy as unknown as typeof fetch;
 
-    const tick = await fetchTick('XAUUSD');
-    expect(tick.symbol).toBe('XAUUSD');
+    const tick = await fetchTick('BTCUSDT');
+    expect(tick.symbol).toBe('BTCUSDT');
     expect(tick.bid).toBeCloseTo(2390.12);
     expect(tick.source).toBe('MetaTrader 5 (Broker 1)');
 
-    // Verify URL shape: /api/XAUUSD against the default base.
+    // Verify URL shape: /api/BTCUSDT against the default base.
     const url = String(fetchSpy.mock.calls[0]?.[0]);
-    expect(url).toBe('https://biquote.io/api/XAUUSD');
+    expect(url).toBe('https://biquote.io/api/BTCUSDT');
   });
 
   it('honors BIQUOTE_BASE_URL via the baseUrl option', async () => {
     const fetchSpy = vi.fn().mockResolvedValue(jsonResponse(VALID_TICK));
     globalThis.fetch = fetchSpy as unknown as typeof fetch;
 
-    await fetchTick('XAUUSD', { baseUrl: 'https://biquote.example' });
+    await fetchTick('BTCUSDT', { baseUrl: 'https://biquote.example' });
     const url = String(fetchSpy.mock.calls[0]?.[0]);
-    expect(url).toBe('https://biquote.example/api/XAUUSD');
+    expect(url).toBe('https://biquote.example/api/BTCUSDT');
   });
 
   it('refuses to issue a request for an unsupported symbol (no fetch call)', async () => {
     const fetchSpy = vi.fn();
     globalThis.fetch = fetchSpy as unknown as typeof fetch;
 
-    await expect(fetchTick('USDJPY' as unknown as 'XAUUSD')).rejects.toThrow(/unsupported symbol/);
+    await expect(fetchTick('USDJPY' as unknown as 'BTCUSDT')).rejects.toThrow(/unsupported symbol/);
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
@@ -98,14 +98,14 @@ describe('biquote fetchTick', () => {
     globalThis.fetch = vi
       .fn()
       .mockResolvedValue(
-        jsonResponse({ message: "No tick data available for 'XAUUSD'" }, 404),
+        jsonResponse({ message: "No tick data available for 'BTCUSDT'" }, 404),
       ) as unknown as typeof fetch;
 
-    await expect(fetchTick('XAUUSD')).rejects.toMatchObject({
+    await expect(fetchTick('BTCUSDT')).rejects.toMatchObject({
       provider: 'biquote',
       code: 'PROVIDER_HTTP_ERROR',
       status: 404,
-      message: "No tick data available for 'XAUUSD'",
+      message: "No tick data available for 'BTCUSDT'",
     });
   });
 
@@ -114,7 +114,7 @@ describe('biquote fetchTick', () => {
       .fn()
       .mockResolvedValue(jsonResponse({ message: 'rate limited' }, 429)) as unknown as typeof fetch;
 
-    await expect(fetchTick('XAUUSD')).rejects.toMatchObject({
+    await expect(fetchTick('BTCUSDT')).rejects.toMatchObject({
       code: 'PROVIDER_QUOTA_EXCEEDED',
       status: 429,
     });
@@ -125,7 +125,7 @@ describe('biquote fetchTick', () => {
       .fn()
       .mockResolvedValue(jsonResponse({ unexpected: 'shape' })) as unknown as typeof fetch;
 
-    await expect(fetchTick('XAUUSD')).rejects.toMatchObject({
+    await expect(fetchTick('BTCUSDT')).rejects.toMatchObject({
       code: 'PROVIDER_PARSE_ERROR',
     });
   });
@@ -151,18 +151,18 @@ describe('biquote fetchLatest', () => {
     const fetchSpy = vi.fn().mockResolvedValue(
       jsonResponse([
         VALID_TICK,
-        { ...VALID_TICK, symbol: 'EURUSD', last: 1.085 },
+        { ...VALID_TICK, symbol: 'ETHUSDT', last: 1.085 },
       ]),
     );
     globalThis.fetch = fetchSpy as unknown as typeof fetch;
 
-    const ticks = await fetchLatest(['XAUUSD', 'EURUSD']);
+    const ticks = await fetchLatest(['BTCUSDT', 'ETHUSDT']);
     expect(ticks).toHaveLength(2);
-    expect(ticks[1]?.symbol).toBe('EURUSD');
+    expect(ticks[1]?.symbol).toBe('ETHUSDT');
 
     const url = String(fetchSpy.mock.calls[0]?.[0]);
     // Note: URLSearchParams percent-encodes commas as %2C.
-    expect(url).toContain('symbols=XAUUSD%2CEURUSD');
+    expect(url).toContain('symbols=BTCUSDT%2CETHUSDT');
   });
 });
 
@@ -186,7 +186,7 @@ describe('biquote fetchOhlc', () => {
       ),
     ) as unknown as typeof fetch;
 
-    const out = await fetchOhlc({ symbol: 'XAUUSD', tf: '1m', count: 100 });
+    const out = await fetchOhlc({ symbol: 'BTCUSDT', tf: '1m', count: 100 });
     expect(out).toHaveLength(2);
     expect(out.every((b) => !b.isOpen)).toBe(true);
     // Returned ascending.
@@ -205,7 +205,7 @@ describe('biquote fetchOhlc', () => {
     ) as unknown as typeof fetch;
 
     const out = await fetchOhlc({
-      symbol: 'XAUUSD',
+      symbol: 'BTCUSDT',
       tf: '1m',
       count: 100,
       includeOpenBar: true,
@@ -219,7 +219,7 @@ describe('biquote fetchOhlc', () => {
     globalThis.fetch = fetchSpy as unknown as typeof fetch;
 
     await expect(
-      fetchOhlc({ symbol: 'XAUUSD', tf: '1w', count: 100 }),
+      fetchOhlc({ symbol: 'BTCUSDT', tf: '1w', count: 100 }),
     ).rejects.toThrow(/biquote does not provide weekly/);
     expect(fetchSpy).not.toHaveBeenCalled();
   });
@@ -230,7 +230,7 @@ describe('biquote fetchOhlc', () => {
     ) as unknown as typeof fetch;
 
     await expect(
-      fetchOhlc({ symbol: 'XAUUSD', tf: '1m', count: 100 }),
+      fetchOhlc({ symbol: 'BTCUSDT', tf: '1m', count: 100 }),
     ).rejects.toMatchObject({ code: 'PROVIDER_HTTP_ERROR' });
   });
 
@@ -240,7 +240,7 @@ describe('biquote fetchOhlc', () => {
       .mockResolvedValue(jsonResponse(ohlcEnvelope([bar('2026-05-27T18:00:00Z')])));
     globalThis.fetch = fetchSpy as unknown as typeof fetch;
 
-    await fetchOhlc({ symbol: 'XAUUSD', tf: '1m', count: 99999 });
+    await fetchOhlc({ symbol: 'BTCUSDT', tf: '1m', count: 99999 });
     const url = String(fetchSpy.mock.calls[0]?.[0]);
     expect(url).toContain('limit=2000');
   });
@@ -262,8 +262,8 @@ describe('biquote throttle', () => {
 
     // 10 calls succeed; the 11th must throw without hitting fetch.
     for (let i = 0; i < 10; i += 1) {
-      await fetchTick('XAUUSD');
+      await fetchTick('BTCUSDT');
     }
-    await expect(fetchTick('XAUUSD')).rejects.toBeInstanceOf(ProviderError);
+    await expect(fetchTick('BTCUSDT')).rejects.toBeInstanceOf(ProviderError);
   });
 });
