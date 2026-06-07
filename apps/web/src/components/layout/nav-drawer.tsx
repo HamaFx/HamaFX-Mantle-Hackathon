@@ -15,8 +15,6 @@
 import { Menu } from 'lucide-react'; // re-exported for triggers
 import {
   Bell,
-  BookOpen,
-  Calendar,
   Cog,
   LineChart,
   LogOut,
