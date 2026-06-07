@@ -12,11 +12,3 @@ export const LogSignalOnchainOutputSchema = z.object({
   error: z.string().optional(),
 });
 
-declare module '../../ai/tool-io' {
-  interface ToolRegistry {
-    log_signal_onchain: {
-      input: z.infer<typeof LogSignalOnchainInputSchema>;
-      output: z.infer<typeof LogSignalOnchainOutputSchema>;
-    };
-  }
-}

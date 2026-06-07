@@ -10,11 +10,3 @@ export const AnalyzeAlphaSignalOutputSchema = z.object({
   signal: OnChainSignalSchema,
 });
 
-declare module '../../ai/tool-io' {
-  interface ToolRegistry {
-    analyze_alpha_signal: {
-      input: z.infer<typeof AnalyzeAlphaSignalInputSchema>;
-      output: z.infer<typeof AnalyzeAlphaSignalOutputSchema>;
-    };
-  }
-}

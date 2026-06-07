@@ -39,6 +39,13 @@ export const TOOL_NAMES = [
   'get_intermarket_resonance',
   'get_system_diagnostics',
   'run_system_action',
+  // Phase 7d tools
+  'get_onchain_activity',
+  'get_whale_alerts',
+  'get_defi_pools',
+  'analyze_alpha_signal',
+  'log_signal_onchain',
+  'get_agent_performance',
 ] as const;
 
 export type ToolName = (typeof TOOL_NAMES)[number];

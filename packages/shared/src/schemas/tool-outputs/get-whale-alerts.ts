@@ -18,11 +18,3 @@ export const GetWhaleAlertsOutputSchema = z.object({
   })),
 });
 
-declare module '../../ai/tool-io' {
-  interface ToolRegistry {
-    get_whale_alerts: {
-      input: z.infer<typeof GetWhaleAlertsInputSchema>;
-      output: z.infer<typeof GetWhaleAlertsOutputSchema>;
-    };
-  }
-}

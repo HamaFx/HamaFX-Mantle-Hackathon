@@ -18,11 +18,3 @@ export const GetOnchainActivityOutputSchema = z.object({
   totalVolumeUsd: z.number(),
 });
 
-declare module '../../ai/tool-io' {
-  interface ToolRegistry {
-    get_onchain_activity: {
-      input: z.infer<typeof GetOnchainActivityInputSchema>;
-      output: z.infer<typeof GetOnchainActivityOutputSchema>;
-    };
-  }
-}

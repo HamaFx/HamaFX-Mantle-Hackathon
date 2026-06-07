@@ -91,13 +91,16 @@ export class Candle1mAggregator {
   /**
    * Force-close every currently-open bar. Used at shutdown so we don't
    * lose the last partial bar (acceptable trade-off; the tick count tells
-   * downstream consumers it was partial).
+   * downstream consumers it was partial). Returns the closed bars so the
+   * caller can await persistence.
    */
-  closeAll(): void {
+  closeAll(): ClosedCandle[] {
+    const closed: ClosedCandle[] = [];
     for (const [symbol, bar] of this.bars) {
-      this.emitClosed(symbol, bar);
+      closed.push(this.emitClosed(symbol, bar));
     }
     this.bars.clear();
+    return closed;
   }
 
   /** Test introspection. */
@@ -109,8 +112,8 @@ export class Candle1mAggregator {
     return { bucket, o: mid, h: mid, l: mid, c: mid, ticks: 1 };
   }
 
-  private emitClosed(symbol: Symbol, bar: OpenBar): void {
-    this.onClosed({
+  private emitClosed(symbol: Symbol, bar: OpenBar): ClosedCandle {
+    const candle: ClosedCandle = {
       symbol,
       t: bar.bucket * MINUTE_MS,
       o: bar.o,
@@ -120,6 +123,8 @@ export class Candle1mAggregator {
       v: null,
       tickVolume: bar.ticks,
       source: 'biquote-signalr',
-    });
+    };
+    this.onClosed(candle);
+    return candle;
   }
 }

@@ -14,11 +14,3 @@ export const GetDefiPoolsOutputSchema = z.object({
   })),
 });
 
-declare module '../../ai/tool-io' {
-  interface ToolRegistry {
-    get_defi_pools: {
-      input: z.infer<typeof GetDefiPoolsInputSchema>;
-      output: z.infer<typeof GetDefiPoolsOutputSchema>;
-    };
-  }
-}

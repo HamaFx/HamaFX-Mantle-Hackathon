@@ -1,17 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getDb, schema } from '@hamafx/db';
 import { logSignalOnChain } from '@hamafx/web3';
 import { eq } from 'drizzle-orm';
-import { NextResponse } from 'next/server';
+
+import { errorResponse } from '@/lib/api';
+
+export const runtime = 'nodejs';
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const id = params.id;
+    const { id } = await params;
     if (!id) {
-      return NextResponse.json({ error: 'Missing signal ID' }, { status: 400 });
+      return Response.json({ error: 'Missing signal ID' }, { status: 400 });
     }
 
     const db = getDb();
@@ -22,22 +24,22 @@ export async function POST(
       .limit(1);
 
     if (!signal) {
-      return NextResponse.json({ error: 'Signal not found' }, { status: 404 });
+      return Response.json({ error: 'Signal not found' }, { status: 404 });
     }
 
     if (signal.txHash) {
-      return NextResponse.json({ error: 'Signal already logged on-chain' }, { status: 400 });
+      return Response.json({ error: 'Signal already logged on-chain' }, { status: 400 });
     }
 
-    // Call the smart contract
+    // Call the smart contract — DB stores these as text but zod-validated on insert
     const result = await logSignalOnChain({
-      signalType: signal.signalType as any,
+      signalType: signal.signalType as 'whale_alert' | 'defi_anomaly' | 'alpha_signal' | 'macro_event',
       asset: signal.asset,
-      direction: signal.direction as any,
+      direction: signal.direction as 'bullish' | 'bearish' | 'neutral',
       confidence: signal.confidence,
-      committeeGrade: (signal.committeeGrade || 'C') as any,
-      goNoGo: (signal.goNoGo || 'caution') as any,
-      ipfsHash: '', // Phase 2
+      committeeGrade: signal.committeeGrade ?? 'C',
+      goNoGo: (signal.goNoGo ?? 'caution') as 'go' | 'caution' | 'no-go',
+      ipfsHash: '',
       summary: signal.summary,
     });
 
@@ -52,8 +54,8 @@ export async function POST(
       .where(eq(schema.onChainSignals.id, id))
       .returning();
 
-    return NextResponse.json(updated);
+    return Response.json(updated);
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return errorResponse(err, req);
   }
 }

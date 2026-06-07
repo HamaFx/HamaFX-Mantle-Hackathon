@@ -12,11 +12,3 @@ export const GetAgentPerformanceOutputSchema = z.object({
   winRateHint: z.number().optional(),
 });
 
-declare module '../../ai/tool-io' {
-  interface ToolRegistry {
-    get_agent_performance: {
-      input: z.infer<typeof GetAgentPerformanceInputSchema>;
-      output: z.infer<typeof GetAgentPerformanceOutputSchema>;
-    };
-  }
-}

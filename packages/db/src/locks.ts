@@ -1,5 +1,6 @@
 import { and, eq } from 'drizzle-orm';
-import { getDb, schema } from './index';
+import { getDb } from './client';
+import * as schema from './schema/index';
 
 function lockName(jobName: string): string {
   return `hamafx:job:${jobName}`;
@@ -48,7 +49,8 @@ export async function acquireJobLock(
       }
     });
     return acquired;
-  } catch {
+  } catch (err) {
+    console.error('[locks] acquireJobLock failed', err);
     return false;
   }
 }
@@ -65,7 +67,7 @@ export async function renewJobLock(jobName: string, ttlMs = 300_000): Promise<bo
   const expiresAt = new Date(Date.now() + ttlMs);
   const key = lockName(jobName);
   try {
-    const result = await db
+    const [row] = await db
       .update(schema.jobLocks)
       .set({ expiresAt })
       .where(
@@ -73,9 +75,11 @@ export async function renewJobLock(jobName: string, ttlMs = 300_000): Promise<bo
           eq(schema.jobLocks.jobName, key),
           eq(schema.jobLocks.runnerPid, process.pid),
         ),
-      );
-    return (result as { rowCount?: number }).rowCount !== 0;
-  } catch {
+      )
+      .returning({ jobName: schema.jobLocks.jobName });
+    return row !== undefined;
+  } catch (err) {
+    console.error('[locks] renewJobLock failed', err);
     return false;
   }
 }

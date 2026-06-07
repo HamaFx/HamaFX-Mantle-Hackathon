@@ -17,6 +17,7 @@
 
 import type { z } from 'zod';
 
+import type { AnalyzeAlphaSignalOutputSchema } from '../schemas/tool-outputs/analyze-alpha-signal';
 import type { AnalyzeChartImageOutputSchema } from '../schemas/tool-outputs/analyze-chart-image';
 import type { AnalyzeFundamentalOutputSchema } from '../schemas/tool-outputs/analyze-fundamental';
 import type { AnalyzeTechnicalOutputSchema } from '../schemas/tool-outputs/analyze-technical';
@@ -24,19 +25,24 @@ import type { AnnotateChartOutputSchema } from '../schemas/tool-outputs/annotate
 import type { ComputePositionHealthOutputSchema } from '../schemas/tool-outputs/compute-position-health';
 import type { ComputeRiskOutputSchema } from '../schemas/tool-outputs/compute-risk';
 import type { ForecastVolatilityOutputSchema } from '../schemas/tool-outputs/forecast-volatility';
+import type { GetAgentPerformanceOutputSchema } from '../schemas/tool-outputs/get-agent-performance';
 import type { GetCalendarOutputSchema } from '../schemas/tool-outputs/get-calendar';
 import type { GetCandlesOutputSchema } from '../schemas/tool-outputs/get-candles';
 import type { GetCorrelationOutputSchema } from '../schemas/tool-outputs/get-correlation';
 import type { GetCoTOutputSchema } from '../schemas/tool-outputs/get-cot';
+import type { GetDefiPoolsOutputSchema } from '../schemas/tool-outputs/get-defi-pools';
 import type { GetIndicatorsOutputSchema } from '../schemas/tool-outputs/get-indicators';
 import type { GetIntermarketOutputSchema } from '../schemas/tool-outputs/get-intermarket';
 import type { GetJournalStatsOutputSchema } from '../schemas/tool-outputs/get-journal-stats';
 import type { GetMarketStructureOutputSchema } from '../schemas/tool-outputs/get-market-structure';
 import type { GetNewsOutputSchema } from '../schemas/tool-outputs/get-news';
+import type { GetOnchainActivityOutputSchema } from '../schemas/tool-outputs/get-onchain-activity';
 import type { GetPriceOutputSchema } from '../schemas/tool-outputs/get-price';
 import type { GetSeasonalityOutputSchema } from '../schemas/tool-outputs/get-seasonality';
 import type { GetSessionLevelsOutputSchema } from '../schemas/tool-outputs/get-session-levels';
+import type { GetWhaleAlertsOutputSchema } from '../schemas/tool-outputs/get-whale-alerts';
 import type { LogJournalOutputSchema } from '../schemas/tool-outputs/log-journal';
+import type { LogSignalOnchainOutputSchema } from '../schemas/tool-outputs/log-signal-onchain';
 import type { ReplaySetupOutputSchema } from '../schemas/tool-outputs/replay-setup';
 import type { SearchKnowledgeOutputSchema } from '../schemas/tool-outputs/search-knowledge';
 import type { SetAlertOutputSchema } from '../schemas/tool-outputs/set-alert';
@@ -101,6 +107,13 @@ export interface ToolOutputMap {
   get_intermarket_resonance: z.infer<typeof GetIntermarketResonanceOutputSchema>;
   get_system_diagnostics: z.infer<typeof GetSystemDiagnosticsOutputSchema>;
   run_system_action: z.infer<typeof RunSystemActionOutputSchema>;
+  // Phase 7d tools
+  get_onchain_activity: z.infer<typeof GetOnchainActivityOutputSchema>;
+  get_whale_alerts: z.infer<typeof GetWhaleAlertsOutputSchema>;
+  get_defi_pools: z.infer<typeof GetDefiPoolsOutputSchema>;
+  analyze_alpha_signal: z.infer<typeof AnalyzeAlphaSignalOutputSchema>;
+  log_signal_onchain: z.infer<typeof LogSignalOnchainOutputSchema>;
+  get_agent_performance: z.infer<typeof GetAgentPerformanceOutputSchema>;
 }
 
 export type ToolInput<T extends ToolName> = T extends keyof ToolIOMap

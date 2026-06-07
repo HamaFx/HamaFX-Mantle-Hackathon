@@ -16,6 +16,7 @@
 // Server component — no state, no events.
 
 import {
+  AnalyzeAlphaSignalOutputSchema,
   AnalyzeChartImageOutputSchema,
   AnalyzeFundamentalOutputSchema,
   AnalyzeTechnicalOutputSchema,
@@ -24,14 +25,18 @@ import {
   ComputeRiskOutputSchema,
   ConveneCommitteeOutputSchema,
   ForecastVolatilityOutputSchema,
+  GetAgentPerformanceOutputSchema,
   GetCalendarOutputSchema,
   GetCandlesOutputSchema,
   GetCorrelationOutputSchema,
   GetCoTOutputSchema,
+  GetDefiPoolsOutputSchema,
   GetIndicatorsOutputSchema,
   GetIntermarketOutputSchema,
   GetIntermarketResonanceOutputSchema,
+  GetOnchainActivityOutputSchema,
   GetSystemDiagnosticsOutputSchema,
+  GetWhaleAlertsOutputSchema,
   RunSystemActionOutputSchema,
   GetJournalStatsOutputSchema,
   GetMarketStructureOutputSchema,
@@ -40,6 +45,7 @@ import {
   GetSeasonalityOutputSchema,
   GetSessionLevelsOutputSchema,
   LogJournalOutputSchema,
+  LogSignalOnchainOutputSchema,
   ReplaySetupOutputSchema,
   SearchKnowledgeOutputSchema,
   SetAlertOutputSchema,
@@ -61,6 +67,7 @@ import { ComputePositionHealthPart } from './compute-position-health';
 import { ComputeRiskPart } from './compute-risk';
 import { ConveneCommitteePart } from './convene-committee';
 import { ForecastVolatilityPart } from './forecast-volatility';
+import { GenericToolPart } from './generic-tool-part';
 import { GetCalendarPart } from './get-calendar';
 import { GetCandlesPart } from './get-candles';
 import { GetCorrelationPart } from './get-correlation';
@@ -141,6 +148,13 @@ export const partRegistry: { [K in ToolName]: ComponentType<ToolPartProps<K>> } 
   get_intermarket_resonance: GetIntermarketResonancePart,
   get_system_diagnostics: GetSystemDiagnosticsPart,
   run_system_action: RunSystemActionPart,
+  // Phase 7d tools — generic fallback renderers
+  get_onchain_activity: GenericToolPart,
+  get_whale_alerts: GenericToolPart,
+  get_defi_pools: GenericToolPart,
+  analyze_alpha_signal: GenericToolPart,
+  log_signal_onchain: GenericToolPart,
+  get_agent_performance: GenericToolPart,
 };
 
 /**
@@ -186,6 +200,13 @@ const partSchemas: { [K in ToolName]: z.ZodType<ToolOutput<K>> } = {
   get_intermarket_resonance: GetIntermarketResonanceOutputSchema,
   get_system_diagnostics: GetSystemDiagnosticsOutputSchema,
   run_system_action: RunSystemActionOutputSchema,
+  // Phase 7d tools
+  get_onchain_activity: GetOnchainActivityOutputSchema,
+  get_whale_alerts: GetWhaleAlertsOutputSchema,
+  get_defi_pools: GetDefiPoolsOutputSchema,
+  analyze_alpha_signal: AnalyzeAlphaSignalOutputSchema,
+  log_signal_onchain: LogSignalOnchainOutputSchema,
+  get_agent_performance: GetAgentPerformanceOutputSchema,
 };
 
 /** Type guard: is `s` a known `ToolName`? */

@@ -116,7 +116,7 @@ export async function runWorker(args: RunWorkerArgs): Promise<RunningWorker> {
   const db = getDb();
 
   let lastTickAt = 0;
-  let lastMt5TickAt = 0;
+  let lastMt5TickAt = -Infinity;
 
   // Shared tick handler to push ticks to database buffer, trigger 1m candle aggregations, and notify watchdog
   const handleIncomingTick = (tick: NormalizedTick) => {
@@ -253,9 +253,25 @@ export async function runWorker(args: RunWorkerArgs): Promise<RunningWorker> {
     } catch (err) {
       log.warn('final flush on stop failed', { err: String(err) });
     }
-    // Force-close the open 1m bar so we don't lose the partial bar at the
-    // edge. Idempotent if the aggregator is already empty.
-    aggregator.closeAll();
+    // Force-close the open 1m bar(s) so we don't lose the partial bar at
+    // the edge. Idempotent if the aggregator is already empty.
+    const closed = aggregator.closeAll();
+    for (const bar of closed) {
+      try {
+        await flushClosedCandle({ db, log, bar });
+        log.info('candle closed on shutdown', {
+          symbol: bar.symbol,
+          t: new Date(bar.t).toISOString(),
+          o: bar.o,
+          h: bar.h,
+          l: bar.l,
+          c: bar.c,
+          ticks: bar.tickVolume,
+        });
+      } catch (err) {
+        log.error('flushClosedCandle on shutdown failed', { err: String(err), symbol: bar.symbol });
+      }
+    }
     scanner.stop();
   };
 
