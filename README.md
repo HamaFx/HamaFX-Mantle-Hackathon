@@ -1,115 +1,142 @@
-# HamaFX-Ai
+<div align="center">
+  <img src="https://assets.mantle.xyz/mantle-logo.svg" alt="Mantle" width="80" />
+  <h1>🔮 HamaFX-Ai: Mantle Alpha Agent</h1>
+  <p><strong>Mantle Turing Test Hackathon 2026</strong> | <em>Track 2: AI Alpha & Data</em></p>
 
-> A **personal** AI trading copilot for **XAUUSD (primary), EURUSD, GBPUSD** — focused, mobile-first, and chat-driven.
+  [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+  [![Mantle](https://img.shields.io/badge/Mantle-Network-000000?style=for-the-badge&logo=ethereum&logoColor=65b3ae)](https://mantle.xyz/)
+  [![Vercel AI SDK](https://img.shields.io/badge/Vercel_AI-SDK_v5-000000?style=for-the-badge&logo=vercel)](https://sdk.vercel.ai/)
+  [![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+</div>
 
-Built for a single user. The agent has full context over live price action, multi-timeframe charts, technical indicators, fundamental data, curated news, your own journal, and prior briefings.
+<br/>
 
-**Status**: Phases 0 → 8 shipped. The agent now plans, verifies, and remembers; the data layer stays fresh under provider stress with stale-while-revalidate, health-aware failover, and adaptive throttling. Phase 8 added a GCE worker that holds a persistent BiQuote SignalR connection — sub-second prices in `live_ticks`, six heavy jobs migrated off Vercel onto systemd timers, nightly off-site backups + weekly verified restore, server-only Sentry on both deploys. See [`docs/10-roadmap.md`](./docs/10-roadmap.md) for the full feature ledger.
+HamaFX-Ai is an **autonomous, on-chain AI Alpha Agent** built specifically for the Mantle Network ecosystem. 
 
----
-
-## What it does (today)
-
-**Chat-first, with 26 tools the agent calls on demand**
-
-- **Live data** — `get_price`, `get_candles`, `get_indicators`, `get_market_structure`
-- **Macro** — `get_news`, `get_calendar`, `get_correlation`, `get_intermarket`, `get_seasonality`, `get_cot`, `forecast_volatility`
-- **Trading** — `compute_risk`, `get_session_levels`, `compute_position_health`, `replay_setup`, `verify_call`
-- **Analysis** — `analyze_technical`, `analyze_fundamental`, `analyze_chart_image`, `annotate_chart`
-- **Memory** — `search_knowledge` (hybrid dense + Postgres FTS, time-decayed), `summarize_thread`
-- **Mutations** — `set_alert`, `log_journal`, `share_snapshot`
-
-**Per-domain model routing** picks the right tier per turn:
-
-| Turn type | Default model |
-| --- | --- |
-| Fundamental analysis | `google-vertex/gemini-2.5-pro` |
-| Technical analysis | `google-vertex/gemini-2.5-flash` |
-| News / calendar / journal summary | `google-vertex/gemini-2.5-flash` |
-| Vision | `google-vertex/gemini-2.5-pro` |
-| Title / generic | `google-vertex/gemini-2.5-flash-lite` / `2.5-flash` |
-
-**Plan-then-act**: analytical turns emit a collapsible "Thinking" pill above the answer.
-**Verification**: a `verify_call` tool re-checks geometry + opposing liquidity; a post-finish citation enforcer flags prices/events not backed by a tool call.
-**Memory**: news, journal entries, briefings, and saved thread synopses are all retrievable via `search_knowledge` with a `kinds` filter.
+Moving beyond simple heuristic trading bots, HamaFX-Ai utilizes a **Multi-Agent LLM Committee** to actively monitor the Mantle blockchain, analyze DeFi liquidity shifts, detect whale movements, and synthesize fundamental data. To ensure absolute trust and transparency, **every generated alpha signal is permanently logged to the Mantle Sepolia blockchain** via our ERC-8004 Agent Identity contract.
 
 ---
 
-## TL;DR
+## ✨ Premium Features
 
-| Concern          | Choice                                                              |
-| ---------------- | ------------------------------------------------------------------- |
-| Framework        | Next.js 15 (App Router) + React 19 + TypeScript                     |
-| Styling          | Tailwind CSS v4 + `shadcn/ui` (Radix) + `tailwind-variants`         |
-| Charts           | TradingView **lightweight-charts** + optional Pro widget            |
-| AI               | Vercel **AI SDK v5** + Vercel AI Gateway / direct Vertex AI         |
-| State (server)   | TanStack Query                                                      |
-| State (client)   | Zustand + URL state (`nuqs`)                                        |
-| Live prices      | Persistent BiQuote SignalR (worker) → `live_ticks` Postgres snapshot; REST polling fallback every 1.5s with stale-while-revalidate cache (Phase 8 PR-6/7/8) |
-| Market data      | BiQuote (primary) + Finnhub (fallback) — health-aware failover; Twelve Data retired in Phase 8 PR-19   |
-| News             | Finnhub news (primary) + Marketaux (fallback)                       |
-| Macro / calendar | FRED + Trading Economics                                            |
-| DB               | **Supabase Postgres** (free tier) + `pgvector`                      |
-| ORM              | Drizzle                                                             |
-| Cache            | Next.js Data Cache (no Upstash needed) with SWR + single-flight     |
-| Cron             | systemd timers on a GCE e2-medium worker VM; light `/api/cron/*` pokers + 6 heavy worker-resident jobs (Phase 8) |
-| Auth             | Single **`APP_PASSWORD`** env + HMAC-signed cookie + middleware     |
-| Hosting          | **Vercel** — single deploy                                          |
-| Monorepo         | pnpm workspaces + Turborepo                                         |
+### 🤖 Multi-Agent Consensus Architecture
+Why trust one AI when you can consult a committee? When generating an alpha signal, the system spawns three specialized sub-agents in parallel:
+- 📊 **The Economist:** Evaluates macro fundamentals, tokenomics, and market sentiment.
+- 📉 **The Technician:** Analyzes real-time DEX depth, volume spikes, and historical price action.
+- 🛡️ **The Risk Manager:** Audits smart contract concentration risk and liquidity fragmentation.
+A final **Moderator Agent** synthesizes these three distinct viewpoints into a cohesive `A-F` grade and a `1-10` confidence score.
 
-> Single-user app. **No per-user rate limiting, no RLS, no GDPR/exports, no analytics, no eval CI.**
-> Manual eval via `pnpm --filter ai eval -- --cases` runs the 15-case acceptance suite with tool-trace assertions.
+### 🔗 Tamper-Proof On-Chain Identity
+AI predictions are only as good as their verifiable track record. 
+- The agent holds its own private key and acts as the owner of the `MantleAlphaLogger` smart contract.
+- Upon reaching a consensus, the agent automatically executes a transaction on Mantle Sepolia to permanently engrave its prediction (`direction`, `confidence`, `summary`, and `asset`).
+- Users can click directly from our premium UI to view the exact transaction on **MantleScan**.
+
+### 🐋 Live Data Ingestion Worker
+A dedicated Node.js background worker utilizes Mantle RPC nodes to continuously scan for high-value on-chain events. 
+- Detects massive token transfers (Whale Alerts) and calculates their USD value dynamically.
+- Monitors top Mantle DeFi protocols (like Merchant Moe and Agni Finance) for TVL anomalies.
+- Caches this data in a high-performance Supabase PostgreSQL database for the AI committee to query instantly.
+
+### 📱 Instant Telegram Push Routing
+High-conviction alpha is time-sensitive. If the committee generates a signal with a Confidence Score ≥ 7 or an A/B Grade, the system bypasses the web UI and instantly fires a rich Telegram Push Notification directly to the user's device, complete with actionable insights and the blockchain verification link.
 
 ---
 
-## Quickstart (for the owner)
+## 🏗 System Architecture
 
+```mermaid
+graph TD
+    subgraph Mantle Network
+        RPC[Mantle RPC Node]
+        SC[MantleAlphaLogger Contract]
+    end
+
+    subgraph HamaFX Backend
+        Worker[Background Scanner Worker]
+        DB[(Supabase PostgreSQL)]
+        AI[Vercel AI SDK Core]
+    end
+
+    subgraph Sub-Agents
+        Econ[Economist]
+        Tech[Technician]
+        Risk[Risk Manager]
+    end
+
+    RPC -->|Live Blocks| Worker
+    Worker -->|Whale/DeFi Events| DB
+    
+    User[User via Next.js UI] -->|Requests Analysis| AI
+    DB -->|Context| AI
+    
+    AI --> Econ
+    AI --> Tech
+    AI --> Risk
+    
+    Econ --> Moderator[Moderator Agent]
+    Tech --> Moderator
+    Risk --> Moderator
+    
+    Moderator -->|Logs Signal| SC
+    Moderator -->|Alerts| Telegram[Telegram Bot]
+```
+
+---
+
+## 📜 Smart Contract Identity
+
+The AI Agent acts as the autonomous owner of the `MantleAlphaLogger` contract. 
+- **Network:** Mantle Sepolia Testnet
+- **Chain ID:** `5003`
+- **Contract Address:** `0x6D29F763dF73A0C23D837aDAFF67DE68B48a92F9`
+- **Verification:** [View Live on MantleScan ↗](https://sepolia.mantlescan.xyz/address/0x6D29F763dF73A0C23D837aDAFF67DE68B48a92F9)
+
+---
+
+## 🚀 Quickstart & Deployment
+
+This project uses a modern **Turborepo** monorepo structure.
+
+### 1. Install Dependencies
 ```bash
+# We use pnpm for strict workspace management
 pnpm install
-cp .env.example .env.local      # fill in the secrets
-pnpm --filter db migrate:apply
-pnpm --filter web dev           # http://localhost:3000
 ```
 
-**Type-check + test + lint everything**:
-
+### 2. Environment Configuration
+Copy the environment templates:
 ```bash
-pnpm turbo run typecheck
-pnpm turbo run test
-pnpm turbo run lint
+cp .env.example .env.local
+cp contracts/.env.example contracts/.env
 ```
+Ensure you provide your LLM API keys (Google Vertex/Gemini), Supabase credentials, and Telegram Bot tokens in `.env.local`.
 
-**Run the eval against a deploy**:
-
+### 3. Database Migrations
+Push the Drizzle ORM schemas to your Supabase instance:
 ```bash
-pnpm --filter ai eval -- \
-  --base-url https://your-deploy.vercel.app \
-  --cookie "hfx_auth=..." \
-  --cases \
-  --out docs/eval
+cd packages/db
+pnpm run migrate:apply
 ```
+
+### 4. Agent Wallet & Contract Deployment
+The agent requires a funded Mantle Sepolia wallet to deploy its contract and pay for signal transactions.
+1. Claim testnet MNT from the [Mantle Faucet](https://faucet.testnet.mantle.xyz/) to the agent's wallet address (`0xF73BA9f4Fc94F4B648B10FBBc6dE9a708519D3D0`).
+2. Run our automated deployment script from the root directory:
+```bash
+./deploy-agent.sh
+```
+*This script will compile the Solidity contracts via Hardhat, deploy to Mantle, and auto-inject the resulting contract address into your `.env.local`.*
+
+### 5. Launch the Matrix
+Boot up the Next.js frontend and the background worker simultaneously:
+```bash
+pnpm dev
+```
+Navigate to [http://localhost:3000](http://localhost:3000) to access the **Agent Dashboard** and interact with the **On-Chain Signal Feed**.
 
 ---
-
-## Documentation Map
-
-The docs are numbered for reading order. Each file is self-contained and cross-links to the others.
-
-1. [`docs/00-overview.md`](./docs/00-overview.md) — Vision, scope, success metrics
-2. [`docs/01-architecture.md`](./docs/01-architecture.md) — System architecture (with diagrams)
-3. [`docs/02-tech-stack.md`](./docs/02-tech-stack.md) — Tech choices and rationale
-4. [`docs/03-project-structure.md`](./docs/03-project-structure.md) — Monorepo layout and naming
-5. [`docs/04-features.md`](./docs/04-features.md) — Feature catalog (Phase 1 → 7)
-6. [`docs/05-ui-ux.md`](./docs/05-ui-ux.md) — Mobile-first design, navigation, theming
-7. [`docs/06-data-sources.md`](./docs/06-data-sources.md) — Provider matrix, caching, health
-8. [`docs/07-ai-agent.md`](./docs/07-ai-agent.md) — Routing, tools, planner, verifier, memory
-9. [`docs/08-backend-and-api.md`](./docs/08-backend-and-api.md) — API routes (Vercel-only)
-10. [`docs/09-deployment.md`](./docs/09-deployment.md) — Vercel + GCE-VM cron, envs, CI
-11. [`docs/10-roadmap.md`](./docs/10-roadmap.md) — Phase 0 → 7 with checkboxes
-12. [`docs/11-conventions.md`](./docs/11-conventions.md) — Code style, naming, AI-friendly conventions
-13. [`docs/12-security-and-config.md`](./docs/12-security-and-config.md) — Secrets, password gate, guardrails
-14. [`docs/13-data-flow.md`](./docs/13-data-flow.md) — Sequence diagrams for key flows
-15. [`docs/14-ai-agent-handoff.md`](./docs/14-ai-agent-handoff.md) — How AI coding agents should read & extend this repo
-
-`/infra/cron-vm/` — GCE VM setup script + crontab + README for the cron scheduler.
-`.kiro/steering/` — area-specific rules autoloaded by Kiro/Claude/Cursor agents working on this repo.
+<div align="center">
+  <i>Built with 🖤 for the Mantle ecosystem.</i>
+</div>
