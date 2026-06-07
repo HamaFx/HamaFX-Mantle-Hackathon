@@ -46,7 +46,7 @@ High-conviction alpha is time-sensitive. If the committee generates a signal wit
 
 ## 🏗 System Architecture
 
-![System Architecture](.github/assets/architecture.png)
+![System Architecture](.github/assets/architecture-v2.png)
 
 ---
 
