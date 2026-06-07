@@ -103,5 +103,40 @@
     "expectedTools": ["replay_setup"],
     "forbiddenTools": [],
     "mustContainSubstrings": ["EURUSD"]
+  },
+  {
+    "id": "p16",
+    "prompt": "Analyze MNT/USDC for an alpha signal",
+    "expectedTools": ["analyze_alpha_signal"],
+    "forbiddenTools": [],
+    "mustContainSubstrings": []
+  },
+  {
+    "id": "p17",
+    "prompt": "What are the latest whale movements on Mantle?",
+    "expectedTools": ["get_whale_alerts"],
+    "forbiddenTools": [],
+    "mustContainSubstrings": []
+  },
+  {
+    "id": "p18",
+    "prompt": "Check DeFi pool activity on Mantle",
+    "expectedTools": ["get_defi_pools"],
+    "forbiddenTools": [],
+    "mustContainSubstrings": []
+  },
+  {
+    "id": "p19",
+    "prompt": "Show me the agent's performance stats",
+    "expectedTools": ["get_agent_performance"],
+    "forbiddenTools": [],
+    "mustContainSubstrings": []
+  },
+  {
+    "id": "p20",
+    "prompt": "Log this analysis on-chain for MNT",
+    "expectedTools": ["log_signal_onchain"],
+    "forbiddenTools": [],
+    "mustContainSubstrings": []
   }
 ]

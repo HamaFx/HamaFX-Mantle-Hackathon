@@ -36,6 +36,7 @@ import { routeTurn, type RoutingDecision } from './routing';
 import { generateTitle } from './title';
 import { withToolContext, type ToolContext } from './tool-context';
 import { tools } from './tools';
+import { getMessageContent } from './utils/content';
 import { enforceCitations } from './verification';
 import { waitUntil } from './wait-until';
 
@@ -134,8 +135,7 @@ export async function runChat(args: RunChatArgs) {
           role: m.role,
           parts: (Array.isArray(m.parts) && m.parts.length > 0
             ? m.parts
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            : [{ type: 'text', text: (m as any).content || (m as any).text || '' }]) as UIMessage['parts'],
+            : [{ type: 'text', text: getMessageContent(m as unknown as Record<string, unknown>) }]) as UIMessage['parts'],
         }) as UIMessage,
     ),
   );

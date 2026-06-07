@@ -1,11 +1,10 @@
 [Unit]
-Description=Self-update every 5 minutes
-# Run a few minutes after boot so a fresh VM picks up changes promptly.
+Description=Self-update every 20 minutes
 
 [Timer]
-OnBootSec=2min
-OnUnitActiveSec=5min
-RandomizedDelaySec=30
+OnBootSec=5min
+OnUnitActiveSec=20min
+RandomizedDelaySec=120
 Unit=hamafx-update.service
 
 [Install]

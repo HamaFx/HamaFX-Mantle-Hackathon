@@ -10,9 +10,9 @@ import { runFredActuals } from './fred-actuals.js';
 import { runSnapshots } from './snapshots.js';
 import { runWeeklyReview } from './weekly-review.js';
 import { runResonanceSync } from './resonance-sync.js';
-import type { JobFn, JobName } from './types.js';
+import type { JobDefinition, JobName } from './types.js';
 
-export const JOBS: Record<JobName, { run: JobFn; description: string }> = {
+export const JOBS: Record<JobName, JobDefinition> = {
   'embedding-backfill': {
     run: runEmbeddingBackfill,
     description:
@@ -31,6 +31,7 @@ export const JOBS: Record<JobName, { run: JobFn; description: string }> = {
   cot: {
     run: runCoT,
     description: 'Weekly CFTC Commitment-of-Traders ingestion. Phase 8 PR-12.',
+    skipLock: true,
   },
   'fred-actuals': {
     run: runFredActuals,
@@ -47,4 +48,4 @@ export const JOBS: Record<JobName, { run: JobFn; description: string }> = {
   },
 };
 
-export type { JobFn, JobName, JobContext, JobResult } from './types.js';
+export type { JobDefinition, JobFn, JobName, JobContext, JobResult } from './types.js';

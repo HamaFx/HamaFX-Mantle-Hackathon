@@ -23,3 +23,4 @@ export * from './live-ticks';
 export * from './candles-1m';
 export * from './throttle';
 export * from './intermarket-resonance';
+export * from './job-locks';

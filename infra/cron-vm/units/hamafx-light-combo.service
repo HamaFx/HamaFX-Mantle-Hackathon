@@ -1,0 +1,17 @@
+[Unit]
+Description=HamaFX-Ai light cron combo — news + alerts + warm-cache
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=/opt/hamafx/.env
+ExecStart=/bin/sh -c \
+  '/usr/bin/curl -fsS -m 30 -H "Authorization: Bearer ${CRON_SECRET}" ${PRODUCTION_URL}/api/cron/news || true; \
+   /usr/bin/curl -fsS -m 30 -H "Authorization: Bearer ${CRON_SECRET}" ${PRODUCTION_URL}/api/cron/alerts || true; \
+   /usr/bin/curl -fsS -m 30 -H "Authorization: Bearer ${CRON_SECRET}" ${PRODUCTION_URL}/api/cron/warm-cache || true'
+ExecStartPost=/bin/sh -c 'test -z "$HC_LIGHT_COMBO_UUID" || /usr/bin/curl -fsS -m 5 https://hc-ping.com/$HC_LIGHT_COMBO_UUID'
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=hamafx-light-combo

@@ -21,7 +21,7 @@ import {
   type Importance,
   type Symbol,
 } from '@hamafx/shared';
-import { generateText } from 'ai';
+import { generateText, type UIMessage } from 'ai';
 import { and, asc, eq } from 'drizzle-orm';
 
 import { dailySpendUsd } from '../cost';
@@ -115,8 +115,7 @@ async function emitEventBriefing(
     ],
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { messageId } = await appendAssistantMessage(thread.id, ui as any);
+  const { messageId } = await appendAssistantMessage(thread.id, ui as unknown as UIMessage);
   await recordEmitted(eventId, kind, messageId);
 
   // Phase 7b — embed the briefing into the memory index so it's
@@ -251,8 +250,7 @@ export async function emitWeeklyReview(): Promise<{ emitted: boolean; reason?: s
         } satisfies BriefingMessagePart,
       ],
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { messageId } = await appendAssistantMessage(thread.id, ui as any);
+    const { messageId } = await appendAssistantMessage(thread.id, ui as unknown as UIMessage);
     await recordEmitted(weekKey, 'weekly_review', messageId);
     return { emitted: true };
   }
@@ -288,8 +286,7 @@ export async function emitWeeklyReview(): Promise<{ emitted: boolean; reason?: s
       } satisfies BriefingMessagePart,
     ],
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { messageId } = await appendAssistantMessage(thread.id, ui as any);
+  const { messageId } = await appendAssistantMessage(thread.id, ui as unknown as UIMessage);
   await recordEmitted(weekKey, 'weekly_review', messageId);
 
   // Phase 7b — embed the weekly review for later memory recall.

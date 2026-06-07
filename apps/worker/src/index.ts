@@ -34,6 +34,7 @@ import {
   type NormalizedTick,
 } from './signalr/consumer.js';
 import { TickBuffer } from './signalr/tick-buffer.js';
+import { FinnhubTickSource } from './sources/finnhub.js';
 import { startMT5Server } from './mt5-server.js';
 import { OnChainScanner } from './onchain-scanner.js';
 
@@ -102,6 +103,7 @@ export interface RunningWorker {
   buffer: TickBuffer;
   aggregator: Candle1mAggregator;
   scanner: OnChainScanner;
+  finnhubSource: FinnhubTickSource;
   /** Idempotent. Cleanly tears down timers + the hub. */
   stop(): Promise<void>;
 }
@@ -175,6 +177,28 @@ export async function runWorker(args: RunWorkerArgs): Promise<RunningWorker> {
   });
 
   await consumer.start();
+
+  // BiQuote fallback — Finnhub REST poll activates when BiQuote ticks
+  // stop arriving. The poll source runs at 5s intervals and only emits
+  // ticks when lastTickAt is stale (>15s without a tick) AND MT5 isn't
+  // actively providing data.
+  let finnhubActive = false;
+  const finnhubSource = new FinnhubTickSource(log);
+  finnhubSource.onTick((tick: NormalizedTick) => {
+    const now = Date.now();
+    // Only emit Finnhub ticks when primary is silent AND MT5 is silent.
+    if (now - lastTickAt > 15_000 && (now - lastMt5TickAt > 15_000)) {
+      handleIncomingTick({ ...tick, source: 'biquote-signalr' });
+    }
+  });
+
+  // Start the Finnhub poller after a 15s delay so BiQuote has time to
+  // connect first. The poller itself checks the silence condition above.
+  setTimeout(() => {
+    finnhubSource.start().catch(() => {});
+    finnhubActive = true;
+  }, 15_000);
+
   // The consumer is connected and subscribed — tell systemd we're done
   // bootstrapping. Pair with `Type=notify` in hamafx-worker.service so
   // the unit only enters `active (running)` once we're ready.
@@ -216,10 +240,11 @@ export async function runWorker(args: RunWorkerArgs): Promise<RunningWorker> {
     clearInterval(flushTimer);
     if (heartbeatTimer) clearInterval(heartbeatTimer);
     
-    // Gracefully shut down both services in parallel
+    // Gracefully shut down all services in parallel
     await Promise.all([
       mt5Server.stop(),
       consumer.stop(),
+      finnhubActive ? finnhubSource.stop() : Promise.resolve(),
     ]);
 
     // Drain anything buffered after the last interval tick — best-effort.
@@ -237,7 +262,7 @@ export async function runWorker(args: RunWorkerArgs): Promise<RunningWorker> {
   const scanner = new OnChainScanner(db, log.with({ module: 'onchain-scanner' }), 30_000);
   scanner.start();
 
-  return { consumer, buffer, aggregator, scanner, stop };
+  return { consumer, buffer, aggregator, scanner, finnhubSource, stop };
 }
 
 export async function main(): Promise<void> {

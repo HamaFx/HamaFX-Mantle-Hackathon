@@ -28,6 +28,7 @@ import { setAlertTool } from './set-alert';
 import { shareSnapshotTool } from './share-snapshot';
 import { summarizeThreadTool } from './summarize-thread';
 import { verifyCallTool } from './verify-call';
+import type { Tool } from 'ai';
 import { withTelemetry } from './with-telemetry';
 import { conveneCommitteeTool } from './convene-committee';
 import { getIntermarketResonanceTool } from './get-intermarket-resonance';
@@ -56,8 +57,7 @@ export const tools = {
   analyze_fundamental: withTelemetry('analyze_fundamental', analyzeFundamentalTool),
   annotate_chart: withTelemetry('annotate_chart', annotateChartTool),
   // Phase 3 tools
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  analyze_chart_image: withTelemetry('analyze_chart_image', analyzeChartImageTool as any),
+  analyze_chart_image: withTelemetry('analyze_chart_image', analyzeChartImageTool as unknown as Tool<string, unknown>),
   get_correlation: withTelemetry('get_correlation', getCorrelationTool),
   share_snapshot: withTelemetry('share_snapshot', shareSnapshotTool),
   // Phase 7b tools
@@ -66,8 +66,7 @@ export const tools = {
   forecast_volatility: withTelemetry('forecast_volatility', forecastVolatilityTool),
   get_seasonality: withTelemetry('get_seasonality', getSeasonalityTool),
   compute_position_health: withTelemetry('compute_position_health', computePositionHealthTool),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  summarize_thread: withTelemetry('summarize_thread', summarizeThreadTool as any),
+  summarize_thread: withTelemetry('summarize_thread', summarizeThreadTool as unknown as Tool<string, unknown>),
   // Phase 7c tools
   verify_call: withTelemetry('verify_call', verifyCallTool),
   convene_committee: withTelemetry('convene_committee', conveneCommitteeTool),

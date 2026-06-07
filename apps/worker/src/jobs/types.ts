@@ -20,6 +20,13 @@ export interface JobResult {
 /** A registered job's run function. */
 export type JobFn = (ctx: JobContext) => Promise<JobResult>;
 
+export interface JobDefinition {
+  run: JobFn;
+  description: string;
+  /** When true, the runner skips the distributed lock for this job. */
+  skipLock?: boolean | undefined;
+}
+
 /**
  * The full set of jobs that can be invoked from the runner CLI.
  */

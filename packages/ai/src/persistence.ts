@@ -6,6 +6,7 @@ import type { Symbol } from '@hamafx/shared';
 import type { ModelMessage, UIMessage } from 'ai';
 import { asc, desc, eq } from 'drizzle-orm';
 
+import { getMessageContent } from './utils/content';
 import { estimateCostUsd } from './cost';
 
 // ---------------------------------------------------------------------------
@@ -254,8 +255,7 @@ function extractText(m: UIMessage): string {
     .trim();
   
   if (fromParts) return fromParts;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return ((m as any).content || (m as any).text || '').trim();
+  return getMessageContent(m as unknown as Record<string, unknown>).trim();
 }
 
 // ---------------------------------------------------------------------------

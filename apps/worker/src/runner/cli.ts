@@ -3,12 +3,14 @@
 //   ExecStart=/usr/bin/node /opt/hamafx/app/apps/worker/dist/runner/cli.js <name>
 //
 // Resolves env, builds a logger pre-tagged with the job name, pings
-// healthchecks.io start/success/fail, and runs the registered job
-// function. Exit codes:
-//   0  — success
+// healthchecks.io start/success/fail, acquires a Postgres-backed
+// distributed lock so the same job can't run concurrently, and runs
+// the registered job function. Exit codes:
+//   0  — success (or skipped because lock was held)
 //   1  — env / argv error (job not found, env malformed)
 //   2  — job threw (already pinged fail)
 
+import { acquireJobLock, releaseJobLock } from '@hamafx/db';
 import { loadEnv } from '../env.js';
 import { ping, withHeartbeat } from '../healthchecks.js';
 import { JOBS, type JobName } from '../jobs/index.js';
@@ -71,6 +73,17 @@ async function main(): Promise<number> {
   const job = JOBS[jobName];
   const hcUuid = resolveHcUuid(env, jobName);
 
+  // Acquire distributed lock unless the job opts out.
+  const useLock = !job.skipLock;
+  let lockHeld = false;
+  if (useLock) {
+    lockHeld = await acquireJobLock(jobName);
+    if (!lockHeld) {
+      log.info('job already running elsewhere — skipping');
+      return 0;
+    }
+  }
+
   // SIGTERM from systemd → AbortSignal so jobs can short-circuit cleanly.
   const ac = new AbortController();
   const sigtermHandler = (): void => {
@@ -98,6 +111,11 @@ async function main(): Promise<number> {
     await ping(hcUuid, 'fail', msg.slice(0, 1000));
     return 2;
   } finally {
+    if (lockHeld) {
+      await releaseJobLock(jobName).catch((err) =>
+        log.warn('releaseJobLock failed', { err: String(err) }),
+      );
+    }
     await flushSentry(2_000);
     process.removeListener('SIGTERM', sigtermHandler);
     process.removeListener('SIGINT', sigtermHandler);

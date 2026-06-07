@@ -21,6 +21,7 @@ import { desc, eq, gte, sql } from 'drizzle-orm';
 
 import { dailySpendUsd } from '../cost';
 import { embedTexts, vectorLiteral } from '../embeddings';
+import { hasRows } from '../utils/rows';
 
 export type MemoryKind = 'journal' | 'briefing' | 'thread_synopsis';
 
@@ -278,9 +279,8 @@ export async function searchMemory(args: SearchMemoryArgs): Promise<MemoryRow[]>
     LIMIT ${limit}
   `);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rows = (result as any).rows ?? (result as unknown as MemoryRow[]);
-  return (rows as Array<MemoryRow & { occurredAt: Date | string }>).map((r) => {
+  const rows = hasRows<MemoryRow & { occurredAt: Date | string }>(result) ? result.rows : (result as unknown as (MemoryRow & { occurredAt: Date | string })[]);
+  return rows.map((r) => {
     const occurredMs =
       r.occurredAt instanceof Date ? r.occurredAt.getTime() : Date.parse(String(r.occurredAt));
     return {

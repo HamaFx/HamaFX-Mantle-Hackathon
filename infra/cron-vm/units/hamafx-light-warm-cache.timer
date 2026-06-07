@@ -1,9 +1,9 @@
 [Unit]
-Description=Light cron — cache warmer every 2 minutes
+Description=Light cron — cache warmer every 10 minutes
 
 [Timer]
-OnCalendar=*:0/2
-RandomizedDelaySec=10
+OnCalendar=*:0/10
+RandomizedDelaySec=30
 Unit=hamafx-light-warm-cache.service
 
 [Install]

@@ -16,6 +16,13 @@ const nextConfig = {
   typescript: { ignoreBuildErrors: false },
   eslint: { ignoreDuringBuilds: false },
 
+  // Tree-shake heavy icon/component packages at the bundler level.
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'lightweight-charts', 'vaul', 'motion'],
+    // Larger body for chat tool-result payloads.
+    serverActions: { bodySizeLimit: '2mb' },
+  },
+
   // Stricter security headers — see docs/12-security-and-config.md.
   async headers() {
     return [
@@ -48,11 +55,6 @@ const nextConfig = {
         ],
       },
     ];
-  },
-
-  experimental: {
-    // Larger body for chat tool-result payloads.
-    serverActions: { bodySizeLimit: '2mb' },
   },
 };
 

@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, prefer-const */
 import { getDb, schema } from '@hamafx/db';
 import {
   ConveneCommitteeInputSchema,
   type CommitteeVerdict,
   type ConveneCommitteeOutput,
-  type Symbol,
 } from '@hamafx/shared';
 import { tool, generateText } from 'ai';
 import type { z } from 'zod';
@@ -15,6 +13,11 @@ import { resolveModel, getVertexGoogleSearchTool } from '../model';
 import { analyzeFundamentalTool } from './analyze-fundamental';
 import { analyzeTechnicalTool } from './analyze-technical';
 import { computeRiskTool } from './compute-risk';
+
+interface InternalToolCallMeta {
+  toolCallId: string;
+  messages: Array<{ role: 'user' | 'assistant'; content: string }>;
+}
 
 const InputSchema = ConveneCommitteeInputSchema;
 
@@ -33,10 +36,11 @@ export const conveneCommitteeTool = tool({
     const { symbol, side, entry, stop, target } = input;
 
     // 1. Pre-fetch context data in parallel
+    const meta: InternalToolCallMeta = { toolCallId: 'internal', messages: [] };
     const [fundamentalData, technicalData, riskData] = await Promise.all([
-      analyzeFundamentalTool.execute!({ symbol, horizonHours: 48 }, { toolCallId: 'internal', messages: [] } as any),
-      analyzeTechnicalTool.execute!({ symbol, timeframes: ['1d', '4h', '1h', '15m'] }, { toolCallId: 'internal', messages: [] } as any),
-      stop ? computeRiskTool.execute!({ symbol, side, entry, stop, target: target ?? undefined, accountUsd: 1000, riskPct: 1 }, { toolCallId: 'internal', messages: [] } as any) : Promise.resolve(null),
+      analyzeFundamentalTool.execute!({ symbol, horizonHours: 48 }, meta),
+      analyzeTechnicalTool.execute!({ symbol, timeframes: ['1d', '4h', '1h', '15m'] }, meta),
+      stop ? computeRiskTool.execute!({ symbol, side, entry, stop, target: target ?? undefined, accountUsd: 1000, riskPct: 1 }, meta) : Promise.resolve(null),
     ]);
 
     // 2. Run the 3 Personas in parallel
@@ -93,7 +97,7 @@ No markdown fences, no preamble.`;
       model: resolveModel(env.AI_FUNDAMENTAL_MODEL || 'google-vertex/gemini-2.5-flash', env),
       system: "You are an expert forex macroeconomic analyst. Always output raw JSON.",
       prompt,
-      tools: { googleSearch: getVertexGoogleSearchTool(env as any) },
+      tools: { googleSearch: getVertexGoogleSearchTool(env as unknown as Parameters<typeof getVertexGoogleSearchTool>[0]) },
     });
 
     const parsed = parseJson<Omit<CommitteeVerdict, 'persona' | 'sources'>>(text);

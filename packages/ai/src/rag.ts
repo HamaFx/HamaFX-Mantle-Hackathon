@@ -20,6 +20,7 @@ import { sql } from 'drizzle-orm';
 
 import { embedTexts, vectorLiteral } from './embeddings';
 import { searchMemory, type MemoryKind, type MemoryRow } from './memory/memory-index';
+import { hasRows } from './utils/rows';
 
 interface RagRow {
   id: string;
@@ -113,9 +114,8 @@ async function runDenseNewsQuery(args: SubQueryArgs): Promise<RagRow[]> {
     LIMIT ${limit}
   `);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rows = (result as any).rows ?? (result as unknown as RagRow[]);
-  return (rows as RagRow[]).map((r) => ({
+  const rows = hasRows<RagRow>(result) ? result.rows : (result as unknown as RagRow[]);
+  return rows.map((r) => ({
     ...r,
     publishedAt: r.publishedAt instanceof Date ? r.publishedAt : new Date(r.publishedAt),
     similarity: Number(r.similarity),
@@ -160,9 +160,8 @@ async function runFtsNewsQuery(args: FtsSubQueryArgs): Promise<RagRow[]> {
     LIMIT ${limit}
   `);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rows = (result as any).rows ?? (result as unknown as RagRow[]);
-  return (rows as RagRow[]).map((r) => ({
+  const rows = hasRows<RagRow>(result) ? result.rows : (result as unknown as RagRow[]);
+  return rows.map((r) => ({
     ...r,
     publishedAt: r.publishedAt instanceof Date ? r.publishedAt : new Date(r.publishedAt),
     // FTS rank → pseudo-similarity for downstream uniformity. We never
