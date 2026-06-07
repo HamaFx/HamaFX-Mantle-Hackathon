@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { SymbolSchema } from '../../symbols';
 
 export const GetIntermarketResonanceInputSchema = z.object({
-  symbol: SymbolSchema.default('XAUUSD'),
+  symbol: SymbolSchema.default('BTCUSDT'),
   days: z.number().int().min(5).max(60).default(30),
 });
 export type GetIntermarketResonanceInput = z.infer<typeof GetIntermarketResonanceInputSchema>;

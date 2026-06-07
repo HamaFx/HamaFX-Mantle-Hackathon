@@ -53,7 +53,7 @@ export const computeRiskTool = tool({
         : 0;
     // 1 lot = 100,000 units for FX, 100 oz for XAU. We surface units so a
     // user on a non-lot UI (oanda/MT5 unit input) can copy the integer.
-    const unitsPerLot = symbol === 'XAUUSD' ? 100 : 100_000;
+    const unitsPerLot = symbol === 'BTCUSDT' ? 1 : 100_000;
     const positionSizeUnits = positionSizeLots * unitsPerLot;
 
     const rewardUsd =
@@ -101,7 +101,7 @@ function pipValueUsdPerLotFor(symbol: Symbol): number {
   // Personal-mode: all three supported pairs are USD-quoted, so one pip per
   // 1 standard lot is $10 across the board (XAU 1 lot = 100 oz × 0.1; FX
   // 1 lot = 100,000 base × 0.0001 = $10).
-  if (symbol === 'XAUUSD') return 10;
+  if (symbol === 'BTCUSDT') return 10;
   return 10;
 }
 

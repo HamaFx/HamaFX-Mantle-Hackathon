@@ -23,13 +23,13 @@ interface Prompt {
 const PROMPTS: readonly Prompt[] = [
   {
     icon: TrendingUp,
-    label: "What's the bias on gold?",
+    label: "What's the bias on Mantle?",
     bg: 'oklch(78% 0.16 78 / 0.18)',
     fg: 'text-brand',
   },
   {
     icon: LineChart,
-    label: 'Top-down XAUUSD 4H→15M',
+    label: 'Top-down MNTUSDT 4H→15M',
     bg: 'oklch(74% 0.16 230 / 0.15)',
     fg: 'text-info',
   },
@@ -47,7 +47,7 @@ const PROMPTS: readonly Prompt[] = [
   },
   {
     icon: Bell,
-    label: 'Alert XAUUSD above 2400',
+    label: 'Alert MNTUSDT above 2.4',
     bg: 'oklch(82% 0.16 80 / 0.15)',
     fg: 'text-warn',
   },

@@ -43,9 +43,9 @@ const BAR_MS: Record<Timeframe, number> = {
 };
 
 const CURRENCIES_BY_SYMBOL: Record<Symbol, EventCurrency[]> = {
-  XAUUSD: ['USD'],
-  EURUSD: ['EUR', 'USD'],
-  GBPUSD: ['GBP', 'USD'],
+  MNTUSDT: ['USD'],
+  BTCUSDT: ['USD'],
+  ETHUSDT: ['USD'],
 };
 
 export const forecastVolatilityTool = tool({

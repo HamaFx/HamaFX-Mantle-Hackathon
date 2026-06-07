@@ -54,7 +54,7 @@ export function VerifyCallPart({ output, state, errorMessage }: ToolPartProps<'v
           Nearest opposing{' '}
           {output.nearestOpposingLiquidity.kind === 'swing_high' ? 'swing high' : 'swing low'}:{' '}
           <span className="text-fg-muted font-medium">
-            {output.nearestOpposingLiquidity.price.toFixed(output.symbol === 'XAUUSD' ? 2 : 5)}
+            {output.nearestOpposingLiquidity.price.toFixed(output.symbol === 'MNTUSDT' ? 4 : 2)}
           </span>{' '}
           ({output.nearestOpposingLiquidity.barsAgo} bars back)
         </p>

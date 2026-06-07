@@ -30,7 +30,7 @@ const COMMON_INDICATORS = ['rsi:14', 'ema:50', 'ema:200', 'sma:50', 'atr:14'] as
 
 export function AlertForm({ initialSymbol, onCreated }: AlertFormProps) {
   const [type, setType] = useState<RuleType>('priceCross');
-  const [symbol, setSymbol] = useState<Symbol>(initialSymbol ?? 'XAUUSD');
+  const [symbol, setSymbol] = useState<Symbol>(initialSymbol ?? 'MNTUSDT');
   const [tf, setTf] = useState<Timeframe>('1h');
   const [indicator, setIndicator] = useState<string>('rsi:14');
   const [direction, setDirection] = useState<'above' | 'below'>('above');
@@ -184,7 +184,7 @@ export function AlertForm({ initialSymbol, onCreated }: AlertFormProps) {
           value={level}
           onChange={(e) => setLevel(e.target.value)}
           inputMode="decimal"
-          placeholder={symbol === 'XAUUSD' ? 'e.g. 2400' : 'e.g. 1.0850'}
+          placeholder={symbol === 'MNTUSDT' ? 'e.g. 2400' : 'e.g. 1.0850'}
         />
       </div>
 

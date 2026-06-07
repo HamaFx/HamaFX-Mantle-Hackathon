@@ -4,7 +4,7 @@
 
 import { z } from 'zod';
 
-export const SYMBOLS = ['XAUUSD', 'EURUSD', 'GBPUSD'] as const;
+export const SYMBOLS = ['MNTUSDT', 'BTCUSDT', 'ETHUSDT'] as const;
 export type Symbol = (typeof SYMBOLS)[number];
 
 export const SymbolSchema = z.enum(SYMBOLS);
@@ -24,20 +24,14 @@ export function isCryptoSymbol(value: unknown): value is CryptoSymbol {
 export const ALL_SYMBOLS = [...SYMBOLS, ...CRYPTO_SYMBOLS] as const;
 export type AnySymbol = Symbol | CryptoSymbol;
 
-/** Standard pip size per symbol (5-decimal FX, 1-decimal gold). */
+/** Standard pip size per symbol (not deeply relevant for crypto, dummy values). */
 export function pipSize(symbol: Symbol): number {
-  switch (symbol) {
-    case 'XAUUSD':
-      return 0.1;
-    case 'EURUSD':
-    case 'GBPUSD':
-      return 0.0001;
-  }
+  return 0.0001;
 }
 
 /** Number of price decimals to show by default. */
 export function priceDecimals(symbol: Symbol): number {
-  return symbol === 'XAUUSD' ? 2 : 5;
+  return symbol === 'MNTUSDT' ? 4 : 2;
 }
 
 /** Format a price delta as a signed pip count, e.g. "-12.4 pips". */

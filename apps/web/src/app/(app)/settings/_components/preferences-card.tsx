@@ -5,7 +5,7 @@
 // the relevant surfaces on demand.
 //
 // Currently exposes:
-//   - Default symbol (XAUUSD / EURUSD / GBPUSD) → seeds /chart on first
+//   - Default symbol (MNTUSDT / BTCUSDT / ETHUSDT) → seeds /chart on first
 //     visit and the chat composer placeholder
 //   - Time format (12h vs 24h)
 //   - Reduced motion override (auto vs always reduced)
@@ -32,7 +32,7 @@ interface Prefs {
 const STORAGE_KEY = 'hamafx:prefs';
 
 const DEFAULTS: Prefs = {
-  defaultSymbol: 'XAUUSD',
+  defaultSymbol: 'MNTUSDT',
   timeFormat: '24h',
   reduceMotion: false,
 };
@@ -45,9 +45,9 @@ function read(): Prefs {
     const parsed = JSON.parse(raw) as Partial<Prefs>;
     return {
       defaultSymbol:
-        parsed.defaultSymbol === 'XAUUSD' ||
-        parsed.defaultSymbol === 'EURUSD' ||
-        parsed.defaultSymbol === 'GBPUSD'
+        parsed.defaultSymbol === 'MNTUSDT' ||
+        parsed.defaultSymbol === 'BTCUSDT' ||
+        parsed.defaultSymbol === 'ETHUSDT'
           ? parsed.defaultSymbol
           : DEFAULTS.defaultSymbol,
       timeFormat: parsed.timeFormat === '12h' ? '12h' : '24h',
@@ -118,9 +118,9 @@ export function PreferencesCard() {
             variant="solid"
             size="sm"
             options={[
-              { value: 'XAUUSD', label: 'XAU' },
-              { value: 'EURUSD', label: 'EUR' },
-              { value: 'GBPUSD', label: 'GBP' },
+              { value: 'MNTUSDT', label: 'MNT' },
+              { value: 'BTCUSDT', label: 'BTC' },
+              { value: 'ETHUSDT', label: 'ETH' },
             ]}
           />
         }

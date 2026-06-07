@@ -3,8 +3,7 @@
 // Cross-asset pulse: USD-strength proxy (50/50 EUR/GBP), gold 24h pulse,
 // and the XAU↔DXY-proxy correlation in the requested window. Regime is
 // derived deterministically from the signs and magnitudes; `regimeBreak`
-// flags when the correlation has flipped sign (the pair is *typically*
-// strongly negative — the dollar up = gold down).
+// strongly negative).
 
 import { getCandles } from '@hamafx/data';
 import {
@@ -30,14 +29,14 @@ const DXY_FORMULA =
 
 export const getIntermarketTool = tool({
   description:
-    "Cross-asset pulse: USD-strength proxy + 24h change, gold's 24h percent change, and XAU↔DXY-proxy correlation in the chosen window. Flags `regimeBreak` when the typical XAU↔DXY anti-correlation has flipped. Use for any 'what's the dollar doing', 'is gold tracking the dollar today', or 'risk on or off' prompt — captures the macro pulse the agent needs to stop guessing.",
+    "Cross-asset pulse: Crypto-strength proxy + 24h change, MNT's 24h percent change, and MNT↔Crypto-proxy correlation in the chosen window. Flags `regimeBreak` when the typical anti-correlation has flipped. Use for any 'what's crypto doing', 'is MNT tracking BTC/ETH today', or 'risk on or off' prompt.",
   inputSchema: InputSchema,
   execute: async ({ tf, windowBars }): Promise<GetIntermarketOutput> => {
     const need = windowBars + 1;
     const series = new Map<Symbol, BareReturns>();
     let partial = false;
 
-    for (const symbol of ['XAUUSD', 'EURUSD', 'GBPUSD'] as const) {
+    for (const symbol of ['MNTUSDT', 'BTCUSDT', 'ETHUSDT'] as const) {
       try {
         const bars = await getCandles(symbol, tf, { count: need });
         series.set(symbol, bareReturns(bars));
@@ -46,9 +45,9 @@ export const getIntermarketTool = tool({
       }
     }
 
-    const xau = series.get('XAUUSD');
-    const eur = series.get('EURUSD');
-    const gbp = series.get('GBPUSD');
+    const xau = series.get('MNTUSDT');
+    const eur = series.get('BTCUSDT');
+    const gbp = series.get('ETHUSDT');
 
     const dxyProxy = computeDxyProxy(eur, gbp);
     const goldChange24h = computeChange24h(xau);
@@ -229,16 +228,16 @@ function buildNotes(args: {
 }): string {
   const regimeLine =
     args.regime === 'risk-on'
-      ? 'Dollar offered, gold bid — risk-on tone.'
+      ? 'Crypto bid, MNT bid — risk-on tone.'
       : args.regime === 'risk-off'
-        ? 'Dollar bid, gold offered — risk-off tone.'
+        ? 'Crypto offered, MNT offered — risk-off tone.'
         : 'Mixed signals — neutral macro pulse.';
   const corrLine =
     args.xauDxyCorrelation <= -0.4
-      ? 'XAU and DXY are tracking their typical anti-correlation.'
+      ? 'MNT and Crypto Proxy are tracking their typical anti-correlation.'
       : args.xauDxyCorrelation >= 0.4
-        ? 'XAU and DXY are moving together — atypical, treat with caution.'
-        : 'XAU/DXY relationship is loose this window.';
+        ? 'MNT and Crypto Proxy are moving together — atypical, treat with caution.'
+        : 'MNT/Crypto Proxy relationship is loose this window.';
   const breakLine = args.regimeBreak ? ' Regime-break flag is on.' : '';
   return `${regimeLine} ${corrLine}${breakLine}`;
 }

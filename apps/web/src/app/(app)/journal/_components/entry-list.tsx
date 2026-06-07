@@ -151,7 +151,7 @@ export function EntryList({ entries, onClosed, onDeleted }: EntryListProps) {
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-bold uppercase tracking-wider text-fg-subtle">Asset Class</label>
             <div className="flex flex-wrap gap-1">
-              {(['ALL', 'XAUUSD', 'EURUSD', 'GBPUSD'] as const).map((sym) => (
+              {(['ALL', 'MNTUSDT', 'BTCUSDT', 'ETHUSDT'] as const).map((sym) => (
                 <button
                   key={sym}
                   onClick={() => setSymbolFilter(sym)}
@@ -288,13 +288,13 @@ function EntryRow({
     const diff = entry.side === 'long' ? livePrice - entry.entry : entry.entry - livePrice;
     
     // Pip calculations: Gold uses *10, Forex uses *10000
-    const pipMultiplier = entry.symbol === 'XAUUSD' ? 10 : 10000;
+    const pipMultiplier = entry.symbol === 'MNTUSDT' ? 10 : 10000;
     const pips = diff * pipMultiplier;
 
     // USD Cash calculations (size = lots)
     let cashPnl = 0;
     if (entry.size !== null) {
-      const contractSize = entry.symbol === 'XAUUSD' ? 100 : 100000;
+      const contractSize = entry.symbol === 'MNTUSDT' ? 100 : 100000;
       cashPnl = entry.size * contractSize * diff;
     }
 

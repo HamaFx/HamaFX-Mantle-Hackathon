@@ -25,11 +25,11 @@ declare module '@hamafx/shared' {
 
 export const getCoTTool = tool({
   description:
-    "Last N weeks of CFTC Commitment-of-Traders rows for one symbol (default XAUUSD). Use to answer 'how is leveraged-fund net positioning changing on gold' or 'are dealers net long the dollar'. Returns 4-bucket long/short positions per week (dealer / asset / leveraged / other). Computes net = long - short on the agent side.",
+    "Last N weeks of CFTC Commitment-of-Traders rows for one symbol (default BTCUSDT). Use to answer 'how is leveraged-fund net positioning changing on BTC' or 'are dealers net long crypto'. Returns 4-bucket long/short positions per week (dealer / asset / leveraged / other). Computes net = long - short on the agent side.",
   inputSchema: InputSchema,
   execute: async ({ symbol, weeks }): Promise<GetCoTOutput> => {
     const populated = await countCoTRows();
-    const requestedSymbol: Symbol = symbol ?? 'XAUUSD';
+    const requestedSymbol: Symbol = symbol ?? 'BTCUSDT';
     if (populated === 0) {
       return {
         symbol: requestedSymbol,

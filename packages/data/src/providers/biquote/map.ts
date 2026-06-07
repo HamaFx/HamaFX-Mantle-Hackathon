@@ -13,9 +13,9 @@ import type { BiquoteTimeframe } from '@hamafx/shared';
 import type { Symbol, Timeframe } from '@hamafx/shared';
 
 const TO_BIQUOTE_SYMBOL: Record<Symbol, string> = {
-  XAUUSD: 'XAUUSD',
-  EURUSD: 'EURUSD',
-  GBPUSD: 'GBPUSD',
+  MNTUSDT: 'MNTUSDT',
+  BTCUSDT: 'BTCUSDT',
+  ETHUSDT: 'ETHUSDT',
 };
 
 /**

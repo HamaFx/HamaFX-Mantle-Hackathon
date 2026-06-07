@@ -60,10 +60,10 @@ export default async function ChatThreadPage({ params, searchParams }: PageProps
       initialThreads={allThreads.map((t) => ({
         id: t.id,
         title: t.titleSource === 'llm' && t.title ? t.title : null,
-        pinnedSymbol: t.pinnedSymbol,
+        pinnedSymbol: t.pinnedSymbol as 'MNTUSDT' | 'BTCUSDT' | 'ETHUSDT' | null,
         updatedAt: t.updatedAt,
       }))}
-      pinnedSymbol={thread.pinnedSymbol}
+      pinnedSymbol={thread.pinnedSymbol as 'MNTUSDT' | 'BTCUSDT' | 'ETHUSDT' | null}
       autoSubmitPrompt={prompt && prompt.trim().length > 0 ? prompt : null}
     />
   );

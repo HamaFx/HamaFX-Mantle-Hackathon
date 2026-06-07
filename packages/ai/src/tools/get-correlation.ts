@@ -30,8 +30,8 @@ declare module '@hamafx/shared' {
 }
 
 const _FX_PAIRS_FOR_DXY: Array<{ symbol: Symbol; weight: number }> = [
-  { symbol: 'EURUSD', weight: 0.5 },
-  { symbol: 'GBPUSD', weight: 0.5 },
+  { symbol: 'BTCUSDT', weight: 0.5 },
+  { symbol: 'ETHUSDT', weight: 0.5 },
 ];
 void _FX_PAIRS_FOR_DXY;
 
@@ -39,7 +39,7 @@ const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 export const getCorrelationTool = tool({
   description:
-    "Pearson correlation matrix over close-to-close returns for XAUUSD/EURUSD/GBPUSD at the given timeframe + window, plus a USD-strength proxy ('DXY proxy') computed from EURUSD and GBPUSD with 50/50 weights. Use for any 'are EUR and GBP both selling off' / 'how correlated is gold to the dollar' / 'what's the dollar doing today' prompt. Returns the formula verbatim so you can cite it.",
+    "Pearson correlation matrix over close-to-close returns for MNTUSDT/BTCUSDT/ETHUSDT at the given timeframe + window, plus a Crypto-strength proxy ('Crypto proxy') computed from BTCUSDT and ETHUSDT with 50/50 weights. Use for any 'are BTC and ETH both selling off' / 'how correlated is MNT to BTC' / 'what's crypto doing today' prompt. Returns the formula verbatim so you can cite it.",
   inputSchema: InputSchema,
   execute: async ({ tf, windowBars }): Promise<GetCorrelationOutput> => {
     const need = windowBars + 1;
@@ -145,11 +145,11 @@ function computeDxyProxy(
   tf: Timeframe,
   windowBars: number,
 ): GetCorrelationOutput['dxyProxy'] {
-  const eur = data.get('EURUSD');
-  const gbp = data.get('GBPUSD');
+  const eur = data.get('BTCUSDT');
+  const gbp = data.get('ETHUSDT');
 
   const formula =
-    'DXY proxy = 100 / (EURUSD^0.5 * GBPUSD^0.5). Two-leg approximation; not a true DXY (no JPY/CAD/SEK/CHF).';
+    'Crypto proxy = 100 / (BTCUSDT^0.5 * ETHUSDT^0.5). Two-leg approximation; not a true index.';
 
   if (!eur || !gbp || eur.closes.length === 0 || gbp.closes.length === 0) {
     return { value: 0, change24h: 0, samples: 0, formula };

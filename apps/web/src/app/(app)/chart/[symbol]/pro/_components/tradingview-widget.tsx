@@ -4,7 +4,7 @@
 //
 // Loads `tv.js` once via next/script, then constructs the widget against
 // a div container. We pass the matching OANDA prefix the rest of the
-// data layer uses (`OANDA:XAUUSD` etc.) so the symbol picker on the
+// data layer uses (`BINANCE:MNTUSDT` etc.) so the symbol picker on the
 // widget shows the same symbol the user came from.
 //
 // Failure modes:
@@ -44,9 +44,9 @@ declare global {
 }
 
 const SYMBOL_TO_TV: Record<Symbol, string> = {
-  XAUUSD: 'OANDA:XAUUSD',
-  EURUSD: 'OANDA:EURUSD',
-  GBPUSD: 'OANDA:GBPUSD',
+  MNTUSDT: 'BINANCE:MNTUSDT',
+  BTCUSDT: 'BINANCE:BTCUSDT',
+  ETHUSDT: 'BINANCE:ETHUSDT',
 };
 
 const TF_TO_TV_INTERVAL: Record<Timeframe, string> = {

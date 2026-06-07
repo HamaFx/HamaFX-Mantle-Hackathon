@@ -149,7 +149,7 @@ export async function fetchNews(opts: FetchNewsOptions = {}): Promise<NewsArticl
   // dedupe across symbols within a single fetch.
   if (opts.symbol) {
     return value.filter(
-      (a) => a.symbols.includes(opts.symbol as Symbol) || a.symbols.includes('XAU'),
+      (a) => a.symbols.includes(opts.symbol as Symbol),
     );
   }
   return value;
@@ -161,15 +161,10 @@ export async function fetchNews(opts: FetchNewsOptions = {}): Promise<NewsArticl
 
 /** Keywords that map to our supported symbols/currencies. */
 const SYMBOL_KEYWORDS: Array<[RegExp, SymbolOrCurrencyTag]> = [
-  [/\b(XAU|gold|XAUUSD)\b/i, 'XAUUSD'],
-  [/\b(EUR\/USD|EURUSD|euro)\b/i, 'EURUSD'],
-  [/\b(GBP\/USD|GBPUSD|sterling|pound)\b/i, 'GBPUSD'],
-  [/\b(USD|dollar|greenback|DXY)\b/i, 'USD'],
-  [/\b(EUR|euro)\b/i, 'EUR'],
-  [/\b(GBP|pound|sterling)\b/i, 'GBP'],
-  [/\b(Fed|FOMC|NFP|CPI|PCE)\b/i, 'USD'],
-  [/\b(ECB)\b/i, 'EUR'],
-  [/\b(BoE|BOE)\b/i, 'GBP'],
+  [/\b(MNT|Mantle|MNTUSDT)\b/i, 'MNTUSDT'],
+  [/\b(BTC|Bitcoin|BTCUSDT)\b/i, 'BTCUSDT'],
+  [/\b(ETH|Ethereum|ETHUSDT)\b/i, 'ETHUSDT'],
+  [/\b(USD|dollar|greenback|Tether|USDT)\b/i, 'USD'],
 ];
 
 function extractSymbolsFromText(

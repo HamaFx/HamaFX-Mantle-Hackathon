@@ -25,9 +25,9 @@ const FX_CURRENCY_TAGS: Record<string, CurrencyTag> = {
 
 const GOLD_RE = /\b(gold|xau)\b/i;
 const PAIR_RE: Array<[RegExp, Symbol]> = [
-  [/\bxau[\s/-]?usd\b/i, 'XAUUSD'],
-  [/\beur[\s/-]?usd\b/i, 'EURUSD'],
-  [/\bgbp[\s/-]?usd\b/i, 'GBPUSD'],
+  [/\bmnt[\s/-]?usdt\b/i, 'MNTUSDT'],
+  [/\bbtc[\s/-]?usdt\b/i, 'BTCUSDT'],
+  [/\beth[\s/-]?usdt\b/i, 'ETHUSDT'],
 ];
 
 /**
@@ -61,12 +61,9 @@ export function extractSymbols(args: {
     if (re.test(text)) out.add(sym);
   }
 
-  // 3) Gold detection. We tag both the currency-style "XAU" and (when paired
-  //    with USD context) the instrument "XAUUSD".
-  if (GOLD_RE.test(text)) {
-    out.add('XAU');
-    // If there's USD context elsewhere in the article, bump to XAUUSD too.
-    if (/\busd\b|\bdollar\b|\bfed\b/i.test(text)) out.add('XAUUSD');
+  // 3) Crypto detection.
+  if (/\b(crypto|web3|bitcoin|ethereum)\b/i.test(text)) {
+    out.add('BTCUSDT');
   }
 
   return [...out];

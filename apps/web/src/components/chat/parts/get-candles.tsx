@@ -153,14 +153,8 @@ function CandlesCardError({ message }: { message?: string }) {
  * still cross-check against the shared helper at module load — if they ever
  * diverge that's a project-level bug, not a render-time one.
  */
-function pipSize(symbol: Symbol): number {
-  switch (symbol) {
-    case 'XAUUSD':
-      return 0.1;
-    case 'EURUSD':
-    case 'GBPUSD':
-      return 0.0001;
-  }
+function pipSize(_symbol: Symbol): number {
+  return 0.0001;
 }
 
 // Compile-time guarantee that the local helper agrees with `@hamafx/shared`.

@@ -387,7 +387,7 @@ function isoWeekKey(d: Date): string {
  * scope.
  */
 function symbolFromCurrency(currency: EventCurrency): Symbol {
-  if (currency === 'EUR') return 'EURUSD';
-  if (currency === 'GBP') return 'GBPUSD';
-  return 'XAUUSD';
+  if (currency === 'EUR') return 'ETHUSDT';
+  if (currency === 'GBP') return 'MNTUSDT';
+  return 'BTCUSDT';
 }

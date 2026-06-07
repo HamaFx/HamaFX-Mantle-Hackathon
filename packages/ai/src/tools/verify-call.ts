@@ -168,7 +168,7 @@ export const verifyCallTool = tool({
 // ---------------------------------------------------------------------------
 
 function decimals(symbol: Symbol): number {
-  return symbol === 'XAUUSD' ? 2 : 5;
+  return symbol === 'BTCUSDT' ? 2 : 5;
 }
 
 function buildRationale(args: {

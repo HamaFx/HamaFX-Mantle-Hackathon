@@ -56,7 +56,7 @@ export default async function LoginPage({ searchParams }: PageProps) {
             <LoginForm next={safeNext} />
           </div>
           <p className="text-fg-subtle text-center text-xs tabular-nums">
-            XAUUSD · EURUSD · GBPUSD
+            MNTUSDT · BTCUSDT · ETHUSDT
           </p>
         </div>
       </div>

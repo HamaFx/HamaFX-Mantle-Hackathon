@@ -17,7 +17,7 @@ interface EntryFormProps {
 }
 
 export function EntryForm({ onCreated }: EntryFormProps) {
-  const [symbol, setSymbol] = useState<Symbol>('XAUUSD');
+  const [symbol, setSymbol] = useState<Symbol>('MNTUSDT');
   const [side, setSide] = useState<TradeSide>('long');
   const [entry, setEntry] = useState<string>('');
   const [stop, setStop] = useState<string>('');

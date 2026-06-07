@@ -4,9 +4,9 @@
 import type { Symbol, Timeframe } from '@hamafx/shared';
 
 const TO_FINNHUB_SYMBOL: Record<Symbol, string> = {
-  XAUUSD: 'OANDA:XAU_USD',
-  EURUSD: 'OANDA:EUR_USD',
-  GBPUSD: 'OANDA:GBP_USD',
+  MNTUSDT: 'BINANCE:MNTUSDT',
+  BTCUSDT: 'BINANCE:BTCUSDT',
+  ETHUSDT: 'BINANCE:ETHUSDT',
 };
 
 const TO_FINNHUB_RESOLUTION: Record<Timeframe, string> = {

@@ -35,9 +35,9 @@ declare module '@hamafx/shared' {
 
 /** Map from symbol to the relevant currency tags used by the calendar + news. */
 const CURRENCIES_BY_SYMBOL: Record<Symbol, EventCurrency[]> = {
-  XAUUSD: ['USD'],
-  EURUSD: ['EUR', 'USD'],
-  GBPUSD: ['GBP', 'USD'],
+  MNTUSDT: ['USD'],
+  BTCUSDT: ['USD'],
+  ETHUSDT: ['USD'],
 };
 
 /** Per-currency news cap so a noisy Marketaux day can't drown one currency. */
