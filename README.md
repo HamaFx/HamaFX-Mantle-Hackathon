@@ -1,5 +1,6 @@
 <div align="center">
-  <h1>💎 HamaFX-Ai: Mantle Alpha Agent</h1>
+  <img src="https://assets.mantle.xyz/mantle-logo.svg" alt="Mantle" width="80" />
+  <h1>🔮 HamaFX-Ai: Mantle Alpha Agent</h1>
   <p><strong>Mantle Turing Test Hackathon 2026</strong> | <em>Track 2: AI Alpha & Data</em></p>
 
   [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
@@ -47,39 +48,39 @@ High-conviction alpha is time-sensitive. If the committee generates a signal wit
 
 ```mermaid
 graph TD
-    subgraph MantleNetwork ["Mantle Network"]
-        RPC["Mantle RPC Node"]
-        SC["MantleAlphaLogger Contract"]
+    subgraph MantleNetwork
+        RPC[Mantle RPC Node]
+        SC[MantleAlphaLogger Contract]
     end
 
-    subgraph HamaFXBackend ["HamaFX Backend"]
-        Worker["Background Scanner Worker"]
-        DB[("Supabase PostgreSQL")]
-        AI["Vercel AI SDK Core"]
+    subgraph HamaFXBackend
+        Worker[Background Scanner Worker]
+        DB[(Supabase PostgreSQL)]
+        AI[Vercel AI SDK Core]
     end
 
-    subgraph SubAgents ["Sub-Agents"]
-        Econ["Economist"]
-        Tech["Technician"]
-        Risk["Risk Manager"]
+    subgraph SubAgents
+        Econ[Economist]
+        Tech[Technician]
+        Risk[Risk Manager]
     end
 
     RPC -->|Live Blocks| Worker
     Worker -->|Whale/DeFi Events| DB
     
-    User["User via Next.js UI"] -->|Requests Analysis| AI
+    User[User via Next.js UI] -->|Requests Analysis| AI
     DB -->|Context| AI
     
     AI --> Econ
     AI --> Tech
     AI --> Risk
     
-    Econ --> Moderator["Moderator Agent"]
+    Econ --> Moderator[Moderator Agent]
     Tech --> Moderator
     Risk --> Moderator
     
     Moderator -->|Logs Signal| SC
-    Moderator -->|Alerts| Telegram["Telegram Bot"]
+    Moderator -->|Alerts| Telegram[Telegram Bot]
 ```
 
 ---
