@@ -10,7 +10,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { AUTH_COOKIE_NAME, verifyAuthToken } from '@/lib/auth';
-import { getAuthEnv } from '@/lib/env';
+import { getAuthEnv } from '@/lib/auth-env';
 import { readOrCreateRequestId, REQUEST_ID_HEADER } from '@/lib/request-id';
 
 export async function middleware(req: NextRequest): Promise<NextResponse> {
