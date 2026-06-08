@@ -7,7 +7,7 @@
 import { getDb, schema } from '@hamafx/db';
 import { SymbolSchema, type GetNewsOutput, type ToolNewsItem } from '@hamafx/shared';
 import { tool } from 'ai';
-import { and, desc, eq, gte, sql } from 'drizzle-orm';
+import { and, desc, gte, sql } from 'drizzle-orm';
 import { z } from 'zod';
 
 const InputSchema = z.object({
@@ -76,7 +76,4 @@ export const getNewsTool = tool({
       })),
     };
   },
-});
-
-// Silence unused-import lint when this file is bundled in isolation.
-void eq;
+})

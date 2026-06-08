@@ -101,6 +101,39 @@ pnpm dev
 ```
 Navigate to [http://localhost:3000](http://localhost:3000) to access the **Agent Dashboard** and interact with the **On-Chain Signal Feed**.
 
+### 6. Workspace Commands
+
+```bash
+pnpm dev          # Start all apps (web + worker) in dev mode
+pnpm build        # Build all packages and apps
+pnpm lint         # Run ESLint across all packages
+pnpm typecheck    # TypeScript type-check all packages
+pnpm test         # Run all test suites
+```
+
+### 7. Vercel Deployment
+
+The web app is pre-configured for Vercel deployment (see `.vercel/repo.json`):
+
+```bash
+npx vercel deploy --prod --cwd apps/web
+```
+
+Environment variables are managed through the Vercel dashboard. Ensure all
+vars from `.env.example` are set before deploying.
+
+## 🛠 Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| `pnpm install` fails with lockfile mismatch | Run `pnpm install --no-frozen-lockfile` to update |
+| Database migrations fail | Verify `POSTGRES_URL` in `.env.local` and run `pnpm run migrate:apply` from `packages/db` |
+| Agent wallet has no MNT | Claim testnet tokens from [Mantle Faucet](https://faucet.testnet.mantle.xyz/) |
+| TypeScript errors after pulling | Run `pnpm install` and `pnpm typecheck` |
+| Vercel build fails with `frozen-lockfile` | Commit the updated `pnpm-lock.yaml` or use `--no-frozen-lockfile` in Vercel project settings |
+| Worker not connecting to SignalR | Check `BIQUOTE_API_KEY` is set and valid |
+| On-chain scan returning no events | Verify `MANTLE_RPC_URL` points to a synced Mantle RPC endpoint |
+
 ---
 <div align="center">
   <i>Built with 🖤 for the Mantle ecosystem.</i>

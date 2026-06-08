@@ -5,7 +5,7 @@
 // scan is well under 100 ms even cold.
 
 import { getDb, schema } from '@hamafx/db';
-import { and, desc, gte, lte, sql } from 'drizzle-orm';
+import { and, desc, gte, lte } from 'drizzle-orm';
 
 export interface TelemetryRow {
   id: string;
@@ -178,6 +178,3 @@ function rowToTelemetry(row: typeof schema.chatTelemetry.$inferSelect): Telemetr
     createdAt: row.createdAt.getTime(),
   };
 }
-
-// silence unused-import lint when this file is bundled in isolation
-void sql;

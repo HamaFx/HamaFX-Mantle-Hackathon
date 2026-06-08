@@ -22,7 +22,7 @@ import {
   type ToolNewsItem,
 } from '@hamafx/shared';
 import { tool } from 'ai';
-import { and, desc, eq, gte, inArray, lte, or, sql } from 'drizzle-orm';
+import { and, desc, gte, inArray, lte, sql } from 'drizzle-orm';
 import type { z } from 'zod';
 
 const InputSchema = AnalyzeFundamentalInputSchema;
@@ -42,9 +42,6 @@ const CURRENCIES_BY_SYMBOL: Record<Symbol, EventCurrency[]> = {
 
 /** Per-currency news cap so a noisy Marketaux day can't drown one currency. */
 const NEWS_PER_CURRENCY = 5;
-
-void or;
-void eq;
 
 export const analyzeFundamentalTool = tool({
   description:

@@ -195,6 +195,7 @@ export function Chart({
 
   // RSI Sub-pane Lifecycle
   useEffect(() => {
+    let cancelled = false;
     const el = rsiContainerRef.current;
     if (!el || !rsiResult) {
       if (rsiChartRef.current) {
@@ -211,7 +212,7 @@ export function Chart({
     
     if (!rsiChartRef.current) {
       void import('lightweight-charts').then((lc) => {
-        if (!rsiContainerRef.current) return;
+        if (cancelled || !rsiContainerRef.current) return;
         
         const createChartFn = ('createChart' in lc) ? lc.createChart : ((lc as any).default?.createChart as any);
         const rsiChart = createChartFn(rsiContainerRef.current, {
@@ -292,6 +293,7 @@ export function Chart({
     }
 
     return () => {
+      cancelled = true;
       rsiUnsubRef.current?.();
       rsiUnsubRef.current = null;
       if (rsiChartRef.current) {
@@ -303,6 +305,7 @@ export function Chart({
 
   // MACD Sub-pane Lifecycle
   useEffect(() => {
+    let cancelled = false;
     const el = macdContainerRef.current;
     if (!el || !macdResult) {
       if (macdChartRef.current) {
@@ -319,7 +322,7 @@ export function Chart({
     
     if (!macdChartRef.current) {
       void import('lightweight-charts').then((lc) => {
-        if (!macdContainerRef.current) return;
+        if (cancelled || !macdContainerRef.current) return;
         
         const createChartFn = ('createChart' in lc) ? lc.createChart : ((lc as any).default?.createChart as any);
         const macdChart = createChartFn(macdContainerRef.current, {
@@ -410,6 +413,7 @@ export function Chart({
     }
 
     return () => {
+      cancelled = true;
       macdUnsubRef.current?.();
       macdUnsubRef.current = null;
       if (macdChartRef.current) {
@@ -421,6 +425,7 @@ export function Chart({
 
   // ATR Sub-pane Lifecycle
   useEffect(() => {
+    let cancelled = false;
     const el = atrContainerRef.current;
     if (!el || !atrResult) {
       if (atrChartRef.current) {
@@ -437,7 +442,7 @@ export function Chart({
     
     if (!atrChartRef.current) {
       void import('lightweight-charts').then((lc) => {
-        if (!atrContainerRef.current) return;
+        if (cancelled || !atrContainerRef.current) return;
         
         const createChartFn = ('createChart' in lc) ? lc.createChart : ((lc as any).default?.createChart as any);
         const atrChart = createChartFn(atrContainerRef.current, {
@@ -500,6 +505,7 @@ export function Chart({
     }
 
     return () => {
+      cancelled = true;
       atrUnsubRef.current?.();
       atrUnsubRef.current = null;
       if (atrChartRef.current) {

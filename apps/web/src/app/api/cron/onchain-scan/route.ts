@@ -3,6 +3,8 @@ import { getAuthEnv } from '@/lib/env';
 import { scanRecentBlocks } from '@hamafx/web3';
 import { getDb, schema } from '@hamafx/db';
 
+export const maxDuration = 120;
+
 export async function POST(req: Request) {
   try {
     const env = getAuthEnv();

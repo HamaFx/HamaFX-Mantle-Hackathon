@@ -9,6 +9,7 @@
 // prompt once it mounts.
 
 import { getThread, listMessages, listThreads } from '@hamafx/ai';
+import type { UIMessage } from 'ai';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -46,8 +47,7 @@ export default async function ChatThreadPage({ params, searchParams }: PageProps
       Array.isArray(m.parts) && m.parts.length > 0
         ? (m.parts as { type: string }[])
         : ([{ type: 'text', text: m.content }] as { type: 'text'; text: string }[]),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  })) as any[];
+    })) as UIMessage[];
 
   const initialTitle =
     thread.titleSource === 'llm' && thread.title ? thread.title : 'New conversation';

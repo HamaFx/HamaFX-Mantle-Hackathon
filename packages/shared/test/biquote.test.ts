@@ -141,7 +141,7 @@ describe('BiquoteTimeframeSchema', () => {
 
 describe('LiveTickSchema', () => {
   const valid = {
-    symbol: 'XAUUSD',
+    symbol: 'BTCUSDT',
     bid: 2390.12,
     ask: 2390.32,
     mid: 2390.22,
@@ -161,7 +161,7 @@ describe('LiveTickSchema', () => {
 
   it('rejects symbols outside the supported set (single-currency-app guard)', () => {
     expect(() => LiveTickSchema.parse({ ...valid, symbol: 'USDJPY' })).toThrow();
-    expect(() => LiveTickSchema.parse({ ...valid, symbol: 'BTCUSD' })).toThrow();
+    expect(() => LiveTickSchema.parse({ ...valid, symbol: 'XAUUSD' })).toThrow();
   });
 
   it('rejects negative timestamps', () => {

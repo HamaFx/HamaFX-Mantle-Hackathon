@@ -125,7 +125,7 @@ export function ChatScreen({
     if (isStreaming) return;
     autoSubmittedRef.current = threadId;
     lastUserTextRef.current = autoSubmitPrompt;
-    void sendMessage({ text: autoSubmitPrompt });
+    sendMessage({ text: autoSubmitPrompt }).catch(() => {});
   }, [autoSubmitPrompt, threadId, messages.length, isStreaming, sendMessage]);
 
   // After streaming completes, re-fetch thread to pick up the LLM-
@@ -205,7 +205,7 @@ export function ChatScreen({
               {...(isStreaming ? { disabled: true } : {})}
               onSelect={(text) => {
                 lastUserTextRef.current = text;
-                void sendMessage({ text });
+                sendMessage({ text }).catch(() => {});
               }}
             />
           ) : (
@@ -219,14 +219,14 @@ export function ChatScreen({
               }}
               onRegenerate={(opts) => {
                 if (opts?.modelOverride) modelOverrideRef.current = opts.modelOverride;
-                void regenerate();
+                regenerate().catch(() => {});
               }}
               onEdit={(messageId, newText) => {
                 const idx = messages.findIndex((m) => m.id === messageId);
                 if (idx === -1) return;
                 const sliced = messages.slice(0, idx);
                 setMessages(sliced);
-                void sendMessage({ text: newText });
+                sendMessage({ text: newText }).catch(() => {});
               }}
             />
           )}
@@ -242,7 +242,7 @@ export function ChatScreen({
                 type="button"
                 onClick={() => {
                   if (lastUserTextRef.current) {
-                    void sendMessage({ text: lastUserTextRef.current });
+                    sendMessage({ text: lastUserTextRef.current }).catch(() => {});
                   }
                 }}
                 aria-label="Retry"
@@ -271,10 +271,10 @@ export function ChatScreen({
           onSubmit={(text, images) => {
             lastUserTextRef.current = text;
             if (images.length === 0) {
-              void sendMessage({ text });
+              sendMessage({ text }).catch(() => {});
               return;
             }
-            void sendMessage({
+            sendMessage({
               text,
               files: images.map((img) => ({
                 type: 'file' as const,
@@ -282,7 +282,7 @@ export function ChatScreen({
                 url: img.url,
                 filename: img.name,
               })),
-            });
+            }).catch(() => {});
           }}
           onStop={() => stop()}
           isStreaming={isStreaming}

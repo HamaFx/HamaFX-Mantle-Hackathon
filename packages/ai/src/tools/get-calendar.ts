@@ -6,7 +6,7 @@
 import { getDb, schema } from '@hamafx/db';
 import type { GetCalendarOutput } from '@hamafx/shared';
 import { tool } from 'ai';
-import { and, asc, gte, inArray, lte, sql } from 'drizzle-orm';
+import { and, asc, gte, inArray, lte } from 'drizzle-orm';
 import { z } from 'zod';
 
 const ImportanceSchema = z.enum(['low', 'medium', 'high']);
@@ -86,5 +86,3 @@ export const getCalendarTool = tool({
     };
   },
 });
-
-void sql;

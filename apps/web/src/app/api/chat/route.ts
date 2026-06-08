@@ -4,6 +4,7 @@
 
 import { BudgetExceededError, runChat } from '@hamafx/ai';
 import { providerUnavailable } from '@hamafx/shared';
+import { type UIMessage } from 'ai';
 import { z } from 'zod';
 
 import { errorResponse, parseJsonBody } from '@/lib/api';
@@ -79,8 +80,7 @@ export async function POST(req: Request): Promise<Response> {
       threadId: body.threadId,
       // The client-side cast to UIMessage is safe enough here — we only
       // forward the shape AI SDK already understands.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      userMessage: last as any,
+      userMessage: last as UIMessage,
       ...(body.modelOverride !== undefined && body.modelOverride !== null
         ? { modelOverride: body.modelOverride }
         : {}),
