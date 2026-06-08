@@ -1,22 +1,22 @@
-export { runDaemon } from './runner.js';
-export type { RunDaemonArgs, RunningDaemon } from './runner.js';
+export { runDaemon } from './runner';
+export type { RunDaemonArgs, RunningDaemon } from './runner';
 
-export { createLogger } from './logger.js';
-export type { Logger, LoggerOptions } from './logger.js';
+export { createLogger } from './logger';
+export type { Logger, LoggerOptions } from './logger';
 
-export { SignalRConsumer, createDefaultBuildConnection } from './signalr/consumer.js';
-export type { NormalizedTick, MinimalHubConnection, BuildConnection, ConsumerOptions } from './signalr/consumer.js';
+export { SignalRConsumer, createDefaultBuildConnection } from './signalr/consumer';
+export type { NormalizedTick, MinimalHubConnection, BuildConnection, ConsumerOptions } from './signalr/consumer';
 
-export { TickBuffer } from './signalr/tick-buffer.js';
+export { TickBuffer } from './signalr/tick-buffer';
 
-export { Candle1mAggregator } from './aggregator/candle-1m.js';
-export type { ClosedCandle } from './aggregator/candle-1m.js';
+export { Candle1mAggregator } from './aggregator/candle-1m';
+export type { ClosedCandle } from './aggregator/candle-1m';
 
-export { FinnhubTickSource } from './sources/finnhub.js';
+export { FinnhubTickSource } from './sources/finnhub';
 
-export { OnChainScanner } from './onchain-scanner.js';
+export { OnChainScanner } from './onchain-scanner';
 
-export { flushLiveTicks } from './persistence/live-ticks.js';
-export { flushClosedCandle } from './persistence/candles-1m.js';
+export { flushLiveTicks } from './persistence/live-ticks';
+export { flushClosedCandle } from './persistence/candles-1m';
 
-export { ping, withHeartbeat } from './healthchecks.js';
+export { ping, withHeartbeat } from './healthchecks';

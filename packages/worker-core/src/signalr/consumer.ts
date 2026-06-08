@@ -5,8 +5,8 @@ import {
   type Symbol,
 } from '@hamafx/shared';
 
-import type { Logger } from '../logger.js';
-import { DEFAULT_RECONNECT_DELAYS, jitteredDelay } from './reconnect.js';
+import type { Logger } from '../logger';
+import { DEFAULT_RECONNECT_DELAYS, jitteredDelay } from './reconnect';
 
 export interface NormalizedTick {
   symbol: Symbol;

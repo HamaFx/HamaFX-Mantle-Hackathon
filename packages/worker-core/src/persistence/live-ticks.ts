@@ -2,9 +2,9 @@ import type { getDb } from '@hamafx/db';
 import { liveTicks } from '@hamafx/db/schema';
 import { sql } from 'drizzle-orm';
 
-import type { Logger } from '../logger.js';
-import type { NormalizedTick } from '../signalr/consumer.js';
-import type { TickBuffer } from '../signalr/tick-buffer.js';
+import type { Logger } from '../logger';
+import type { NormalizedTick } from '../signalr/consumer';
+import type { TickBuffer } from '../signalr/tick-buffer';
 
 export interface LiveTicksWriterArgs {
   db: ReturnType<typeof getDb>;

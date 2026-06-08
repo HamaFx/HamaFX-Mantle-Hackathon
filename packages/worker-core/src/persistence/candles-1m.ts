@@ -1,8 +1,8 @@
 import type { getDb } from '@hamafx/db';
 import { candles1m } from '@hamafx/db/schema';
 
-import type { ClosedCandle } from '../aggregator/candle-1m.js';
-import type { Logger } from '../logger.js';
+import type { ClosedCandle } from '../aggregator/candle-1m';
+import type { Logger } from '../logger';
 
 export interface FlushClosedCandleArgs {
   db: ReturnType<typeof getDb>;

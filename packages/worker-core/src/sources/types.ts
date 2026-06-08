@@ -1,4 +1,4 @@
-import type { NormalizedTick } from '../signalr/consumer.js';
+import type { NormalizedTick } from '../signalr/consumer';
 
 export interface TickSource {
   readonly name: string;

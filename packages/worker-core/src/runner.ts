@@ -1,19 +1,19 @@
 import { getDb } from '@hamafx/db';
 
-import { Candle1mAggregator, type ClosedCandle } from './aggregator/candle-1m.js';
-import { ping } from './healthchecks.js';
-import type { Logger } from './logger.js';
-import { flushClosedCandle } from './persistence/candles-1m.js';
-import { flushLiveTicks } from './persistence/live-ticks.js';
+import { Candle1mAggregator, type ClosedCandle } from './aggregator/candle-1m';
+import { ping } from './healthchecks';
+import type { Logger } from './logger';
+import { flushClosedCandle } from './persistence/candles-1m';
+import { flushLiveTicks } from './persistence/live-ticks';
 import {
   createDefaultBuildConnection,
   SignalRConsumer,
   type BuildConnection,
   type NormalizedTick,
-} from './signalr/consumer.js';
-import { TickBuffer } from './signalr/tick-buffer.js';
-import { FinnhubTickSource } from './sources/finnhub.js';
-import { OnChainScanner } from './onchain-scanner.js';
+} from './signalr/consumer';
+import { TickBuffer } from './signalr/tick-buffer';
+import { FinnhubTickSource } from './sources/finnhub';
+import { OnChainScanner } from './onchain-scanner';
 
 export interface RunDaemonArgs {
   log: Logger;

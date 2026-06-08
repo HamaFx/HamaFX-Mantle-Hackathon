@@ -1,6 +1,6 @@
 import { getDb, schema } from '@hamafx/db';
 import { scanRecentBlocks, type OnChainActivity } from '@hamafx/web3';
-import type { Logger } from './logger.js';
+import type { Logger } from './logger';
 
 export class OnChainScanner {
   private timer: NodeJS.Timeout | null = null;

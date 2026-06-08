@@ -1,8 +1,8 @@
 import { isSymbol, SYMBOLS, type Symbol } from '@hamafx/shared';
 import { z } from 'zod';
-import type { Logger } from '../logger.js';
-import type { NormalizedTick } from '../signalr/consumer.js';
-import type { TickSource } from './types.js';
+import type { Logger } from '../logger';
+import type { NormalizedTick } from '../signalr/consumer';
+import type { TickSource } from './types';
 
 const BASE_URL = 'https://finnhub.io/api/v1/quote';
 
