@@ -35,8 +35,10 @@ export async function register(): Promise<void> {
 }
 
 // Graceful shutdown on SIGTERM/SIGINT (Docker sends SIGTERM on stop).
-process.on('SIGTERM', () => void shutdown('SIGTERM'));
-process.on('SIGINT', () => void shutdown('SIGINT'));
+if (typeof process.on === 'function') {
+  process.on('SIGTERM', () => void shutdown('SIGTERM'));
+  process.on('SIGINT', () => void shutdown('SIGINT'));
+}
 
 async function shutdown(signal: string): Promise<void> {
   const { createLogger } = await import('@hamafx/worker-core');
