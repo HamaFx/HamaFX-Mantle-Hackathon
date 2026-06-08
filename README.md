@@ -52,45 +52,45 @@ A full-featured Next.js frontend with:
 ## 🏗 Architecture
 
 ```mermaid
-flowchart TB
-  subgraph Sources["Data Sources"]
-    BIQ["BiQuote SignalR<br/>WebSocket ticks"]
-    FINN["Finnhub REST<br/>fallback quotes"]
-    MNT["Mantle RPC<br/>whale transfers / TVL"]
-    NEWS["Marketaux / FRED / CFTC<br/>news, calendar, COT"]
+graph TB
+  subgraph Data Sources
+    BIQ["BiQuote SignalR WebSocket ticks"]
+    FINN["Finnhub REST fallback quotes"]
+    MNT["Mantle RPC whale transfers / TVL"]
+    NEWS["Marketaux / FRED / CFTC news"]
   end
 
-  subgraph Daemon["Background Daemon (worker-core)"]
+  subgraph worker-core
     SR["SignalR Consumer"]
     FH["FinnhubTickSource"]
     OC["OnChain Scanner"]
     CB["Candle1m Aggregator"]
     TB["TickBuffer"]
-    HP["Healthchecks.io<br/>heartbeat"]
+    HP["Healthchecks.io heartbeat"]
   end
 
-  subgraph Storage["Supabase Postgres"]
+  subgraph Supabase Postgres
     LT["live_ticks"]
     C1["candles_1m"]
     OE["onchain_events"]
-    NE["news_events / calendar_events<br/>cot_data / briefings"]
+    NE["news / calendar / briefings"]
   end
 
-  subgraph API["Next.js API Routes"]
-    CR["/api/cron/*<br/>news, calendar, alerts,<br/>snapshots, briefings, CoT"]
+  subgraph Next.js API
+    CR["/api/cron/* jobs"]
     MP["/api/market/price"]
     MC["/api/market/candles"]
   end
 
-  subgraph AI["AI Committee"]
+  subgraph AI Committee
     EC["The Economist"]
     TC["The Technician"]
     RM["Risk Manager"]
     MD["Moderator Agent"]
   end
 
-  subgraph Output["Outputs"]
-    SC["MantleAlphaLogger<br/>on-chain contract"]
+  subgraph Outputs
+    SC["MantleAlphaLogger on-chain"]
     TG["Telegram push"]
     UI["Web Dashboard"]
   end
