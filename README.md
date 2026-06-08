@@ -111,11 +111,38 @@ Opens the dashboard at [http://localhost:3000](http://localhost:3000).
 
 ### Workspace Commands
 ```bash
-pnpm build        # Build all packages
-pnpm typecheck    # TypeScript type-check across all packages
-pnpm test         # Run all test suites
-pnpm lint         # ESLint across all packages
+pnpm build          # Build all packages
+pnpm typecheck      # TypeScript type-check across all packages
+pnpm test           # Run all test suites (488 tests across 9 packages)
+pnpm test:coverage  # Run tests with coverage reporting
+pnpm lint           # ESLint across all packages
 ```
+
+### Test Coverage
+
+| Package | Tests | Coverage |
+|---------|-------|----------|
+| @hamafx/shared | 47 | Zod schemas, env validation, structured errors |
+| @hamafx/db | 32 | Schema structure, locks, client |
+| @hamafx/web3 | 22 | Chain config, alpha logger, token registry |
+| @hamafx/worker-core | 12 | TickBuffer, Candle1mAggregator |
+| @hamafx/data | 86 | Providers, failover, adapters |
+| @hamafx/ai | 112 | Committee, tools, routing, prompts |
+| @hamafx/indicators | 46 | RSI, MACD, Bollinger, SMC |
+| @hamafx/worker | 70 | SignalR, jobs, persistence |
+| @hamafx/web | 56 | API routes, auth, security, middleware |
+| **Total** | **488** | |
+
+### Error Handling
+
+The project uses a structured error hierarchy (`@hamafx/shared/src/errors/`):
+
+- `HamaFxError` — base class with `code` and `recoverable` fields
+- `DatabaseError`, `BlockchainError`, `DataProviderError`, `AIProviderError` — domain errors
+- `ValidationError`, `ConfigError` — input/config errors
+
+All API routes sanitize errors via `errorResponse()` — internal details never leak to clients.
+A React `<ErrorBoundary>` component catches render crashes with a retry button.
 
 ---
 

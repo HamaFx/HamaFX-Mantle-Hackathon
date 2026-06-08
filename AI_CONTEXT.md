@@ -70,5 +70,7 @@ When editing this codebase, strictly adhere to the following rules:
 - **Type Safety:** Always use the shared Zod schemas in `packages/shared/src/schemas` to enforce typing between the AI tools, the frontend UI, and the Drizzle database.
 - **Context Isolation:** We use `AsyncLocalStorage` in `packages/ai/src/tool-context.ts` to prevent cross-talk between concurrent user chat threads. Always retrieve env variables via `getToolContext().env` inside tool executions (except for specific workarounds like Telegram where `process.env` is required to bypass type Pick constraints).
 - **Aesthetic Excellence:** This is a premium hackathon submission. Ensure all UI components in `apps/web/src/components` utilize proper Tailwind spacing, subtle borders (`border-divider`), and brand colors (Emerald for bullish, Rose for bearish).
+- **Error Handling:** Use the structured error hierarchy in `@hamafx/shared/src/errors/` (`HamaFxError`, `DatabaseError`, etc.) for errors that cross package boundaries. Never swallow errors silently — log them. API routes must use `errorResponse()` to sanitize errors before sending to clients. Catch blocks in Edge middleware must not crash — the `auth-env.ts` split ensures Edge-safe imports.
+- **Testing:** Every new feature requires tests. Run `pnpm test` before committing. The project has 488 tests across 9 packages. Add new tests in `test/` directories using vitest. Use the mock helpers in `packages/*/test/helpers/` for DB, viem, and SignalR mocking.
 
 *End of Spec. You are now fully synchronized with the HamaFX-Ai matrix.*
