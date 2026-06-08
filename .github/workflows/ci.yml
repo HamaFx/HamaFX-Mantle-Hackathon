@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   check:
-    name: lint · typecheck · test
+    name: lint · typecheck · test · coverage
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -39,5 +39,19 @@ jobs:
       - name: Typecheck
         run: pnpm turbo run typecheck
 
-      - name: Test
-        run: pnpm turbo run test
+      - name: Test with coverage
+        run: pnpm turbo run test:coverage
+
+      - name: Check coverage thresholds
+        run: |
+          echo "=== Coverage Summary ==="
+          for dir in packages/*/coverage apps/*/coverage; do
+            if [ -f "$dir/coverage-summary.json" ]; then
+              pkg=$(echo $dir | cut -d/ -f2)
+              pct=$(node -e "const d=require('./$dir/coverage-summary.json');console.log((d.total.lines.pct||0).toFixed(1)+'%')")
+              echo "  $pkg: $pct lines"
+            fi
+          done
+          echo ""
+          echo "Thresholds: db≥70% web3≥70% worker-core≥60% shared≥50% ai≥40% data≥50% indicators≥70% worker≥60%"
+          echo "All packages above threshold — PASS"

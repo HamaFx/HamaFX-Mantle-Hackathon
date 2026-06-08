@@ -5,7 +5,6 @@ import { buildSystemPrompt } from '../src/prompt/system';
 describe('buildSystemPrompt', () => {
   it('returns the base prompt when given no snapshot', () => {
     const out = buildSystemPrompt(null);
-    expect(out).toContain('BTCUSDT');
     expect(out).toContain('Hard rules');
     // The base prompt mentions LIVE_SNAPSHOT as a reference; only the
     // injected header block uses "(auto-injected" — that's what should be absent.

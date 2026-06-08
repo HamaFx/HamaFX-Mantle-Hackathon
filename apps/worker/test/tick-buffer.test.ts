@@ -40,7 +40,7 @@ describe('TickBuffer', () => {
     buf.push(tick('MNTUSDT', 1.27));
     expect(buf.size()).toBe(3);
     const drained = buf.drain();
-    expect(drained.map((d) => d.tick.symbol).sort()).toEqual(['ETHUSDT', 'MNTUSDT', 'BTCUSDT']);
+    expect(drained.map((d) => d.tick.symbol).sort()).toEqual(['BTCUSDT', 'ETHUSDT', 'MNTUSDT']);
   });
 
   it('clears after drain', () => {

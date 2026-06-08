@@ -66,7 +66,7 @@ describe('flushLiveTicks', () => {
     expect(r.written).toBe(3);
     expect(captured.rows).toHaveLength(3);
     const symbols = captured.rows.map((row) => row['symbol']).sort();
-    expect(symbols).toEqual(['ETHUSDT', 'MNTUSDT', 'BTCUSDT']);
+    expect(symbols.sort()).toEqual(['BTCUSDT', 'ETHUSDT', 'MNTUSDT']);
 
     // ts is converted to Date for the timestamptz column
     for (const row of captured.rows) {

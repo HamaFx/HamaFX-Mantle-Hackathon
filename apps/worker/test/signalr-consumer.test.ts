@@ -97,7 +97,7 @@ describe('SignalRConsumer.start', () => {
     expect(state.startCalls).toBe(1);
     expect(state.invokes).toContainEqual({
       method: 'Subscribe',
-      args: [['BTCUSDT', 'ETHUSDT', 'MNTUSDT']],
+      args: [['MNTUSDT', 'BTCUSDT', 'ETHUSDT']],
     });
     expect(consumer.isStarted()).toBe(true);
   });

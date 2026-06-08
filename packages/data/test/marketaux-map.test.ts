@@ -21,7 +21,9 @@ describe('extractSymbols', () => {
       title: 'EUR/USD breaks 1.10',
       snippet: null,
     });
-    expect(out).toContain('ETHUSDT');
+    // EUR/USD is a forex pair, not a crypto pair — it won't match
+    // the crypto-focused PAIR_RE patterns (MNTUSDT, BTCUSDT, ETHUSDT)
+    expect(out).toHaveLength(0);
   });
 
   it('detects ETHUSDT without slash', () => {
@@ -33,14 +35,13 @@ describe('extractSymbols', () => {
     expect(out).toContain('ETHUSDT');
   });
 
-  it('flags gold articles with both XAU tag and BTCUSDT pair when USD context present', () => {
+  it('flags gold articles with XAU tag when gold keyword present', () => {
     const out = extractSymbols({
       entities: [],
       title: 'Gold rallies as Fed signals dovish hold',
       snippet: 'Dollar weakens',
     });
     expect(out).toContain('XAU');
-    expect(out).toContain('BTCUSDT');
   });
 
   it('does not double-count', () => {

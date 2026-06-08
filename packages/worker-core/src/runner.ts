@@ -83,7 +83,9 @@ export async function runDaemon(args: RunDaemonArgs): Promise<RunningDaemon> {
   });
 
   const finnhubStartTimer = setTimeout(() => {
-    finnhubSource.start().catch(() => {});
+    finnhubSource.start().catch((err) => {
+      log.warn('finnhub fallback failed to start', { err: String(err) });
+    });
     finnhubActive = true;
   }, 15_000);
 

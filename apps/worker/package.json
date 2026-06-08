@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest --passWithNoTests",
+    "test:coverage": "vitest --passWithNoTests --coverage",
     "clean": "rm -rf node_modules .turbo dist"
   },
   "dependencies": {

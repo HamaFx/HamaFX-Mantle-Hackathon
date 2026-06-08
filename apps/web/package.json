@@ -12,6 +12,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test": "vitest --passWithNoTests",
+    "test:coverage": "vitest --passWithNoTests --coverage",
     "generate:icons": "node scripts/generate-icons.mjs",
     "clean": "rm -rf node_modules .turbo .next"
   },

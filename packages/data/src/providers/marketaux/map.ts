@@ -61,7 +61,12 @@ export function extractSymbols(args: {
     if (re.test(text)) out.add(sym);
   }
 
-  // 3) Crypto detection.
+  // 3) Gold / commodity keywords.
+  if (GOLD_RE.test(text)) {
+    out.add('XAU');
+  }
+
+  // 4) Crypto detection.
   if (/\b(crypto|web3|bitcoin|ethereum)\b/i.test(text)) {
     out.add('BTCUSDT');
   }

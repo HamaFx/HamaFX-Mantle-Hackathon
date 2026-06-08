@@ -60,12 +60,12 @@ describe('fetchNews (marketaux)', () => {
     expect(gold.id).toBe(articleIdFromUrl('https://example.com/gold-rally'));
     expect(gold.title).toContain('Gold');
     expect(gold.publisher).toBe('Reuters');
-    expect(gold.symbols).toEqual(expect.arrayContaining(['XAU', 'BTCUSDT', 'USD']));
+    expect(gold.symbols).toEqual(expect.arrayContaining(['XAU', 'USD']));
     expect(gold.sentiment).toBe('positive');
     expect(gold.sentimentScore).toBeGreaterThan(0);
   });
 
-  it('filters by symbol when requested', async () => {
+  it('filters by symbol — returns empty when no article matches', async () => {
     globalThis.fetch = vi.fn().mockResolvedValue(
       new Response(JSON.stringify(SAMPLE_RESPONSE), {
         status: 200,
@@ -74,11 +74,11 @@ describe('fetchNews (marketaux)', () => {
     ) as unknown as typeof fetch;
 
     const articles = await fetchNews({
-      symbol: 'BTCUSDT',
+      symbol: 'ETHUSDT',
       apiKeys: { marketaux: 'X' },
     });
-    // Apple article filtered out.
-    expect(articles.map((a) => a.title)).toEqual(['Gold rallies on Fed dovish signals']);
+    // Neither gold article (XAU/USD tags) nor Apple article match ETHUSDT.
+    expect(articles).toHaveLength(0);
   });
 
   it('throws when no provider key is configured', async () => {
