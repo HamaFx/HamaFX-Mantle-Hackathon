@@ -51,7 +51,87 @@ A full-featured Next.js frontend with:
 
 ## 🏗 Architecture
 
-![System Architecture](.github/assets/architecture-v2.png)
+```mermaid
+flowchart TB
+  subgraph Sources["Data Sources"]
+    BIQ["BiQuote SignalR<br/>WebSocket ticks"]
+    FINN["Finnhub REST<br/>fallback quotes"]
+    MNT["Mantle RPC<br/>whale transfers / TVL"]
+    NEWS["Marketaux / FRED / CFTC<br/>news, calendar, COT"]
+  end
+
+  subgraph Daemon["Background Daemon (worker-core)"]
+    SR["SignalR Consumer"]
+    FH["FinnhubTickSource"]
+    OC["OnChain Scanner"]
+    CB["Candle1m Aggregator"]
+    TB["TickBuffer"]
+    HP["Healthchecks.io<br/>heartbeat"]
+  end
+
+  subgraph Storage["Supabase Postgres"]
+    LT["live_ticks"]
+    C1["candles_1m"]
+    OE["onchain_events"]
+    NE["news_events / calendar_events<br/>cot_data / briefings"]
+  end
+
+  subgraph API["Next.js API Routes"]
+    CR["/api/cron/*<br/>news, calendar, alerts,<br/>snapshots, briefings, CoT"]
+    MP["/api/market/price"]
+    MC["/api/market/candles"]
+  end
+
+  subgraph AI["AI Committee"]
+    EC["The Economist"]
+    TC["The Technician"]
+    RM["Risk Manager"]
+    MD["Moderator Agent"]
+  end
+
+  subgraph Output["Outputs"]
+    SC["MantleAlphaLogger<br/>on-chain contract"]
+    TG["Telegram push"]
+    UI["Web Dashboard"]
+  end
+
+  BIQ --> SR
+  FINN --> FH
+  MNT --> OC
+  NEWS --> CR
+
+  SR --> TB
+  SR --> CB
+  FH --> TB
+  FH --> CB
+  TB --> LT
+  CB --> C1
+  OC --> OE
+  CR --> NE
+
+  LT --> MP
+  C1 --> MC
+
+  MP --> EC
+  MP --> TC
+  MP --> RM
+  MC --> EC
+  MC --> TC
+  MC --> RM
+  OE --> RM
+  NE --> EC
+
+  EC --> MD
+  TC --> MD
+  RM --> MD
+
+  MD --> SC
+  MD --> TG
+  MD --> UI
+
+  SR -.->|fallback| FH
+  SR -.->|health| HP
+```
 
 The monorepo is organized as a **Turborepo** with two deploy targets:
 
