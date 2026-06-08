@@ -15,6 +15,8 @@ import {
 import { tool } from 'ai';
 import type { z } from 'zod';
 
+import { computeDxyProxy as sharedDxyProxy } from './dxy-proxy';
+
 const InputSchema = GetIntermarketInputSchema;
 
 declare module '@hamafx/shared' {
@@ -24,8 +26,6 @@ declare module '@hamafx/shared' {
 }
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-const DXY_FORMULA =
-  'DXY proxy = 100 / (ETHUSDT^0.5 * MNTUSDT^0.5). Two-leg approximation; not a true DXY.';
 
 export const getIntermarketTool = tool({
   description:
@@ -49,7 +49,7 @@ export const getIntermarketTool = tool({
     const eur = series.get('BTCUSDT');
     const gbp = series.get('ETHUSDT');
 
-    const dxyProxy = computeDxyProxy(eur, gbp);
+    const dxyProxy = sharedDxyProxy(eur, gbp, 'BTCUSDT', 'ETHUSDT');
     const goldChange24h = computeChange24h(xau);
     const xauDxyCorrelation = computeXauDxyCorrelation(xau, eur, gbp, windowBars);
 
@@ -131,28 +131,6 @@ function pearson(xs: number[], ys: number[]): number {
   if (den === 0 || !Number.isFinite(den)) return 0;
   const r = num / den;
   return Math.max(-1, Math.min(1, r));
-}
-
-function computeDxyProxy(
-  eur: BareReturns | undefined,
-  gbp: BareReturns | undefined,
-): GetIntermarketOutput['dxyProxy'] {
-  if (!eur || !gbp || eur.closes.length === 0 || gbp.closes.length === 0) {
-    return { value: 0, change24h: 0, formula: DXY_FORMULA };
-  }
-  const lastEur = eur.closes[eur.closes.length - 1]!;
-  const lastGbp = gbp.closes[gbp.closes.length - 1]!;
-  const value = 100 / (Math.pow(lastEur, 0.5) * Math.pow(lastGbp, 0.5));
-
-  const lastTime = eur.times[eur.times.length - 1] ?? Date.now();
-  const eurAtTarget = closestPrice(eur, lastTime - ONE_DAY_MS);
-  const gbpAtTarget = closestPrice(gbp, lastTime - ONE_DAY_MS);
-  let change24h = 0;
-  if (eurAtTarget !== null && gbpAtTarget !== null) {
-    const past = 100 / (Math.pow(eurAtTarget, 0.5) * Math.pow(gbpAtTarget, 0.5));
-    if (past > 0) change24h = ((value - past) / past) * 100;
-  }
-  return { value, change24h, formula: DXY_FORMULA };
 }
 
 function computeChange24h(s: BareReturns | undefined): number | null {

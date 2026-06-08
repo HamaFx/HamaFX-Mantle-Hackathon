@@ -11,7 +11,7 @@
 // briefing body, with ON DELETE CASCADE so a wiped chat history can't leave
 // dangling pointers.
 
-import { pgTable, primaryKey, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { index, pgTable, primaryKey, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 import { chatMessages } from './chat';
 
@@ -25,5 +25,5 @@ export const briefingsEmitted = pgTable(
       .references(() => chatMessages.id, { onDelete: 'cascade' }),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   },
-  (t) => [primaryKey({ columns: [t.eventId, t.kind] })],
+  (t) => [primaryKey({ columns: [t.eventId, t.kind] }), index('briefings_emitted_message_id_idx').on(t.messageId)],
 );

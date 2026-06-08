@@ -18,5 +18,11 @@ export function defaultSwingLookback(tf: Timeframe): number {
     case '1d':
     case '1w':
       return 5;
+    default:
+      return assertNever(tf);
   }
+}
+
+function assertNever(x: never): never {
+  throw new Error(`unexpected timeframe: ${x}`);
 }

@@ -22,13 +22,13 @@ import { z } from 'zod';
 
 import { SymbolSchema } from '../../symbols';
 import { TimeframeSchema } from '../../timeframes';
+import { TradeDirectionSchema } from './compute-risk';
 
-export const VerifyCallDirectionSchema = z.enum(['long', 'short']);
-export type VerifyCallDirection = z.infer<typeof VerifyCallDirectionSchema>;
+export type VerifyCallDirection = 'long' | 'short';
 
 export const VerifyCallInputSchema = z.object({
   symbol: SymbolSchema,
-  side: VerifyCallDirectionSchema,
+  side: TradeDirectionSchema,
   entry: z.number().positive(),
   stop: z.number().positive(),
   target: z.number().positive().nullable().optional(),
@@ -55,7 +55,7 @@ export type VerifyCallCaveat = z.infer<typeof VerifyCallCaveatSchema>;
 export const VerifyCallOutputSchema = z.object({
   symbol: SymbolSchema,
   asOf: z.number().int(),
-  side: VerifyCallDirectionSchema,
+  side: TradeDirectionSchema,
   entry: z.number(),
   stop: z.number(),
   target: z.number().nullable(),

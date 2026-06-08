@@ -4,6 +4,7 @@ import type { Logger } from './log.js';
 
 export class OnChainScanner {
   private timer: NodeJS.Timeout | null = null;
+  private pendingTick = false;
   
   constructor(
     private readonly db: ReturnType<typeof getDb>,
@@ -33,11 +34,15 @@ export class OnChainScanner {
   }
 
   private async tick(): Promise<void> {
+    if (this.pendingTick) return;
+    this.pendingTick = true;
     try {
       const activity = await scanRecentBlocks(200);
       await this.persistEvents(activity);
     } catch (err) {
       this.log.error('OnChainScanner tick failed', { err: String(err) });
+    } finally {
+      this.pendingTick = false;
     }
   }
 

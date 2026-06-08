@@ -5,7 +5,7 @@
 
 import { z } from 'zod';
 
-import { AUTH_COOKIE_NAME, authCookieSerialized, signAuthToken, timingSafeEqual } from '@/lib/auth';
+import { authCookieSerialized, signAuthToken, timingSafeEqual } from '@/lib/auth';
 import { getAuthEnv } from '@/lib/env';
 
 export const runtime = 'nodejs';
@@ -93,5 +93,4 @@ export async function POST(req: Request): Promise<Response> {
   });
 }
 
-// Tiny helper so we don't import an unused name.
-void AUTH_COOKIE_NAME;
+

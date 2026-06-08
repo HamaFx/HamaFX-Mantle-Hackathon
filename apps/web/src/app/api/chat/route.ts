@@ -74,13 +74,6 @@ export async function POST(req: Request): Promise<Response> {
     }
   }
 
-  // Auto-Journal — the chat route used to regex-parse `Journal: …` shortcuts
-  // and call `createEntry` server-side, but the same user message was then
-  // forwarded to the model verbatim, which has a `log_journal` tool and
-  // would create a duplicate row. The model owns journal logging now;
-  // unstructured "I just bought XAU at 2400" messages still work via the
-  // tool. See docs/15-hardening-phase-1-correctness.md §2.
-
   try {
     const result = await runChat({
       threadId: body.threadId,
@@ -121,6 +114,9 @@ export async function POST(req: Request): Promise<Response> {
           { code: 'BUDGET_EXCEEDED', spent: err.spent, max: err.max },
         ),
       );
+    }
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      return new Response(null, { status: 499 });
     }
     return errorResponse(err);
   }

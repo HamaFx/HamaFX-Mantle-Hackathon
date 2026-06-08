@@ -9,6 +9,7 @@
 import { z } from 'zod';
 
 import { SymbolSchema } from '../../symbols';
+import { TradeDirectionSchema } from './compute-risk';
 import { TimeframeSchema } from '../../timeframes';
 
 export const ReplayRuleEmaCrossSchema = z.object({
@@ -18,7 +19,7 @@ export const ReplayRuleEmaCrossSchema = z.object({
   /** EMA period for the slow leg. */
   slow: z.number().int().min(3).max(500),
   /** "long" enters on fast crossing above slow. "short" inverse. */
-  side: z.enum(['long', 'short']),
+  side: TradeDirectionSchema,
 });
 
 export const ReplayRuleRsiSchema = z.object({
@@ -27,7 +28,7 @@ export const ReplayRuleRsiSchema = z.object({
   /** Threshold value, e.g. 30 for "RSI crosses up through 30". */
   threshold: z.number().min(1).max(99),
   /** "long": RSI crossing UP through threshold. "short": crossing DOWN. */
-  side: z.enum(['long', 'short']),
+  side: TradeDirectionSchema,
 });
 
 export const ReplayRuleSchema = z.discriminatedUnion('kind', [
@@ -66,7 +67,7 @@ export const ReplayTradeSchema = z.object({
   /** ms epoch UTC of entry. */
   entryAt: z.number().int(),
   exitAt: z.number().int(),
-  side: z.enum(['long', 'short']),
+  side: TradeDirectionSchema,
   entry: z.number(),
   exit: z.number(),
   stop: z.number(),

@@ -21,6 +21,8 @@ import {
 import { tool } from 'ai';
 import type { z } from 'zod';
 
+import { computeDxyProxy as sharedDxyProxy } from './dxy-proxy';
+
 const InputSchema = GetCorrelationInputSchema;
 
 declare module '@hamafx/shared' {
@@ -28,14 +30,6 @@ declare module '@hamafx/shared' {
     get_correlation: { input: z.infer<typeof InputSchema> };
   }
 }
-
-const _FX_PAIRS_FOR_DXY: Array<{ symbol: Symbol; weight: number }> = [
-  { symbol: 'BTCUSDT', weight: 0.5 },
-  { symbol: 'ETHUSDT', weight: 0.5 },
-];
-void _FX_PAIRS_FOR_DXY;
-
-const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 export const getCorrelationTool = tool({
   description:
@@ -142,55 +136,14 @@ function clampUnit(x: number): number {
 
 function computeDxyProxy(
   data: Map<Symbol, SymbolReturns>,
-  tf: Timeframe,
-  windowBars: number,
+  _tf: Timeframe,
+  _windowBars: number,
 ): GetCorrelationOutput['dxyProxy'] {
-  const eur = data.get('BTCUSDT');
-  const gbp = data.get('ETHUSDT');
-
-  const formula =
-    'Crypto proxy = 100 / (BTCUSDT^0.5 * ETHUSDT^0.5). Two-leg approximation; not a true index.';
-
-  if (!eur || !gbp || eur.closes.length === 0 || gbp.closes.length === 0) {
-    return { value: 0, change24h: 0, samples: 0, formula };
-  }
-
-  const lastEur = eur.closes[eur.closes.length - 1]!;
-  const lastGbp = gbp.closes[gbp.closes.length - 1]!;
-  const value = 100 / (Math.pow(lastEur, 0.5) * Math.pow(lastGbp, 0.5));
-
-  // 24h change — find the bar closest to 24h before the last bar.
-  const lastTime = eur.times[eur.times.length - 1] ?? Date.now();
-  const targetTime = lastTime - ONE_DAY_MS;
-  const eurAtTarget = closestPrice(eur, targetTime);
-  const gbpAtTarget = closestPrice(gbp, targetTime);
-
-  let change24h = 0;
-  if (eurAtTarget !== null && gbpAtTarget !== null) {
-    const past = 100 / (Math.pow(eurAtTarget, 0.5) * Math.pow(gbpAtTarget, 0.5));
-    if (past > 0) change24h = ((value - past) / past) * 100;
-  }
-
-  void tf;
-  void windowBars;
+  const core = sharedDxyProxy(data.get('BTCUSDT'), data.get('ETHUSDT'), 'BTCUSDT', 'ETHUSDT');
+  const btc = data.get('BTCUSDT');
+  const eth = data.get('ETHUSDT');
   return {
-    value,
-    change24h,
-    samples: Math.min(eur.closes.length, gbp.closes.length),
-    formula,
+    ...core,
+    samples: Math.min(btc?.closes.length ?? 0, eth?.closes.length ?? 0),
   };
-}
-
-function closestPrice(s: SymbolReturns, targetMs: number): number | null {
-  if (s.times.length === 0) return null;
-  let bestIdx = 0;
-  let bestDiff = Math.abs(s.times[0]! - targetMs);
-  for (let i = 1; i < s.times.length; i += 1) {
-    const d = Math.abs(s.times[i]! - targetMs);
-    if (d < bestDiff) {
-      bestDiff = d;
-      bestIdx = i;
-    }
-  }
-  return s.closes[bestIdx] ?? null;
 }

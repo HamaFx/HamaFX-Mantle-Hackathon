@@ -14,7 +14,7 @@
 
 import { z } from 'zod';
 
-import { AUTH_COOKIE_NAME, verifyAuthToken } from '@/lib/auth';
+import { readCookie, AUTH_COOKIE_NAME, verifyAuthToken } from '@/lib/auth';
 import { getAuthEnv } from '@/lib/env';
 
 export const runtime = 'nodejs';
@@ -92,18 +92,7 @@ export async function POST(req: Request): Promise<Response> {
   return Response.json({ id: json.id ?? null }, { status: 200 });
 }
 
-/** Read a single cookie value from a `Cookie` header string. */
-function readCookie(header: string, name: string): string | undefined {
-  if (!header) return undefined;
-  const parts = header.split(';');
-  for (const part of parts) {
-    const eq = part.indexOf('=');
-    if (eq < 0) continue;
-    const k = part.slice(0, eq).trim();
-    if (k === name) return part.slice(eq + 1).trim();
-  }
-  return undefined;
-}
+
 
 /** `req.json()` that tolerates empty bodies and invalid JSON by returning `{}`. */
 async function safeReadJson(req: Request): Promise<unknown> {

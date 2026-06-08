@@ -14,6 +14,8 @@ import { analyzeFundamentalTool } from './analyze-fundamental';
 import { analyzeTechnicalTool } from './analyze-technical';
 import { computeRiskTool } from './compute-risk';
 
+import { parseJson } from '../committee/committee';
+
 interface InternalToolCallMeta {
   toolCallId: string;
   messages: Array<{ role: 'user' | 'assistant'; content: string }>;
@@ -67,9 +69,12 @@ export const conveneCommitteeTool = tool({
   },
 });
 
-// ---------------------------------------------------------------------------
-// Persona Runners
-// ---------------------------------------------------------------------------
+// Committee members run as individual LLM calls with data pre-fetched from
+// other tools. The simpler `committee.ts` module (used by analyze-alpha-signal)
+// uses a lightweight `GenerateTextFn` callback pattern; this tool uses full
+// `generateText` with model resolution and Google Search grounding.
+//
+// `parseJson` is shared from committee.ts.
 
 async function runEconomist(input: any, data: any, env: ToolEnv): Promise<CommitteeVerdict> {
   const prompt = `You are The Economist on a trading committee. Evaluate this trade:
@@ -245,15 +250,6 @@ No markdown fences, no preamble.`;
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function parseJson<T>(text: string): T | null {
-  try {
-    const cleaned = text.trim().replace(/^```json\s*/, '').replace(/```$/, '').trim();
-    return JSON.parse(cleaned);
-  } catch {
-    return null;
-  }
-}
 
 function fallbackVerdict(persona: CommitteeVerdict['persona']): CommitteeVerdict {
   return {

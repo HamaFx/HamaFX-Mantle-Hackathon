@@ -1,4 +1,3 @@
-import { sql } from 'drizzle-orm';
 import { index, jsonb, pgTable, text, timestamp, unique, uuid, vector } from 'drizzle-orm/pg-core';
 
 /**
@@ -59,5 +58,3 @@ export const memoryEmbeddings = pgTable(
     unique('memory_embeddings_kind_source_uk').on(t.kind, t.sourceId),
   ],
 );
-
-void sql; // silence unused-import lint when bundled in isolation

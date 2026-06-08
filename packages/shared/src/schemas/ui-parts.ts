@@ -15,8 +15,8 @@
 
 import { z } from 'zod';
 
-import { TOOL_NAMES } from '../ai/tool-names';
 import { SymbolSchema } from '../symbols';
+import { TradeDirectionSchema } from './tool-outputs/compute-risk';
 
 // ---------------------------------------------------------------------------
 // data-plan — collapsible "Thinking" UI part
@@ -76,7 +76,7 @@ export type CitationWarningPart = z.infer<typeof CitationWarningPartSchema>;
 export const VerifyWarningPartSchema = z.object({
   type: z.literal('data-verify-warning'),
   symbol: SymbolSchema,
-  side: z.enum(['long', 'short']),
+  side: TradeDirectionSchema,
   caveats: z.array(z.string()).max(6),
   createdAt: z.number().int(),
 });
@@ -100,7 +100,7 @@ export type CommitteeVerdict = z.infer<typeof CommitteeVerdictSchema>;
 export const CommitteeReportPartSchema = z.object({
   type: z.literal('data-committee-report'),
   symbol: SymbolSchema,
-  side: z.enum(['long', 'short']),
+  side: TradeDirectionSchema,
   entry: z.number(),
   stop: z.number().optional(),
   verdicts: z.array(CommitteeVerdictSchema).length(3),
@@ -123,4 +123,3 @@ export const UiPartSchema = z.discriminatedUnion('type', [
 ]);
 export type UiPart = z.infer<typeof UiPartSchema>;
 
-void TOOL_NAMES; // re-exported elsewhere; this import keeps types coupled

@@ -12,7 +12,7 @@
 import { savePushSubscription } from '@hamafx/ai';
 import { z } from 'zod';
 
-import { AUTH_COOKIE_NAME, verifyAuthToken } from '@/lib/auth';
+import { readCookie, AUTH_COOKIE_NAME, verifyAuthToken } from '@/lib/auth';
 import { getAuthEnv } from '@/lib/env';
 
 export const runtime = 'nodejs';
@@ -65,12 +65,4 @@ export async function POST(req: Request): Promise<Response> {
   return Response.json({ id: row.id }, { status: 200 });
 }
 
-function readCookie(header: string, name: string): string | undefined {
-  if (!header) return undefined;
-  for (const part of header.split(';')) {
-    const eq = part.indexOf('=');
-    if (eq < 0) continue;
-    if (part.slice(0, eq).trim() === name) return part.slice(eq + 1).trim();
-  }
-  return undefined;
-}
+

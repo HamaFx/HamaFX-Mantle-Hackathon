@@ -1,9 +1,4 @@
-// Generic renderer for tool-call parts. The AI SDK v5 streams parts of
-// shape `{ type: 'tool-<name>', input, output, state }`. Each tool COULD
-// have a bespoke renderer (mini chart for get_candles, etc.); for Phase 1b
-// we ship one expandable card that works for all five tools and looks
-// crisp on mobile. Bespoke renderers can land per-tool later without
-// touching the message-list code.
+'use client';
 
 import { useState } from 'react';
 

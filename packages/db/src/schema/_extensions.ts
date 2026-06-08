@@ -1,5 +1,5 @@
 // Required Postgres extensions. Drizzle does not auto-emit these — we run them
-// once via a hand-written migration in ./drizzle/0000_extensions.sql (created
+// once via a hand-written migration in ./drizzle/0000_lazy_red_shift.sql (created
 // the first time you run `pnpm --filter @hamafx/db migrate:gen`).
 //
 // Required:

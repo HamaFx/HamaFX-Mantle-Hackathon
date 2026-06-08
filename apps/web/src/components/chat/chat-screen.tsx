@@ -147,8 +147,8 @@ export function ChatScreen({
             document.title = `${t.title} · Hama DeFAI`;
           }
         }
-      } catch {
-        /* silent */
+      } catch (e) {
+        console.error('title refresh failed', e);
       }
     })();
     return () => {

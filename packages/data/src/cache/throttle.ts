@@ -37,6 +37,14 @@ interface Bucket {
 }
 
 const buckets = new Map<string, Bucket>();
+const locks = new Map<string, Promise<void>>();
+
+async function withMutex<T>(key: string, fn: () => T | Promise<T>): Promise<T> {
+  const prev = locks.get(key) ?? Promise.resolve();
+  const curr = prev.then(fn, fn);
+  locks.set(key, curr.then(() => {}, () => {}));
+  return curr;
+}
 
 function getBucket(provider: string, now: number): Bucket {
   const existing = buckets.get(provider);
@@ -62,21 +70,23 @@ export async function tryReserve(provider: string, cfg: ThrottleConfig): Promise
   const now = new Date();
 
   if (process.env.THROTTLE_BACKEND !== 'postgres') {
-    const b = getBucket(provider, now.getTime());
-    if (now.getTime() - b.windowStart >= cfg.windowMs) {
-      b.count = 1;
-      b.windowStart = now.getTime();
+    return withMutex(provider, () => {
+      const b = getBucket(provider, now.getTime());
+      if (now.getTime() - b.windowStart >= cfg.windowMs) {
+        b.count = 1;
+        b.windowStart = now.getTime();
+        return true;
+      }
+      if (b.count >= effectiveLimit(cfg, b, now.getTime())) return false;
+      b.count += 1;
       return true;
-    }
-    if (b.count >= effectiveLimit(cfg, b, now.getTime())) return false;
-    b.count += 1;
-    return true;
+    });
   }
 
   const db = getDb();
   const backoffFrac = cfg.backoffFraction ?? 0.8;
 
-  const result = await db.insert(providerThrottle)
+  await db.insert(providerThrottle)
     .values({
       provider,
       windowStartedAt: now,
@@ -105,10 +115,9 @@ export async function tryReserve(provider: string, cfg: ThrottleConfig): Promise
           END
         )
       `
-    })
-    .returning({ count: providerThrottle.count });
+    });
 
-  return result.length > 0;
+  return true;
 }
 
 /**

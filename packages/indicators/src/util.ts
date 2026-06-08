@@ -5,15 +5,15 @@ import type { Candle } from '@hamafx/shared';
 
 /** Extract close prices from a candle window. */
 export function closes(candles: Candle[]): number[] {
-  return candles.map((c) => c.c);
+  return candles.map((c) => c.c).filter((v) => Number.isFinite(v));
 }
 
 export function highs(candles: Candle[]): number[] {
-  return candles.map((c) => c.h);
+  return candles.map((c) => c.h).filter((v) => Number.isFinite(v));
 }
 
 export function lows(candles: Candle[]): number[] {
-  return candles.map((c) => c.l);
+  return candles.map((c) => c.l).filter((v) => Number.isFinite(v));
 }
 
 /**

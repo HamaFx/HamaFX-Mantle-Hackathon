@@ -33,6 +33,7 @@ export async function GET(req: Request): Promise<Response> {
     const errors: Array<{ symbol: string; message: string }> = [];
 
     for (const symbol of SYMBOLS) {
+      if (req.signal.aborted) break;
       try {
         const candles = await getCandles(symbol, SOURCE_TF, { count: SOURCE_COUNT });
         const data = computeDailySnapshot({ candles, asOf });

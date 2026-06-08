@@ -18,10 +18,6 @@
 
 import { z } from 'zod';
 
-const coerceEmptyToUndefined = z
-  .string()
-  .optional()
-  .transform((v) => (v === '' ? undefined : v));
 const optionalUrl = z.preprocess((v) => (v === '' ? undefined : v), z.string().url().optional());
 const optionalNonEmpty = z.preprocess(
   (v) => (v === '' ? undefined : v),
@@ -69,7 +65,7 @@ const WorkerEnvSchema = z.object({
    * Used as a Sentry tag and embedded in healthcheck POST bodies so we can
    * pinpoint a regression to a specific deploy.
    */
-  DEPLOYED_SHA: coerceEmptyToUndefined.pipe(z.string().min(1).optional()).default('unknown'),
+  DEPLOYED_SHA: optionalNonEmpty.default('unknown'),
 
   /** Port for local MT5 bridge server. Defaults to 8080. */
   MT5_BRIDGE_PORT: z.coerce.number().int().min(1024).max(65535).default(8080),

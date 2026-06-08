@@ -22,7 +22,7 @@
 //    its own portal-mounted drawer.
 
 import { AlertTriangle } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import {
   Drawer,
@@ -134,9 +134,14 @@ interface ConfirmState extends ConfirmOptions {
 export function useConfirm(): readonly [React.ReactNode, (opts: ConfirmOptions) => Promise<boolean>] {
   const [state, setState] = useState<ConfirmState>({ open: false, title: '' });
   const [busy, setBusy] = useState(false);
+  const resolveRef = useRef<((v: boolean) => void) | null>(null);
 
   const confirm = useCallback((opts: ConfirmOptions): Promise<boolean> => {
+    // Cancel any pending confirm to prevent Promise leak (H6/H9)
+    resolveRef.current?.(false);
+
     return new Promise<boolean>((resolve) => {
+      resolveRef.current = resolve;
       setState({ ...opts, open: true, resolve });
     });
   }, []);
@@ -144,20 +149,22 @@ export function useConfirm(): readonly [React.ReactNode, (opts: ConfirmOptions) 
   const handleOpenChange = useCallback(
     (open: boolean) => {
       if (!open) {
-        state.resolve?.(false);
+        resolveRef.current?.(false);
+        resolveRef.current = null;
         setState((s) => {
           const { resolve: _drop, ...rest } = s;
           return { ...rest, open: false };
         });
       }
     },
-    [state],
+    [],
   );
 
   const handleConfirm = useCallback(async () => {
     setBusy(true);
     try {
-      state.resolve?.(true);
+      resolveRef.current?.(true);
+      resolveRef.current = null;
     } finally {
       setBusy(false);
       setState((s) => {
@@ -165,7 +172,7 @@ export function useConfirm(): readonly [React.ReactNode, (opts: ConfirmOptions) 
         return { ...rest, open: false };
       });
     }
-  }, [state]);
+  }, []);
 
   const node = (
     <ConfirmDrawer

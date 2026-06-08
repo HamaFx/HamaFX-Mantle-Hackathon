@@ -21,14 +21,28 @@ export interface OnChainActivity {
   totalVolumeUsd: number; // estimated
 }
 
-// Well-known token addresses on Mantle Sepolia (update for mainnet if needed)
-export const MANTLE_TOKENS: Record<string, { address: `0x${string}`; symbol: string; decimals: number }> = {
+// Well-known token addresses on Mantle (Sepolia + Mainnet)
+export const MANTLE_TOKENS_SEPOLIA: Record<string, { address: `0x${string}`; symbol: string; decimals: number }> = {
   WETH:  { address: "0xdEAddEaDdeadDEadDEADDEaDDeaDDeAd00000000", symbol: "WETH",  decimals: 18 },
   USDT:  { address: "0x201EBa5CC46D216Ce6DC03F6a759e8E766e956aE", symbol: "USDT",  decimals: 6  },
   USDC:  { address: "0x09Bc4E0D10E52d8DA52E4f45D34B08B98F0ED2e0", symbol: "USDC",  decimals: 6  },
   WMNT:  { address: "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8", symbol: "WMNT",  decimals: 18 },
   mETH:  { address: "0xcDA86A272531e8640cD7F1a92c01839911B90bb0", symbol: "mETH",  decimals: 18 },
 };
+
+export const MANTLE_TOKENS_MAINNET: Record<string, { address: `0x${string}`; symbol: string; decimals: number }> = {
+  WETH:  { address: "0xDeadDeAddeADdEAd6000000F846E20520000000", symbol: "WETH",  decimals: 18 },
+  USDT:  { address: "0x09Bc4E0D10E52d8DA52E4f45D34B08B98F0ED2e0", symbol: "USDT",  decimals: 6  },
+  USDC:  { address: "0x09Bc4E0D10E52d8DA52E4f45D34B08B98F0ED2e0", symbol: "USDC",  decimals: 6  },
+  WMNT:  { address: "0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8", symbol: "WMNT",  decimals: 18 },
+  mETH:  { address: "0xcDA86A272531e8640cD7F1a92c01839911B90bb0", symbol: "mETH",  decimals: 18 },
+};
+
+export function getTokens(): Record<string, { address: `0x${string}`; symbol: string; decimals: number }> {
+  return (process.env.MANTLE_RPC_URL || "").includes("sepolia")
+    ? MANTLE_TOKENS_SEPOLIA
+    : MANTLE_TOKENS_MAINNET;
+}
 
 // Whale threshold: transfers above this USD value are flagged
 const WHALE_THRESHOLD_USD = 50_000;
@@ -49,7 +63,7 @@ export async function scanRecentBlocks(blockRange: number = 100): Promise<OnChai
   const whaleTransfers: WhaleTransfer[] = [];
 
   // Scan ERC-20 Transfer events for each tracked token
-  for (const [name, token] of Object.entries(MANTLE_TOKENS)) {
+  for (const [name, token] of Object.entries(getTokens())) {
     try {
       const logs = await client.getLogs({
         address: token.address,
@@ -69,7 +83,7 @@ export async function scanRecentBlocks(blockRange: number = 100): Promise<OnChai
           whaleTransfers.push({
             from: log.args.from ?? "0x0",
             to: log.args.to ?? "0x0",
-            value: humanValue.toFixed(4),
+            value: humanValue.toString(),
             valueRaw: value,
             token: name,
             tokenAddress: token.address,

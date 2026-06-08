@@ -77,10 +77,11 @@ export class MemoryCache implements Cache {
       }
     }
 
+    let producedAt = 0;
     const promise = (async () => {
       try {
         const value = await producer();
-        const producedAt = Date.now();
+        producedAt = Date.now();
         this.store.set(key, {
           value,
           producedAt,
@@ -97,7 +98,7 @@ export class MemoryCache implements Cache {
 
     try {
       const value = await promise;
-      return { value, meta: { producedAt: Date.now(), stale: false } };
+      return { value, meta: { producedAt, stale: false } };
     } catch (err) {
       // Stale-while-error fallback: if we still have a value within the
       // hard ceiling, hand it back and let the adapter mark it stale.

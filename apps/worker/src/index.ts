@@ -194,7 +194,7 @@ export async function runWorker(args: RunWorkerArgs): Promise<RunningWorker> {
 
   // Start the Finnhub poller after a 15s delay so BiQuote has time to
   // connect first. The poller itself checks the silence condition above.
-  setTimeout(() => {
+  const finnhubStartTimer = setTimeout(() => {
     finnhubSource.start().catch(() => {});
     finnhubActive = true;
   }, 15_000);
@@ -237,6 +237,7 @@ export async function runWorker(args: RunWorkerArgs): Promise<RunningWorker> {
 
   const stop = async (): Promise<void> => {
     notifyStopping();
+    clearTimeout(finnhubStartTimer);
     clearInterval(flushTimer);
     if (heartbeatTimer) clearInterval(heartbeatTimer);
     

@@ -89,6 +89,9 @@ export function Chart({
   const rsiContainerRef = useRef<HTMLDivElement | null>(null);
   const macdContainerRef = useRef<HTMLDivElement | null>(null);
   const atrContainerRef = useRef<HTMLDivElement | null>(null);
+  const rsiUnsubRef = useRef<(() => void) | null>(null);
+  const macdUnsubRef = useRef<(() => void) | null>(null);
+  const atrUnsubRef = useRef<(() => void) | null>(null);
 
   const decimals = useMemo(() => priceDecimals(symbol), [symbol]);
 
@@ -271,10 +274,11 @@ export function Chart({
           const range = mainChart.timeScale().getVisibleLogicalRange();
           if (range) rsiChart.timeScale().setVisibleLogicalRange(range);
 
-          mainChart.timeScale().subscribeVisibleLogicalRangeChange((range: any) => {
+          const unsub = mainChart.timeScale().subscribeVisibleLogicalRangeChange((range: any) => {
             if (!range) return;
             rsiChart.timeScale().setVisibleLogicalRange(range);
           });
+          rsiUnsubRef.current = unsub;
         }
       });
     } else {
@@ -288,6 +292,8 @@ export function Chart({
     }
 
     return () => {
+      rsiUnsubRef.current?.();
+      rsiUnsubRef.current = null;
       if (rsiChartRef.current) {
         rsiChartRef.current.remove();
         rsiChartRef.current = null;
@@ -387,10 +393,11 @@ export function Chart({
           const range = mainChart.timeScale().getVisibleLogicalRange();
           if (range) macdChart.timeScale().setVisibleLogicalRange(range);
 
-          mainChart.timeScale().subscribeVisibleLogicalRangeChange((range: any) => {
+          const unsub = mainChart.timeScale().subscribeVisibleLogicalRangeChange((range: any) => {
             if (!range) return;
             macdChart.timeScale().setVisibleLogicalRange(range);
           });
+          macdUnsubRef.current = unsub;
         }
       });
     } else {
@@ -403,6 +410,8 @@ export function Chart({
     }
 
     return () => {
+      macdUnsubRef.current?.();
+      macdUnsubRef.current = null;
       if (macdChartRef.current) {
         macdChartRef.current.remove();
         macdChartRef.current = null;
@@ -474,10 +483,11 @@ export function Chart({
           const range = mainChart.timeScale().getVisibleLogicalRange();
           if (range) atrChart.timeScale().setVisibleLogicalRange(range);
 
-          mainChart.timeScale().subscribeVisibleLogicalRangeChange((range: any) => {
+          const unsub = mainChart.timeScale().subscribeVisibleLogicalRangeChange((range: any) => {
             if (!range) return;
             atrChart.timeScale().setVisibleLogicalRange(range);
           });
+          atrUnsubRef.current = unsub;
         }
       });
     } else {
@@ -490,6 +500,8 @@ export function Chart({
     }
 
     return () => {
+      atrUnsubRef.current?.();
+      atrUnsubRef.current = null;
       if (atrChartRef.current) {
         atrChartRef.current.remove();
         atrChartRef.current = null;

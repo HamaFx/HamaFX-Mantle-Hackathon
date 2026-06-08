@@ -17,7 +17,6 @@
     "@hamafx/ai": "workspace:*",
     "@hamafx/data": "workspace:*",
     "@hamafx/db": "workspace:*",
-    "@hamafx/indicators": "workspace:*",
     "@hamafx/shared": "workspace:*",
     "@hamafx/web3": "workspace:*",
     "@microsoft/signalr": "^8",

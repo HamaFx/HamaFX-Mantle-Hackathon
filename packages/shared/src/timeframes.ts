@@ -28,7 +28,13 @@ export function msPerTimeframe(tf: Timeframe): number {
       return 24 * 60 * 60_000;
     case '1w':
       return 7 * 24 * 60 * 60_000;
+    default:
+      return assertNever(tf);
   }
+}
+
+function assertNever(x: never): never {
+  throw new Error(`unexpected timeframe: ${x}`);
 }
 
 export const DEFAULT_TIMEFRAME: Timeframe = '1h';

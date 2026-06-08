@@ -65,7 +65,7 @@ export function startMT5Server(opts: MT5ServerOptions): MT5ServerHandle {
             }
 
             const mid = (bid + ask) / 2;
-            const ts = Number(raw.ts) || Date.now();
+            const ts = Number.isFinite(Number(raw.ts)) ? Number(raw.ts) : Date.now();
 
             const tick: NormalizedTick = {
               symbol: symbol as Symbol,

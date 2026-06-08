@@ -162,6 +162,16 @@ export function authCookieSerialized(token: string, isProd: boolean): string {
   return parts.join('; ');
 }
 
+export function readCookie(header: string, name: string): string | undefined {
+  if (!header) return undefined;
+  for (const part of header.split(';')) {
+    const eq = part.indexOf('=');
+    if (eq < 0) continue;
+    if (part.slice(0, eq).trim() === name) return part.slice(eq + 1).trim();
+  }
+  return undefined;
+}
+
 export function clearedCookieSerialized(isProd: boolean): string {
   const parts = [`${COOKIE_NAME}=`, 'Path=/', 'HttpOnly', 'SameSite=Lax', 'Max-Age=0'];
   if (isProd) parts.push('Secure');

@@ -54,6 +54,7 @@ export async function GET(req: Request): Promise<Response> {
 
     try {
       while (pages < MAX_PAGES) {
+        if (req.signal.aborted) break;
         const articles = await fetchNews({ publishedAfter, limit: PAGE_LIMIT });
         if (articles.length === 0) break;
 
