@@ -32,7 +32,10 @@ async function fetchQuote(symbol: Symbol, apiKey: string): Promise<FinnhubQuote 
   const timer = setTimeout(() => ctrl.abort(), 5_000);
   try {
     const res = await fetch(url.toString(), { signal: ctrl.signal, cache: 'no-store' });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      await res.text().catch(() => {});
+      return null;
+    }
     const json = await res.json();
     const parsed = FinnhubQuoteSchema.safeParse(json);
     if (!parsed.success) return null;

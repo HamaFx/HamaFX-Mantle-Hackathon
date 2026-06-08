@@ -300,10 +300,12 @@ export async function main(): Promise<void> {
   process.on('unhandledRejection', (reason) => {
     log.error('unhandledRejection', { reason: String(reason) });
     captureException(reason, { kind: 'unhandledRejection' });
+    void flushSentry(2_000).finally(() => process.exit(1));
   });
   process.on('uncaughtException', (err) => {
     log.error('uncaughtException', { err: String(err) });
     captureException(err, { kind: 'uncaughtException' });
+    void flushSentry(2_000).finally(() => process.exit(1));
   });
 
   installSignalHandlers(log);

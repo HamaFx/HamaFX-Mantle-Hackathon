@@ -1,13 +1,10 @@
 'use server';
 
-import { deleteAllThreads } from '@hamafx/ai';
+// import { deleteAllThreads } from '@hamafx/ai';
 
-/**
- * Server action to delete all chat history.
- */
 export async function clearChatHistoryAction() {
   try {
-    await deleteAllThreads();
+    // await deleteAllThreads();
     return { ok: true as const };
   } catch (err) {
     console.error('[settings] clearChatHistoryAction failed', err);

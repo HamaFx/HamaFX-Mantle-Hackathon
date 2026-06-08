@@ -101,6 +101,7 @@ export interface LogSignalArgs {
   goNoGo: "go" | "caution" | "no-go";
   ipfsHash: string;
   summary: string; // max 280 chars
+  _retries?: number;
 }
 
 export interface LogSignalResult {
@@ -113,41 +114,51 @@ export async function logSignalOnChain(args: LogSignalArgs): Promise<LogSignalRe
   const wallet = getWalletClient();
   const publicClient = getMantleClient();
   const address = getAlphaLoggerAddress();
+  const retries = args._retries ?? 3;
 
-  const txHash = await wallet.writeContract({
-    address,
-    chain: mantleSepolia,
-    account: wallet.account!,
-    abi: ALPHA_LOGGER_ABI,
-    functionName: "logSignal",
-    args: [{
-      signalType: args.signalType,
-      asset: args.asset,
-      direction: args.direction,
-      confidence: args.confidence,
-      committeeGrade: args.committeeGrade,
-      goNoGo: args.goNoGo,
-      ipfsHash: args.ipfsHash,
-      summary: args.summary.slice(0, 280),
-    }],
-  });
+  try {
+    const txHash = await wallet.writeContract({
+      address,
+      chain: mantleSepolia,
+      account: wallet.account!,
+      abi: ALPHA_LOGGER_ABI,
+      functionName: "logSignal",
+      args: [{
+        signalType: args.signalType,
+        asset: args.asset,
+        direction: args.direction,
+        confidence: args.confidence,
+        committeeGrade: args.committeeGrade,
+        goNoGo: args.goNoGo,
+        ipfsHash: args.ipfsHash,
+        summary: args.summary.slice(0, 280),
+      }],
+    });
 
-  const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
+    const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
 
-  // Parse SignalLogged event to get the signal ID
-  let signalId = 0;
-  for (const log of receipt.logs) {
-    // Parse the event — signalId is the first indexed topic
-    if (log.topics[1]) {
-      signalId = Number(BigInt(log.topics[1]));
+    let signalId = 0;
+    for (const log of receipt.logs) {
+      if (log.topics[1]) {
+        signalId = Number(BigInt(log.topics[1]));
+        break;
+      }
     }
-  }
 
-  return {
-    txHash,
-    signalId,
-    explorerUrl: getExplorerUrl("tx", txHash),
-  };
+    return {
+      txHash,
+      signalId,
+      explorerUrl: getExplorerUrl("tx", txHash),
+    };
+  } catch (err: any) {
+    if (retries > 0 && err.message?.toLowerCase().includes("nonce")) {
+      console.warn(`[logSignalOnChain] Nonce error, retrying... (${retries} left)`);
+      // Add a small jitter delay before retrying
+      await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 1000));
+      return logSignalOnChain({ ...args, _retries: retries - 1 });
+    }
+    throw err;
+  }
 }
 
 export async function getSignalCount(): Promise<number> {
@@ -180,4 +191,3 @@ export async function getAgentBalance(): Promise<number> {
     return 0;
   }
 }
-

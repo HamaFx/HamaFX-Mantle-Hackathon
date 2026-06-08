@@ -51,6 +51,8 @@ const ERC20_TRANSFER_EVENT = parseAbiItem(
   "event Transfer(address indexed from, address indexed to, uint256 value)"
 );
 
+let globalLastScannedBlock: bigint | null = null;
+
 /**
  * Scan recent blocks for whale transfers on known Mantle tokens.
  * Returns transfers above the whale threshold.
@@ -58,7 +60,31 @@ const ERC20_TRANSFER_EVENT = parseAbiItem(
 export async function scanRecentBlocks(blockRange: number = 100): Promise<OnChainActivity> {
   const client = getMantleClient();
   const latestBlock = await client.getBlockNumber();
-  const fromBlock = latestBlock - BigInt(blockRange);
+  
+  // Reorg protection: stay 5 blocks behind tip
+  const safeLatestBlock = latestBlock > BigInt(5) ? latestBlock - BigInt(5) : latestBlock;
+
+  let fromBlock: bigint;
+  if (globalLastScannedBlock !== null) {
+    fromBlock = globalLastScannedBlock + BigInt(1);
+  } else {
+    fromBlock = safeLatestBlock - BigInt(blockRange);
+  }
+
+  if (fromBlock > safeLatestBlock) {
+    return {
+      blockNumber: safeLatestBlock,
+      timestamp: Date.now(),
+      transactionCount: 0,
+      whaleTransfers: [],
+      totalVolumeUsd: 0,
+    };
+  }
+
+  // Prevent RPC range too large errors if we fell too far behind
+  if (safeLatestBlock - fromBlock > BigInt(2000)) {
+    fromBlock = safeLatestBlock - BigInt(2000);
+  }
 
   const whaleTransfers: WhaleTransfer[] = [];
 
@@ -69,11 +95,11 @@ export async function scanRecentBlocks(blockRange: number = 100): Promise<OnChai
         address: token.address,
         event: ERC20_TRANSFER_EVENT,
         fromBlock,
-        toBlock: latestBlock,
+        toBlock: safeLatestBlock,
       });
 
       for (const log of logs) {
-        const value = log.args.value ?? 0n;
+        const value = log.args.value ?? BigInt(0);
         const humanValue = Number(value) / 10 ** token.decimals;
 
         // Simple USD estimation (rough — for hackathon purposes)
@@ -88,7 +114,7 @@ export async function scanRecentBlocks(blockRange: number = 100): Promise<OnChai
             token: name,
             tokenAddress: token.address,
             txHash: log.transactionHash ?? "0x0",
-            blockNumber: log.blockNumber ?? 0n,
+            blockNumber: log.blockNumber ?? BigInt(0),
             timestamp: Date.now(), // Approximate — could fetch block timestamp
           });
         }
@@ -100,10 +126,12 @@ export async function scanRecentBlocks(blockRange: number = 100): Promise<OnChai
   }
 
   // Get block details for transaction count
-  const block = await client.getBlock({ blockNumber: latestBlock });
+  const block = await client.getBlock({ blockNumber: safeLatestBlock });
+
+  globalLastScannedBlock = safeLatestBlock;
 
   return {
-    blockNumber: latestBlock,
+    blockNumber: safeLatestBlock,
     timestamp: Number(block.timestamp) * 1000,
     transactionCount: block.transactions.length,
     whaleTransfers,

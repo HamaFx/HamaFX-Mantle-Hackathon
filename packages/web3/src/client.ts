@@ -44,7 +44,7 @@ export function getMantleClient(): PublicClient {
     const isSepolia = rpcUrl.includes("sepolia") || !rpcUrl;
     const mode: 'sepolia' | 'mainnet' = isSepolia ? 'sepolia' : 'mainnet';
     const chain = mode === 'sepolia' ? mantleSepolia : mantleMainnet;
-    const urls = rpcUrl ? [rpcUrl] : RPC_FALLBACKS[mode];
+    const urls = rpcUrl ? [rpcUrl, ...RPC_FALLBACKS[mode].filter(u => u !== rpcUrl)] : RPC_FALLBACKS[mode];
     const transports = urls.map((u) => http(u, { retryCount: 1 }));
     client = createPublicClient({ chain, transport: fallback(transports) });
   }

@@ -168,28 +168,26 @@ export async function runResonanceSync(ctx: JobContext): Promise<JobResult> {
   log.info('persisting resonance rows', { rows: dbRows.length });
   let processed = 0;
 
-  for (const row of dbRows) {
+  if (dbRows.length > 0) {
     if (ctx.signal?.aborted) {
       log.warn('resonance-sync aborted during persistence');
-      break;
+    } else {
+      await db
+        .insert(schema.intermarketResonance)
+        .values(dbRows)
+        .onConflictDoUpdate({
+          target: schema.intermarketResonance.date,
+          set: {
+            realYieldPct: sql`excluded.real_yield_pct`,
+            breakevenInflationPct: sql`excluded.breakeven_inflation_pct`,
+            dxyIndex: sql`excluded.dxy_index`,
+            goldClose: sql`excluded.gold_close`,
+            divergenceScore: sql`excluded.divergence_score`,
+            createdAt: sql`now()`,
+          },
+        });
+      processed = dbRows.length;
     }
-
-    await db
-      .insert(schema.intermarketResonance)
-      .values(row)
-      .onConflictDoUpdate({
-        target: schema.intermarketResonance.date,
-        set: {
-          realYieldPct: sql`excluded.real_yield_pct`,
-          breakevenInflationPct: sql`excluded.breakeven_inflation_pct`,
-          dxyIndex: sql`excluded.dxy_index`,
-          goldClose: sql`excluded.gold_close`,
-          divergenceScore: sql`excluded.divergence_score`,
-          createdAt: sql`now()`,
-        },
-      });
-
-    processed += 1;
   }
 
   log.info('resonance-sync complete', { processed });

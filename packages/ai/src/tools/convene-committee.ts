@@ -49,7 +49,7 @@ export const conveneCommitteeTool = tool({
     const [economist, technician, riskManager] = await Promise.all([
       runEconomist(input, fundamentalData, ctx.env),
       runTechnician(input, technicalData, ctx.env),
-      runRiskManager(input, null, riskData, ctx.env),
+      runRiskManager(input, {}, riskData, ctx.env),
     ]);
 
     // 3. Run the Moderator

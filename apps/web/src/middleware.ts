@@ -67,10 +67,9 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
     return next;
   } catch (err) {
     console.error('[middleware] unhandled error', err);
-    // If middleware fails (missing env, import error), let the request
-    // through so the route handlers can handle auth themselves. On Vercel
-    // this prevents MIDDLEWARE_INVOCATION_FAILED from taking down the site.
-    return NextResponse.next();
+    // Security boundary must fail closed. If an error occurs during auth validation
+    // (e.g. missing secret), reject the request rather than bypassing auth.
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 

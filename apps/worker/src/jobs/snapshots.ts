@@ -52,11 +52,10 @@ export async function runSnapshots(ctx: JobContext): Promise<JobResult> {
   let pruned = 0;
   try {
     const cutoff = new Date(Date.now() - CANDLES_RETENTION_DAYS * 24 * 60 * 60 * 1000);
-    const result = await getDb()
+    await getDb()
       .delete(candles1m)
-      .where(lt(candles1m.t, cutoff))
-      .returning({ symbol: candles1m.symbol });
-    pruned = result.length;
+      .where(lt(candles1m.t, cutoff));
+    pruned = -1; // Count omitted to prevent massive memory allocation from .returning()
     log.info('candles_1m prune complete', { cutoff: cutoff.toISOString(), pruned });
   } catch (err) {
     log.error('candles_1m prune failed', { err: String(err) });

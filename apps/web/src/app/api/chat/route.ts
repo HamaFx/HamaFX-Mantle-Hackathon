@@ -63,12 +63,16 @@ export async function POST(req: Request): Promise<Response> {
   // Parse client AI preferences if provided
   const aiPrefsHeader = req.headers.get('X-AI-Prefs');
   let customInstructions: string | undefined;
+  
+  // Shallow copy env to prevent mutating global state across concurrent Node requests
+  const runEnv = { ...env };
+  
   if (aiPrefsHeader) {
     try {
       const prefs = JSON.parse(aiPrefsHeader);
-      if (prefs.fundamentalModel) env.AI_FUNDAMENTAL_MODEL = prefs.fundamentalModel;
-      if (prefs.technicalModel) env.AI_TECHNICAL_MODEL = prefs.technicalModel;
-      if (prefs.summaryModel) env.AI_SUMMARY_MODEL = prefs.summaryModel;
+      if (prefs.fundamentalModel) runEnv.AI_FUNDAMENTAL_MODEL = prefs.fundamentalModel;
+      if (prefs.technicalModel) runEnv.AI_TECHNICAL_MODEL = prefs.technicalModel;
+      if (prefs.summaryModel) runEnv.AI_SUMMARY_MODEL = prefs.summaryModel;
       if (prefs.customInstructions) customInstructions = prefs.customInstructions;
     } catch {
       // ignore invalid json
@@ -86,21 +90,21 @@ export async function POST(req: Request): Promise<Response> {
         : {}),
       ...(customInstructions ? { customInstructions } : {}),
       env: {
-        AI_GATEWAY_API_KEY: env.AI_GATEWAY_API_KEY,
-        GOOGLE_GENERATIVE_AI_API_KEY: env.GOOGLE_GENERATIVE_AI_API_KEY,
-        GOOGLE_VERTEX_PROJECT: env.GOOGLE_VERTEX_PROJECT,
-        GOOGLE_VERTEX_LOCATION: env.GOOGLE_VERTEX_LOCATION,
-        GOOGLE_APPLICATION_CREDENTIALS_JSON: env.GOOGLE_APPLICATION_CREDENTIALS_JSON,
-        GOOGLE_APPLICATION_CREDENTIALS: env.GOOGLE_APPLICATION_CREDENTIALS,
-        AI_DEFAULT_MODEL: env.AI_DEFAULT_MODEL,
-        AI_TITLE_MODEL: env.AI_TITLE_MODEL,
-        AI_VISION_MODEL: env.AI_VISION_MODEL,
-        AI_FUNDAMENTAL_MODEL: env.AI_FUNDAMENTAL_MODEL,
-        AI_TECHNICAL_MODEL: env.AI_TECHNICAL_MODEL,
-        AI_SUMMARY_MODEL: env.AI_SUMMARY_MODEL,
-        MAX_DAILY_USD: env.MAX_DAILY_USD,
-        MAX_TOOL_ITERATIONS: env.MAX_TOOL_ITERATIONS,
-        LOG_PROMPTS: env.LOG_PROMPTS,
+        AI_GATEWAY_API_KEY: runEnv.AI_GATEWAY_API_KEY,
+        GOOGLE_GENERATIVE_AI_API_KEY: runEnv.GOOGLE_GENERATIVE_AI_API_KEY,
+        GOOGLE_VERTEX_PROJECT: runEnv.GOOGLE_VERTEX_PROJECT,
+        GOOGLE_VERTEX_LOCATION: runEnv.GOOGLE_VERTEX_LOCATION,
+        GOOGLE_APPLICATION_CREDENTIALS_JSON: runEnv.GOOGLE_APPLICATION_CREDENTIALS_JSON,
+        GOOGLE_APPLICATION_CREDENTIALS: runEnv.GOOGLE_APPLICATION_CREDENTIALS,
+        AI_DEFAULT_MODEL: runEnv.AI_DEFAULT_MODEL,
+        AI_TITLE_MODEL: runEnv.AI_TITLE_MODEL,
+        AI_VISION_MODEL: runEnv.AI_VISION_MODEL,
+        AI_FUNDAMENTAL_MODEL: runEnv.AI_FUNDAMENTAL_MODEL,
+        AI_TECHNICAL_MODEL: runEnv.AI_TECHNICAL_MODEL,
+        AI_SUMMARY_MODEL: runEnv.AI_SUMMARY_MODEL,
+        MAX_DAILY_USD: runEnv.MAX_DAILY_USD,
+        MAX_TOOL_ITERATIONS: runEnv.MAX_TOOL_ITERATIONS,
+        LOG_PROMPTS: runEnv.LOG_PROMPTS,
       },
       ...(req.signal ? { signal: req.signal } : {}),
     });

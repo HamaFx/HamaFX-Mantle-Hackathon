@@ -43,7 +43,6 @@ export const candles1m = pgTable(
   },
   (t) => [
     primaryKey({ columns: [t.symbol, t.t] }),
-    index('candles_1m_symbol_t_idx').on(t.symbol, t.t),
   ],
 );
 

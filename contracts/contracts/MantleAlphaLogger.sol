@@ -44,6 +44,12 @@ contract MantleAlphaLogger {
         emit AgentRegistered(msg.sender, "HamaFX-Alpha-Agent", block.timestamp);
     }
 
+    function transferOwnership(address newOwner) external onlyOwner {
+        require(newOwner != address(0), "New owner cannot be zero address");
+        owner = newOwner;
+        emit AgentRegistered(newOwner, "HamaFX-Alpha-Agent (Rotated)", block.timestamp);
+    }
+
     struct LogSignalParams {
         string signalType;
         string asset;

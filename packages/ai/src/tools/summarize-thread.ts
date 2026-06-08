@@ -88,7 +88,10 @@ export const summarizeThreadTool = {
         const { text } = await generateText({
           model: resolveModel(modelId, env),
           system: SYSTEM_PROMPT,
-          prompt: transcript,
+          messages: messages.map((m) => ({
+            role: m.role as 'user' | 'assistant' | 'system',
+            content: m.content,
+          })),
         });
         const parsed = parseModelJson(text);
         if (parsed) {

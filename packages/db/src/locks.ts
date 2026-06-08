@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, lt } from 'drizzle-orm';
 import { getDb } from './client';
 import * as schema from './schema/index';
 
@@ -19,32 +19,25 @@ export async function acquireJobLock(
   try {
     let acquired = false;
     await db.transaction(async (tx) => {
-      const existing = await tx
-        .select()
-        .from(schema.jobLocks)
-        .where(eq(schema.jobLocks.jobName, key))
-        .limit(1)
-        .then((rows) => rows[0] ?? null);
+      // 1. Delete the lock if it has expired
+      await tx
+        .delete(schema.jobLocks)
+        .where(and(eq(schema.jobLocks.jobName, key), lt(schema.jobLocks.expiresAt, now)));
 
-      if (!existing || existing.expiresAt < now) {
-        await tx
-          .insert(schema.jobLocks)
-          .values({
-            jobName: key,
-            lockedAt: now,
-            expiresAt,
-            runnerPid: process.pid,
-            runnerHost: host ?? process.env.HOSTNAME ?? 'unknown',
-          })
-          .onConflictDoUpdate({
-            target: schema.jobLocks.jobName,
-            set: {
-              lockedAt: now,
-              expiresAt,
-              runnerPid: process.pid,
-              runnerHost: host ?? process.env.HOSTNAME ?? 'unknown',
-            },
-          });
+      // 2. Attempt to acquire the lock. If it already exists (and wasn't expired), this does nothing.
+      const rows = await tx
+        .insert(schema.jobLocks)
+        .values({
+          jobName: key,
+          lockedAt: now,
+          expiresAt,
+          runnerPid: process.pid,
+          runnerHost: host ?? process.env.HOSTNAME ?? 'unknown',
+        })
+        .onConflictDoNothing()
+        .returning({ jobName: schema.jobLocks.jobName });
+
+      if (rows.length > 0) {
         acquired = true;
       }
     });
