@@ -51,7 +51,7 @@ A full-featured Next.js frontend with:
 
 ## 🏗 Architecture
 
-![Data Flow Diagram](.github/assets/architecture-v2.svg)
+![Data Flow Diagram](.github/assets/architecture-v2.png)
 
 The monorepo is organized as a **Turborepo** with two deploy targets:
 
