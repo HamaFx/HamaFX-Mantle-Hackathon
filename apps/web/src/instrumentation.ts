@@ -1,14 +1,17 @@
-import type { Logger } from '@hamafx/worker-core';
-
 /**
  * Instrumentation hook for Next.js.
  *
  * In production (non-Vercel) we start the persistent daemon processes
  * (SignalR consumer, Finnhub fallback, on-chain scanner) as a sidecar
- * within the same Node.js process.  On Vercel the daemon is skipped
+ * within the same Node.js process. On Vercel the daemon is skipped
  * because Vercel's serverless runtime doesn't support long-lived
  * connections — the cron routes handle one-shot jobs there instead.
+ *
+ * IMPORTANT: all imports of @hamafx/worker-core must be dynamic so
+ * Vercel's build step doesn't try to webpack the `postgres` Node.js
+ * native modules (net/tls/crypto) that @hamafx/db transitively pulls in.
  */
+
 let daemon: Awaited<ReturnType<typeof import('@hamafx/worker-core').runDaemon>> | null = null;
 
 export async function register(): Promise<void> {
@@ -16,9 +19,10 @@ export async function register(): Promise<void> {
     return;
   }
 
+  // Dynamic import — only resolved at runtime, not at build time
   const { createLogger, runDaemon } = await import('@hamafx/worker-core');
-  const log: Logger = createLogger({ service: 'web-daemon' });
 
+  const log = createLogger({ service: 'web-daemon' });
   log.info('starting unified daemon from instrumentation.ts');
 
   try {
@@ -35,7 +39,7 @@ process.on('SIGINT', () => void shutdown('SIGINT'));
 
 async function shutdown(signal: string): Promise<void> {
   const { createLogger } = await import('@hamafx/worker-core');
-  const log: Logger = createLogger({ service: 'web-daemon' });
+  const log = createLogger({ service: 'web-daemon' });
   log.info('shutdown signal received', { signal });
 
   if (daemon) {

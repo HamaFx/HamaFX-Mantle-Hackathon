@@ -12,7 +12,6 @@ const nextConfig = {
     '@hamafx/indicators',
     '@hamafx/ai',
     '@hamafx/config',
-    '@hamafx/worker-core',
   ],
 
   // Type-checking + linting are run separately in CI; don't block the build.
