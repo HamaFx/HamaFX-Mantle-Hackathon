@@ -1,7 +1,6 @@
 <div align="center">
   <img src=".github/assets/mantle-logo.png" alt="Mantle" width="80" />
-  <h1>🔮 HamaFX-Ai: Mantle Alpha Agent</h1>
-  <p><strong>Mantle Turing Test Hackathon 2026</strong> | <em>Track 2: AI Alpha & Data</em></p>
+  <h1>🔮 HamaFX-Ai: Autonomous Alpha Agent for Mantle</h1>
 
   [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
   [![Mantle](https://img.shields.io/badge/Mantle-Network-000000?style=for-the-badge&logo=ethereum&logoColor=65b3ae)](https://mantle.xyz/)
@@ -12,147 +11,150 @@
 
 <br/>
 
-HamaFX-Ai is an **autonomous, on-chain AI Alpha Agent** built specifically for the Mantle Network ecosystem. 
-
-Moving beyond simple heuristic trading bots, HamaFX-Ai utilizes a **Multi-Agent LLM Committee** to actively monitor the Mantle blockchain, analyze DeFi liquidity shifts, detect whale movements, and synthesize fundamental data. To ensure absolute trust and transparency, **every generated alpha signal is permanently logged to the Mantle Sepolia blockchain** via our ERC-8004 Agent Identity contract.
+HamaFX-Ai is an **autonomous, on-chain AI agent** purpose-built for the Mantle Network. It continuously monitors the blockchain, analyzes DeFi liquidity dynamics, detects whale movements, and synthesizes market data — then logs every generated signal on-chain for verifiable transparency.
 
 ---
 
-## ✨ Premium Features
+## ✨ Features
 
-### 🤖 Multi-Agent Consensus Architecture
-Why trust one AI when you can consult a committee? When generating an alpha signal, the system spawns three specialized sub-agents in parallel:
-- 📊 **The Economist:** Evaluates macro fundamentals, tokenomics, and market sentiment.
-- 📉 **The Technician:** Analyzes real-time DEX depth, volume spikes, and historical price action.
-- 🛡️ **The Risk Manager:** Audits smart contract concentration risk and liquidity fragmentation.
-A final **Moderator Agent** synthesizes these three distinct viewpoints into a cohesive `A-F` grade and a `1-10` confidence score.
+### 🤖 Multi-Agent Consensus
+Alpha signals are produced by a committee of three specialized LLM sub-agents running in parallel:
+- **The Economist** — evaluates macro fundamentals, tokenomics, and sentiment
+- **The Technician** — analyzes DEX depth, volume, and price action
+- **The Risk Manager** — audits concentration risk and liquidity fragmentation
 
-### 🔗 Tamper-Proof On-Chain Identity
-AI predictions are only as good as their verifiable track record. 
-- The agent holds its own private key and acts as the owner of the `MantleAlphaLogger` smart contract.
-- Upon reaching a consensus, the agent automatically executes a transaction on Mantle Sepolia to permanently engrave its prediction (`direction`, `confidence`, `summary`, and `asset`).
-- Users can click directly from our premium UI to view the exact transaction on **MantleScan**.
+A **Moderator Agent** reconciles the three viewpoints into a single `A-F` grade and `1-10` confidence score.
 
-### 🐋 Live Data Ingestion Worker
-A dedicated Node.js background worker utilizes Mantle RPC nodes to continuously scan for high-value on-chain events. 
-- Detects massive token transfers (Whale Alerts) and calculates their USD value dynamically.
-- Monitors top Mantle DeFi protocols (like Merchant Moe and Agni Finance) for TVL anomalies.
-- Caches this data in a high-performance Supabase PostgreSQL database for the AI committee to query instantly.
+### 🔗 On-Chain Verifiability
+The agent holds its own private key and acts as the owner of the `MantleAlphaLogger` contract on Mantle Sepolia. Every alpha signal is permanently engraved on-chain, producing a verifiable record that can be inspected directly on MantleScan.
 
-### 📱 Instant Telegram Push Routing
-High-conviction alpha is time-sensitive. If the committee generates a signal with a Confidence Score ≥ 7 or an A/B Grade, the system bypasses the web UI and instantly fires a rich Telegram Push Notification directly to the user's device, complete with actionable insights and the blockchain verification link.
+### 🐋 Live Data Pipeline
+A persistent background daemon continuously ingests:
+- Real-time price ticks via **BiQuote SignalR** WebSocket
+- On-chain whale transfers and DeFi TVL changes via **Mantle RPC**
+- REST fallback via **Finnhub** when primary sources are silent
+
+All data is cached in **Supabase PostgreSQL** for low-latency access by the AI committee.
+
+### 📱 Instant Telegram Notifications
+High-conviction signals (confidence ≥ 7 or grade A/B) bypass the web UI and fire a rich Telegram push notification with actionable insights and the on-chain verification link.
+
+### 📊 Interactive Dashboard
+A full-featured Next.js frontend with:
+- Real-time price charts (lightweight-charts)
+- Multi-chart layouts with sync'd crosshairs
+- AI chat interface with tool execution
+- On-chain signal feed with MantleScan deep links
+- Economic calendar and news feed
 
 ---
 
-## 🏗 System Architecture
+## 🏗 Architecture
 
 ![System Architecture](.github/assets/architecture-v2.png)
 
+The monorepo is organized as a **Turborepo** with two deploy targets:
+
+| Package | Purpose |
+|---------|---------|
+| `apps/web` | Next.js 15 frontend + API routes |
+| `packages/worker-core` | Persistent daemon (ticks, candles, on-chain scan) |
+| `packages/shared` | Zod schemas, symbol definitions, shared types |
+| `packages/db` | Drizzle ORM schema + Postgres client |
+| `packages/data` | Market data providers with failover |
+| `packages/indicators` | Technical indicators (RSI, MACD, Bollinger, ATR, etc.) |
+| `packages/ai` | AI tools, prompts, agent orchestration |
+| `packages/web3` | On-chain reading + event scanning |
+| `packages/config` | Shared TypeScript, ESLint configs |
+| `apps/worker` | Legacy standalone worker (includes MT5 bridge) |
+
+On **Vercel**, only the web app runs (daemon disabled automatically). For self-hosted deployment, a single **Docker** image bundles both the web server and background daemon.
+
 ---
 
-## 📜 Smart Contract Identity
+## 🚀 Quickstart
 
-The AI Agent acts as the autonomous owner of the `MantleAlphaLogger` contract. 
-- **Network:** Mantle Sepolia Testnet
-- **Chain ID:** `5003`
-- **Contract Address:** `0x6D29F763dF73A0C23D837aDAFF67DE68B48a92F9`
-- **Verification:** [View Live on MantleScan ↗](https://sepolia.mantlescan.xyz/address/0x6D29F763dF73A0C23D837aDAFF67DE68B48a92F9)
+### Prerequisites
+- Node.js >= 20.11
+- pnpm >= 9.0
+- A Supabase project (Postgres)
+- API keys for your chosen LLM provider (Google Gemini, etc.)
+- A Mantle Sepolia wallet funded with testnet MNT
 
----
-
-## 🚀 Quickstart & Deployment
-
-This project uses a modern **Turborepo** monorepo structure.
-
-### 1. Install Dependencies
+### 1. Install
 ```bash
-# We use pnpm for strict workspace management
 pnpm install
 ```
 
-### 2. Environment Configuration
-Copy the environment templates:
+### 2. Configure Environment
 ```bash
 cp .env.example .env.local
-cp contracts/.env.example contracts/.env
 ```
-Ensure you provide your LLM API keys (Google Vertex/Gemini), Supabase credentials, and Telegram Bot tokens in `.env.local`.
+Fill in your LLM keys, Supabase credentials, and any other service tokens.
 
-### 3. Database Migrations
-Push the Drizzle ORM schemas to your Supabase instance:
+### 3. Database
 ```bash
-cd packages/db
-pnpm run migrate:apply
+cd packages/db && pnpm run migrate:apply
 ```
 
-### 4. Agent Wallet & Contract Deployment
-The agent requires a funded Mantle Sepolia wallet to deploy its contract and pay for signal transactions.
-1. Claim testnet MNT from the [Mantle Faucet](https://faucet.testnet.mantle.xyz/) to the agent's wallet address (`0xF73BA9f4Fc94F4B648B10FBBc6dE9a708519D3D0`).
-2. Run our automated deployment script from the root directory:
+### 4. Agent Wallet
+Fund the agent wallet with Mantle Sepolia testnet MNT, then deploy the logging contract:
 ```bash
 ./deploy-agent.sh
 ```
-*This script will compile the Solidity contracts via Hardhat, deploy to Mantle, and auto-inject the resulting contract address into your `.env.local`.*
 
-### 5. Launch the Matrix
-Boot up the Next.js frontend and the background worker simultaneously:
+### 5. Local Development
 ```bash
 pnpm dev
 ```
-Navigate to [http://localhost:3000](http://localhost:3000) to access the **Agent Dashboard** and interact with the **On-Chain Signal Feed**.
+Opens the dashboard at [http://localhost:3000](http://localhost:3000).
 
-### 6. Workspace Commands
-
+### Workspace Commands
 ```bash
-pnpm dev          # Start all apps (web + worker) in dev mode
-pnpm build        # Build all packages and apps
-pnpm lint         # Run ESLint across all packages
-pnpm typecheck    # TypeScript type-check all packages
+pnpm build        # Build all packages
+pnpm typecheck    # TypeScript type-check across all packages
 pnpm test         # Run all test suites
+pnpm lint         # ESLint across all packages
 ```
 
-### 7. Vercel Deployment
+---
 
-The web app is pre-configured for Vercel deployment (see `.vercel/repo.json`):
+## 🐳 Docker Deployment
 
+Build and run the unified image (web server + background daemon):
 ```bash
-npx vercel deploy --prod --cwd apps/web
-```
-
-Environment variables are managed through the Vercel dashboard. Ensure all
-vars from `.env.example` are set before deploying.
-
-### 8. Docker Deployment (Unified)
-
-The monorepo supports a unified Docker image that bundles the Next.js server
-AND the persistent daemon processes (SignalR consumer, Finnhub fallback,
-on-chain scanner) into a single runtime. On Vercel, the daemon is skipped
-automatically (checked via the `VERCEL` env variable).
-
-```bash
-# Build the image
 docker build -t hamafx-web .
-
-# Run with env vars
-docker run -p 3000:3000 --env-file .env.docker hamafx-web
+docker run -p 3000:3000 --env-file .env.local hamafx-web
 ```
 
-Development mode (daemon disabled): `pnpm dev:unified` starts Next.js with
-`VERCEL=true` so the daemon doesn't start in local dev.
+The daemon processes start automatically when not running on Vercel (checked via the `VERCEL` environment variable).
 
-## 🛠 Troubleshooting
+---
+
+## 📜 Smart Contract
+
+| Property | Value |
+|----------|-------|
+| Network | Mantle Sepolia Testnet |
+| Chain ID | `5003` |
+| Contract | `0x6D29F763dF73A0C23D837aDAFF67DE68B48a92F9` |
+| Explorer | [MantleScan ↗](https://sepolia.mantlescan.xyz/address/0x6D29F763dF73A0C23D837aDAFF67DE68B48a92F9) |
+
+---
+
+## 🔧 Troubleshooting
 
 | Problem | Solution |
 |---------|----------|
-| `pnpm install` fails with lockfile mismatch | Run `pnpm install --no-frozen-lockfile` to update |
-| Database migrations fail | Verify `POSTGRES_URL` in `.env.local` and run `pnpm run migrate:apply` from `packages/db` |
-| Agent wallet has no MNT | Claim testnet tokens from [Mantle Faucet](https://faucet.testnet.mantle.xyz/) |
-| TypeScript errors after pulling | Run `pnpm install` and `pnpm typecheck` |
-| Vercel build fails with `frozen-lockfile` | Commit the updated `pnpm-lock.yaml` or use `--no-frozen-lockfile` in Vercel project settings |
-| Worker not connecting to SignalR | Check `BIQUOTE_API_KEY` is set and valid |
-| On-chain scan returning no events | Verify `MANTLE_RPC_URL` points to a synced Mantle RPC endpoint |
+| `pnpm install` fails with lockfile mismatch | Run `pnpm install --no-frozen-lockfile` |
+| Database migrations fail | Check `POSTGRES_URL` in `.env.local` |
+| Agent wallet has no MNT | Claim from [Mantle Faucet](https://faucet.testnet.mantle.xyz/) |
+| TypeScript errors after pulling | Run `pnpm install && pnpm typecheck` |
+| Daemon not collecting ticks | Verify `BIQUOTE_HUB_URL` and `FINNHUB_API_KEY` are set |
+| On-chain scan returns nothing | Ensure `MANTLE_RPC_URL` points to a synced RPC endpoint |
 
 ---
-<div align="center">
-  <i>Built with 🖤 for the Mantle ecosystem.</i>
-</div>
+
+## License
+
+MIT
