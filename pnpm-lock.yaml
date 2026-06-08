@@ -153,9 +153,6 @@ importers:
       '@hamafx/db':
         specifier: workspace:*
         version: link:../../packages/db
-      '@hamafx/indicators':
-        specifier: workspace:*
-        version: link:../../packages/indicators
       '@hamafx/shared':
         specifier: workspace:*
         version: link:../../packages/shared
