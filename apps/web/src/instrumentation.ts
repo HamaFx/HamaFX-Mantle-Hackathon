@@ -12,7 +12,8 @@
  * native modules (net/tls/crypto) that @hamafx/db transitively pulls in.
  */
 
-let daemon: Awaited<ReturnType<typeof import('@hamafx/worker-core').runDaemon>> | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let daemon: any = null;
 
 export async function register(): Promise<void> {
   if (process.env.VERCEL) {
