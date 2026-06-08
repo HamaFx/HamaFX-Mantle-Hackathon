@@ -1,0 +1,9 @@
+{
+  "extends": "@hamafx/config/typescript/base",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "downlevelIteration": true
+  },
+  "include": ["src"]
+}

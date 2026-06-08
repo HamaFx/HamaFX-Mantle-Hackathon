@@ -2,6 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
 
+  output: process.env.VERCEL ? undefined : 'standalone',
+
   // Workspace packages export TS source directly; Next must transpile them.
   transpilePackages: [
     '@hamafx/shared',
@@ -10,6 +12,7 @@ const nextConfig = {
     '@hamafx/indicators',
     '@hamafx/ai',
     '@hamafx/config',
+    '@hamafx/worker-core',
   ],
 
   // Type-checking + linting are run separately in CI; don't block the build.

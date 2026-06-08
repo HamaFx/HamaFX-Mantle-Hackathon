@@ -17,7 +17,10 @@
     "test": "turbo run test -- --run",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
-    "clean": "turbo run clean && rm -rf node_modules"
+    "clean": "turbo run clean && rm -rf node_modules",
+    "dev:unified": "VERCEL=true pnpm --filter @hamafx/web dev",
+    "docker:build": "docker build -t hamafx-web .",
+    "docker:run": "docker run -p 3000:3000 --env-file .env.docker hamafx-web"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",

@@ -122,6 +122,24 @@ npx vercel deploy --prod --cwd apps/web
 Environment variables are managed through the Vercel dashboard. Ensure all
 vars from `.env.example` are set before deploying.
 
+### 8. Docker Deployment (Unified)
+
+The monorepo supports a unified Docker image that bundles the Next.js server
+AND the persistent daemon processes (SignalR consumer, Finnhub fallback,
+on-chain scanner) into a single runtime. On Vercel, the daemon is skipped
+automatically (checked via the `VERCEL` env variable).
+
+```bash
+# Build the image
+docker build -t hamafx-web .
+
+# Run with env vars
+docker run -p 3000:3000 --env-file .env.docker hamafx-web
+```
+
+Development mode (daemon disabled): `pnpm dev:unified` starts Next.js with
+`VERCEL=true` so the daemon doesn't start in local dev.
+
 ## 🛠 Troubleshooting
 
 | Problem | Solution |
