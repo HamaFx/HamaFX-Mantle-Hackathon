@@ -12,17 +12,23 @@ const nextConfig = {
     '@hamafx/indicators',
     '@hamafx/ai',
     '@hamafx/config',
+    '@hamafx/worker-core',
   ],
 
   // Type-checking + linting are run separately in CI; don't block the build.
   typescript: { ignoreBuildErrors: false },
   eslint: { ignoreDuringBuilds: false },
 
-  // Node.js native packages that webpack cannot bundle. The `postgres` driver
-  // imports net/tls/crypto which only exist in a Node.js runtime. Marking them
-  // external tells Next.js to leave them as runtime requires rather than
-  // trying to webpack them.
-  serverExternalPackages: ['postgres'],
+  // `postgres` is a Node.js native driver (net/tls/crypto). Next.js's
+  // webpack cannot bundle it, so we mark it as external for server bundles.
+  // This is needed because @hamafx/db (in transpilePackages) statically
+  // imports it, and webpack follows all static imports transitively.
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals = [...(Array.isArray(config.externals) ? config.externals : []), 'postgres'];
+    }
+    return config;
+  },
 
   // Tree-shake heavy icon/component packages at the bundler level.
   experimental: {
